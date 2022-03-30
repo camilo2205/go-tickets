@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FuncionarioController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,11 +23,15 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])
+->middleware('can:dashboard')
+->name('dashboard');
 
-Route::resource('clientes', ClienteController::class);
-Route::resource('users', UserController::class);
-Route::resource('encargados', EncargadoController::class);
-Route::resource('tickets', TicketController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('clientes', ClienteController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('funcionarios', FuncionarioController::class);
+    Route::resource('tickets', TicketController::class); 
+});
 
 require __DIR__.'/auth.php';

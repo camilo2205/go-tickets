@@ -1,13 +1,22 @@
 <x-app-layout>
+    <link rel="stylesheet" href="{{ asset('css/cruds/clientes.css') }}">
     <x-slot name="header">
         <div class="flex flex-row content-end">
             <div class="basis-1/3">
                 <x-anchor href="{{ route('clientes.create') }}">Agregar</x-anchor>
             </div>
-            <div class="basis-1/3 self-end">
+            <div class="basis-1/4 self-end">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
                     {{ __('CLIENTES') }}
                 </h2>
+            </div>
+            <div class="basis-1/3 self-start">
+                @if (session('success'))
+                    <div class="basis-full">
+                        <x-small-message class="bg-green-200 text-green-600 text-center w-full p-1 rounded font-bold">
+                            {{ session('success') }}</x-small-message>
+                    </div>
+                @endif
             </div>
         </div>
     </x-slot>
@@ -35,12 +44,16 @@
                         <div class="flex flex-row space-x-2">
                             <x-edit-button class="basis-1/2" href="{{ route('clientes.edit', $cliente->id) }}">
                             </x-edit-button>
-                            <x-delete-button class="basis-1/2"
-                                href="{{ route('clientes.destroy', $cliente->id) }}"></x-delete-button>
+                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-cliente"
+                                data-model="Cliente" href="#">
+                            </x-delete-button>
+                            <x-delete-form id="eliminar-cliente"
+                                action="{{ route('clientes.destroy', $cliente->id) }}"></x-delete-form>
                         </div>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <script src="{{ asset('js/cruds/clientes.js') }}" defer></script>
 </x-app-layout>

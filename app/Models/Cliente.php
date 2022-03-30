@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cliente extends Model
 {
-    use HasFactory;
-
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nit',
@@ -28,6 +26,16 @@ class Cliente extends Model
         'direccion' => 'required',
         'telefono' => 'required',
         'celular' => 'required',
-        'correo' => 'required'
+        'correo' => 'required|unique:clientes'
     ];
+
+    /**
+     * Get the user that owns the Cliente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

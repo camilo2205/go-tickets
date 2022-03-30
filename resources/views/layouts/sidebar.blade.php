@@ -3,31 +3,41 @@
         <div
             class="md:mt-12 md:w-48 md:fixed md:left-0 md:top-0 content-center md:content-start text-left justify-between">
             <ul class="list-reset flex flex-row md:flex-col pt-3 md:py-3 px-1 md:px-2 text-center md:text-left">
-                <li class="mr-3 flex-1">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Inicio') }}
-                    </x-nav-link>
-                </li>
-                <li class="mr-3 flex-1">
-                    <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
-                        {{ __('Clientes') }}
-                    </x-nav-link>
-                </li>
-                <li class="mr-3 flex-1">
-                    <x-nav-link :href="route('encargados.index')" :active="request()->routeIs('encargados.*')">
-                        {{ __('Encargados') }}
-                    </x-nav-link>
-                </li>
-                <li class="mr-3 flex-1">
-                    <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.*')">
-                        {{ __('Tickets') }}
-                    </x-nav-link>
-                </li>
-                <li class="mr-3 flex-1">
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                        {{ __('Usuarios') }}
-                    </x-nav-link>
-                </li>
+                @can('dashboard')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Inicio') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
+                @can('clientes.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                            {{ __('Clientes') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
+                @can('funcionarios.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('funcionarios.index')" :active="request()->routeIs('funcionarios.*')">
+                            {{ __('Funcionarios') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
+                @can('tickets.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.*')">
+                            {{ __('Tickets') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
+                @can('users.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Usuarios') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
             </ul>
         </div>
     </div>

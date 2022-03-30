@@ -8,9 +8,19 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:clientes.index')->only('index');
+        $this->middleware('can:clientes.create')->only(['create', 'store']);
+        $this->middleware('can:clientes.edit')->only(['edit', 'update']);
+        $this->middleware('can:clientes.show')->only('show');
+        $this->middleware('can:clientes.destroy')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,16 +50,23 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(Cliente::$rules);
+
         try {
             DB::beginTransaction();
+
             $user = User::create([
                 'name' => $request->nombre,
                 'email' => $request->correo,
+                'identificacion' => $request->nit,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
                 'password' => bcrypt($request->nit)
             ]);
 
-            $request->validate(Cliente::$rules);
-    
+            $user->assignRole('cliente');
+
             Cliente::create([
                 'nit' => $request->nit,
                 'nombre' => $request->nombre,
@@ -59,12 +76,13 @@ class ClienteController extends Controller
                 'correo' => $request->correo,
                 'user_id' => $user->id
             ]);
-            
+
             DB::commit();
-            return redirect()->route('clientes.index');   
+            return redirect()->route('clientes.index')->with('success', 'Cliente creado correctamente.');
         } catch (Exception $e) {
             Log::alert("Error al crear cliente", [$e->getMessage() => $e]);
             DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
     }
 
@@ -99,8 +117,46 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        $cliente->update($request->except('_token'));
-        return redirect()->route('clientes.index');
+        $request->validate([
+            'nit' => 'required',
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'celular' => 'required',
+            'correo' => [
+                'required',
+                Rule::unique('clientes')->ignore($cliente->id)
+            ]
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $user = $cliente->user;
+
+            $user->update([
+                'name' => $request->nombre,
+                'email' => $request->correo,
+                'identificacion' => $request->nit
+            ]);
+
+            $cliente->update([
+                'nit' => $request->nit,
+                'nombre' => $request->nombre,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
+                'correo' => $request->correo,
+                'user_id' => $user->id
+            ]);
+
+            DB::commit();
+            return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente.');
+        } catch (Exception $e) {
+            Log::alert("Error al actualizar cliente", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 
     /**
@@ -111,6 +167,17 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = $cliente->user;
+            $user->delete();
+            $cliente->delete();
+            DB::commit();
+            return redirect()->back()->with("success", 'Cliente eliminado correctamente');
+        } catch (\Exception $e) {
+            Log::alert("Error al eliminar cliente", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 }

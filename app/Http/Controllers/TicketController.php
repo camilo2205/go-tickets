@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class TicketController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:users.index')->only('index');
-        $this->middleware('can:users.create')->only(['create', 'store']);
-        $this->middleware('can:users.edit')->only(['edit', 'update']);
-        $this->middleware('can:users.show')->only('show');
-        $this->middleware('can:users.destroy')->only('destroy');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -23,8 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        //
     }
 
     /**
@@ -34,7 +24,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        //
     }
 
     /**
@@ -51,10 +41,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Ticket $ticket)
     {
         //
     }
@@ -62,10 +52,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(Ticket $ticket)
     {
         //
     }
@@ -74,10 +64,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Ticket $ticket)
     {
         //
     }
@@ -85,10 +75,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Ticket $ticket)
     {
         //
     }

@@ -1,6 +1,6 @@
 <header>
     <!--Nav-->
-    <nav aria-label="menu nav" class="bg-white-800 pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full z-20 top-0">
+    <nav aria-label="menu nav" class="bg-white-800 pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full top-0">
         {{-- <nav x-data="{ open: false }" class="bg-white border-b border-gray-100"> --}}
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl px-4 sm:px-6 lg:px-8">

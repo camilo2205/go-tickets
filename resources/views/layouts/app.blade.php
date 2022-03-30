@@ -19,12 +19,16 @@
 </head>
 
 <body class="font-sans antialiased">
-    @include('layouts.navigation')
+    @auth
+        @include('layouts.navigation')
+    @endauth
     <div class="min-h-screen bg-white-100">
         <!-- Page Content -->
         <main>
             <div class="flex flex-col md:flex-row">
-                @include('layouts.sidebar')
+                @auth
+                    @include('layouts.sidebar')
+                @endauth
                 <section class="overflow-auto mt-16">
                     <div id="main" class="main-content flex-1 bg-white-100 mt-12 md:mt-2 pb-24 md:pb-5">
                         <!-- Page Heading -->
