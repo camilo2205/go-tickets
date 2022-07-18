@@ -12,12 +12,11 @@ class Cliente extends Model
 
     protected $fillable = [
         'nit',
-        'nombre',
-        'direccion',
+        'razon_social',
         'telefono',
-        'celular',
-        'correo',
-        'user_id'
+        'user_id',
+        'identificacion_encargado',
+        'nombre_encargado'
     ];
 
     public static $rules = [
@@ -26,7 +25,7 @@ class Cliente extends Model
         'direccion' => 'required',
         'telefono' => 'required',
         'celular' => 'required',
-        'correo' => 'required|unique:clientes'
+        'correo' => 'required|unique:users,email'
     ];
 
     /**

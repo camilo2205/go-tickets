@@ -1,6 +1,7 @@
 <header>
     <!--Nav-->
-    <nav aria-label="menu nav" class="bg-white-800 pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full top-0">
+    <nav x-data="{ open: false }" aria-label="menu nav"
+        class="bg-white pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full top-0 z-10 shadow">
         {{-- <nav x-data="{ open: false }" class="bg-white border-b border-gray-100"> --}}
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -12,18 +13,6 @@
                             <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                         </a>
                     </div>
-
-                    {{-- <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Inicio') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
-                        {{ __('Clientes') }}
-                    </x-nav-link>
-                </div> --}}
                 </div>
 
                 <!-- Settings Dropdown -->
@@ -88,7 +77,7 @@
             </div>
 
             <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="pt-4 pb-1 border-t border-gray-200 text-right">
                 <div class="px-4">
                     <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>

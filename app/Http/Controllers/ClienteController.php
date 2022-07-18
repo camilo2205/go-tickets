@@ -56,24 +56,22 @@ class ClienteController extends Controller
             DB::beginTransaction();
 
             $user = User::create([
-                'name' => $request->nombre,
+                'name' => $request->nombre_encargado,
                 'email' => $request->correo,
-                'identificacion' => $request->nit,
+                'identificacion' => $request->identificacion_encargado,
                 'direccion' => $request->direccion,
                 'telefono' => $request->telefono,
                 'celular' => $request->celular,
-                'password' => bcrypt($request->nit)
+                'password' => bcrypt($request->identificacion_encargado)
             ]);
 
             $user->assignRole('cliente');
 
             Cliente::create([
                 'nit' => $request->nit,
-                'nombre' => $request->nombre,
-                'direccion' => $request->direccion,
-                'telefono' => $request->telefono,
-                'celular' => $request->celular,
-                'correo' => $request->correo,
+                'razon_social' => $request->nombre,
+                'identificacion_encargado' => $request->identificacion_encargado,
+                'nombre_encargado' => $request->nombre_encargado,
                 'user_id' => $user->id
             ]);
 
@@ -125,7 +123,7 @@ class ClienteController extends Controller
             'celular' => 'required',
             'correo' => [
                 'required',
-                Rule::unique('clientes')->ignore($cliente->id)
+                Rule::unique('users','email')->ignore($cliente->user->id)
             ]
         ]);
 
@@ -135,18 +133,17 @@ class ClienteController extends Controller
             $user = $cliente->user;
 
             $user->update([
-                'name' => $request->nombre,
+                'name' => $request->nombre_encargado,
                 'email' => $request->correo,
-                'identificacion' => $request->nit
+                'identificacion' => $request->identificacion_encargado,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
             ]);
 
             $cliente->update([
                 'nit' => $request->nit,
-                'nombre' => $request->nombre,
-                'direccion' => $request->direccion,
-                'telefono' => $request->telefono,
-                'celular' => $request->celular,
-                'correo' => $request->correo,
+                'razon_social' => $request->nombre,
                 'user_id' => $user->id
             ]);
 

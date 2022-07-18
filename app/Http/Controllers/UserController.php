@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -34,7 +38,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::all();
+        $permisos = Permission::all();
+        return view('users.create', compact('roles', 'permisos'));
     }
 
     /**
@@ -45,7 +51,36 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'identificacion' => 'required',
+            'name' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'celular' => 'required',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'identificacion' => $request->identificacion,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
+                'password' => bcrypt($request->password)
+            ]);
+            DB::rollback();
+            
+            // DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
+        } catch (\Exception $e) {
+            Log::alert("Error al crear usuario", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 
     /**

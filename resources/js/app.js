@@ -50,5 +50,32 @@ $(document).ready(function () {
         }
     });
 
+    $('#buscar-permiso').keyup(function (e) {
+        e.preventDefault();
+        let key_word = $(this).val();
+        let _permisos = permisos.filter(p => p.name.includes(key_word) || p.description.includes(key_word))
+
+        $('.permiso').hide()
+
+        _permisos.forEach(element => {
+            console.log(element.id)
+            $(`#permiso-${element.id}`).show();
+        });
+    });
+
+    $('#superadmin').change(function (e) { 
+        if ($('#superadmin').prop('checked')) {
+            $('.permiso > input').prop('checked', true)
+            $('.permiso > input').prop('disabled', true)
+            $('.permiso').addClass('text-gray-400')
+            $('.permiso > input').addClass('bg-gray-600 checked:bg-gray-600')
+        } else {
+            $('.permiso > input').prop('checked', false)
+            $('.permiso > input').prop('disabled', false)
+            $('.permiso').removeClass('text-gray-400')
+            $('.permiso > input').removeClass('bg-gray-600 checked:bg-gray-600')
+        }
+    });
+
     $('.small-message').fadeOut(5000);
 });

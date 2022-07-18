@@ -11,17 +11,23 @@
                     {{ __('CREAR USUARIO') }}
                 </h2>
             </div>
+            @if (session('error'))
+                <div class="basis-1/3">
+                    <x-small-message class="bg-red-200 text-red-600 w-fit p-1 rounded font-bold">{{ session('error') }}
+                    </x-small-message>
+                </div>
+            @endif
         </div>
     </x-slot>
 
     <form action="{{ route('users.store') }}" method="post" class="flex flex-row flex-wrap space-y-4">
         @csrf
-        @if (session('error'))
-            <div class="basis-full">
-                <x-small-message class="bg-red-200 text-red-600 w-fit p-1 rounded font-bold">{{ session('error') }}
-                </x-small-message>
-            </div>
-        @endif
+
+        <!-- Guardar -->
+        <div class="basis-full px-2">
+            <x-button>Guardar</x-button>
+        </div>
+
         <!-- Identificación -->
         <div class="md:basis-1/6 basis-1/3 px-2">
             <x-label for="identificacion" :value="__('Identificación')" />
@@ -63,18 +69,18 @@
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
-        <!-- Correo -->
+        <!-- Email -->
         <div class="md:basis-1/4 basis-1/2 px-2">
-            <x-label for="correo" :value="__('Correo')" />
-            <x-input id="correo" class="block mt-1 w-full" type="text" name="correo" :value="old('correo')" />
-            @error('correo')
+            <x-label for="email" :value="__('Email')" />
+            <x-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email')" autocomplete="new-email"/>
+            @error('email')
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
         <!-- Contraseña -->
         <div class="md:basis-1/4 basis-1/2 px-2 relative">
             <x-label for="password" :value="__('Contraseña')" />
-            <x-input id="password" class="block mt-1 w-full" type="password" name="password" :value="old('password')" />
+            <x-input id="password" class="block mt-1 w-full" type="password" name="password" :value="old('password')"  autocomplete="new-password"/>
             <button data-status="0" data-input="password" type="button" class="absolute right-4 top-7 show-password">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -88,9 +94,42 @@
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
-        <!-- Guardar -->
-        <div class="basis-full px-2">
-            <x-button class="self-end">Guardar</x-button>
+
+        <div class="basis-1/3 px-2">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Roles
+                {{-- <x-input id="buscar-role" type="text" placeholder="buscar rol" class="ml-5 h-6"></x-input> --}}
+            </h2>
+            <ul class="mt-2 ml-2 space-y-2">
+                @foreach ($roles as $role)
+                    <li>
+                        <input type="checkbox" {{ old($role->name) ? 'checked' : '' }} name="{{ $role->name }}" id="{{ $role->name }}">
+                        <label class="ml-2" for="{{ $role->name }}">
+                            <span class="font-semibold">{{ $role->description }}</span>
+                        </label>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        <div class="basis-2/3 px-2">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Permisos
+                <x-input id="buscar-permiso" type="text" placeholder="buscar permiso" class="ml-5 h-6"></x-input>
+            </h2>
+            <ul class="mt-5 ml-2 space-y-2">
+                @foreach ($permisos as $permiso)
+                    <li id="permiso-{{ $permiso->id }}" class="permiso">
+                        <input type="checkbox" {{ old($role->name) ? 'checked' : '' }} name="{{ $role->name }}" name="{{ $permiso->name }}" id="{{ $permiso->name }}">
+                        <label class="ml-2" for="{{ $permiso->name }}">
+                            <span class="font-semibold">{{ $permiso->name }}</span> - {{ $permiso->description }}
+                        </label>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </form>
+
+    <script>
+        var permisos = @json($permisos);
+    </script>
 </x-app-layout>

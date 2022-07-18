@@ -9,6 +9,14 @@
                     {{ __('Usuarios') }}
                 </h2>
             </div>
+            <div class="basis-1/3 self-start">
+                @if (session('success'))
+                    <div class="basis-full">
+                        <x-small-message class="bg-green-200 text-green-600 text-center w-full p-1 rounded font-bold">
+                            {{ session('success') }}</x-small-message>
+                    </div>
+                @endif
+            </div>
         </div>
     </x-slot>
 

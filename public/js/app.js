@@ -5001,6 +5001,34 @@ jquery__WEBPACK_IMPORTED_MODULE_1___default()(document).ready(function () {
       jquery__WEBPACK_IMPORTED_MODULE_1___default()(this).html("\n            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                <path d=\"M10 12a2 2 0 100-4 2 2 0 000 4z\" />\n                <path fill-rule=\"evenodd\" d=\"M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z\" clip-rule=\"evenodd\" />\n            </svg>\n            ");
     }
   });
+  jquery__WEBPACK_IMPORTED_MODULE_1___default()('#buscar-permiso').keyup(function (e) {
+    e.preventDefault();
+    var key_word = jquery__WEBPACK_IMPORTED_MODULE_1___default()(this).val();
+
+    var _permisos = permisos.filter(function (p) {
+      return p.name.includes(key_word) || p.description.includes(key_word);
+    });
+
+    jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso').hide();
+
+    _permisos.forEach(function (element) {
+      console.log(element.id);
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()("#permiso-".concat(element.id)).show();
+    });
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_1___default()('#superadmin').change(function (e) {
+    if (jquery__WEBPACK_IMPORTED_MODULE_1___default()('#superadmin').prop('checked')) {
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').prop('checked', true);
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').prop('disabled', true);
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso').addClass('text-gray-400');
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').addClass('bg-gray-600 checked:bg-gray-600');
+    } else {
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').prop('checked', false);
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').prop('disabled', false);
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso').removeClass('text-gray-400');
+      jquery__WEBPACK_IMPORTED_MODULE_1___default()('.permiso > input').removeClass('bg-gray-600 checked:bg-gray-600');
+    }
+  });
   jquery__WEBPACK_IMPORTED_MODULE_1___default()('.small-message').fadeOut(5000);
 });
 

@@ -33,15 +33,15 @@
         <!-- Nombre -->
         <div class="md:basis-1/4 basis-2/3 px-2">
             <x-label for="nombre" :value="__('Nombre')" />
-            <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre') ? old('nombre') : $cliente->razon_social" />
+            <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre') ? old('nombre') : $cliente->nombre" />
             @error('nombre')
                 <x-small class="text-red-600">{{ $message }}</x-small>
             @enderror
         </div>
         <!-- Dirección -->
-        <div class="md:basis-4/12 basis-full px-2">
+        <div class="md:basis-5/12 basis-full px-2">
             <x-label for="direccion" :value="__('Dirección')" />
-            <x-input id="direccion" class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion') ? old('direccion') : $cliente->user->direccion" />
+            <x-input id="direccion" class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion') ? old('direccion') : $cliente->direccion" />
             @error('direccion')
                 <x-small class="text-red-600">{{ $message }}</x-small>
             @enderror
@@ -49,7 +49,7 @@
         <!-- Teléfono -->
         <div class="md:basis-2/12 basis-4/12 px-2">
             <x-label for="telefono" :value="__('Teléfono')" />
-            <x-input id="telefono" class="block mt-1 w-full" type="text" name="telefono" :value="old('telefono') ? old('telefono') : $cliente->user->telefono" />
+            <x-input id="telefono" class="block mt-1 w-full" type="text" name="telefono" :value="old('telefono') ? old('telefono') : $cliente->telefono" />
             @error('telefono')
                 <x-small class="text-red-600">{{ $message }}</x-small>
             @enderror
@@ -57,7 +57,7 @@
         <!-- Celular -->
         <div class="md:basis-2/12 basis-4/12 px-2">
             <x-label for="celular" :value="__('Celular')" />
-            <x-input id="celular" class="block mt-1 w-full" type="text" name="celular" :value="old('celular') ? old('celular') : $cliente->user->celular" />
+            <x-input id="celular" class="block mt-1 w-full" type="text" name="celular" :value="old('celular') ? old('celular') : $cliente->celular" />
             @error('celular')
                 <x-small class="text-red-600">{{ $message }}</x-small>
             @enderror
@@ -65,27 +65,9 @@
         <!-- Correo -->
         <div class="md:basis-1/4 basis-1/2 px-2">
             <x-label for="correo" :value="__('Correo')" />
-            <x-input id="correo" class="block mt-1 w-full" type="text" name="correo" :value="old('correo') ? old('correo') : $cliente->user->email" />
+            <x-input id="correo" class="block mt-1 w-full" type="text" name="correo" :value="old('correo') ? old('correo') : $cliente->correo" />
             @error('correo')
                 <x-small class="text-red-600">{{ $message }}</x-small>
-            @enderror
-        </div>
-        <!-- Identificación Encargado -->
-        <div class="md:basis-2/12 basis-1/2 px-2">
-            <x-label for="identificacion_encargado" :value="__('Identificación Encargado')" />
-            <x-input id="identificacion_encargado" class="block mt-1 w-full" type="text"
-                name="identificacion_encargado" :value="old('identificacion_encargado') ? old('identificacion_encargado') : $cliente->identificacion_encargado" />
-            @error('identificacion_encargado')
-                <x-small>{{ $message }}</x-small>
-            @enderror
-        </div>
-        <!-- Nombre Encargado -->
-        <div class="md:basis-4/12 basis-1/2 px-2">
-            <x-label for="nombre_encargado" :value="__('Nombre Encargado')" />
-            <x-input id="nombre_encargado" class="block mt-1 w-full" type="text" name="nombre_encargado"
-                :value="old('nombre_encargado') ? old('nombre_encargado') : $cliente->nombre_encargado" />
-            @error('nombre_encargado')
-                <x-small>{{ $message }}</x-small>
             @enderror
         </div>
         <!-- Guardar -->
