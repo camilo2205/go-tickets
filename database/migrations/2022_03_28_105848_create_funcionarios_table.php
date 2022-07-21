@@ -18,6 +18,7 @@ class CreateFuncionariosTable extends Migration
             $table->string('cargo', 20);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

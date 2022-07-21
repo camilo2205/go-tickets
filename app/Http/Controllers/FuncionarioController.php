@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class FuncionarioController extends Controller
 {
@@ -90,7 +91,7 @@ class FuncionarioController extends Controller
      */
     public function edit(Funcionario $funcionario)
     {
-        //
+        return view('funcionarios.edit', compact('funcionario'));
     }
 
     /**
@@ -102,7 +103,44 @@ class FuncionarioController extends Controller
      */
     public function update(Request $request, Funcionario $funcionario)
     {
-        //
+        $request->validate([
+            'identificacion' => 'required',
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'celular' => 'required',
+            'correo' => [
+                'required',
+                Rule::unique('users','email')->ignore($funcionario->user->id)
+            ],
+            'cargo' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $user = $funcionario->user;
+
+            $user->update([
+                'name' => $request->nombre,
+                'email' => $request->correo,
+                'identificacion' => $request->identificacion,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'celular' => $request->celular,
+            ]);
+
+            $funcionario->update([
+                'cargo' => $request->cargo
+            ]);
+
+            DB::commit();
+            return redirect()->route('funcionarios.index')->with('success', 'Funcionario actualizado correctamente.');
+        } catch (Exception $e) {
+            Log::alert("Error al actualizar funcionario", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 
     /**
@@ -113,6 +151,17 @@ class FuncionarioController extends Controller
      */
     public function destroy(Funcionario $funcionario)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = $funcionario->user;
+            $user->delete();
+            $funcionario->delete();
+            DB::commit();
+            return redirect()->back()->with("success", 'funcionario eliminado correctamente');
+        } catch (\Exception $e) {
+            Log::alert("Error al eliminar funcionario", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 }

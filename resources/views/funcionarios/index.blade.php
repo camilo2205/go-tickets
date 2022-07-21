@@ -34,25 +34,26 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($funcionarios as $cliente)
+            @foreach ($funcionarios as $funcionario)
                 <tr>
                     <td class="border border-slate-300 px-5 py-2">
                         <div class="flex flex-row space-x-2">
-                            <x-edit-button class="basis-1/2" href="{{ route('funcionarios.edit', $cliente->id) }}">
+                            <x-edit-button class="basis-1/2" href="{{ route('funcionarios.edit', $funcionario->id) }}">
                             </x-edit-button>
-                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-cliente"
-                                data-model="Cliente" href="#">
+                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-funcionario-{{ $funcionario->id }}"
+                                data-model="Funcionario" href="#">
                             </x-delete-button>
-                            <x-delete-form id="eliminar-cliente"
-                                action="{{ route('funcionarios.destroy', $cliente->id) }}"></x-delete-form>
+                            <x-delete-form id="eliminar-funcionario-{{ $funcionario->id }}"
+                                action="{{ route('funcionarios.destroy', $funcionario->id) }}">
+                            </x-delete-form>
                         </div>
                     </td>
-                    <td nowrap class="border border-slate-300 px-5 py-1">{{ $cliente->user->identificacion }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $cliente->user->name }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $cliente->cargo }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $cliente->user->telefono }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $cliente->user->celular }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $cliente->user->email }}</td>
+                    <td nowrap class="border border-slate-300 px-5 py-1">{{ $funcionario->user->identificacion }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $funcionario->user->name }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $funcionario->cargo }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $funcionario->user->telefono }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $funcionario->user->celular }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $funcionario->user->email }}</td>
                 </tr>
             @endforeach
         </tbody>

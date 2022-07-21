@@ -39,11 +39,12 @@
                         <div class="flex flex-row space-x-2">
                             <x-edit-button class="basis-1/2" href="{{ route('clientes.edit', $cliente->id) }}">
                             </x-edit-button>
-                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-cliente"
+                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-cliente-{{ $cliente->id }}"
                                 data-model="Cliente" href="#">
                             </x-delete-button>
-                            <x-delete-form id="eliminar-cliente"
-                                action="{{ route('clientes.destroy', $cliente->id) }}"></x-delete-form>
+                            <x-delete-form id="eliminar-cliente-{{ $cliente->id }}"
+                                action="{{ route('clientes.destroy', $cliente->id) }}">
+                            </x-delete-form>
                         </div>
                     </td>
                     <td nowrap class="border border-slate-300 px-5 py-1">{{ $cliente->nit }}</td>
