@@ -15,7 +15,17 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cliente_id');
+            $table->unsignedBigInteger('funcionario_id')->nullable();
+            $table->text('descripcion');
+            $table->enum('prioridad', ['urgente', 'normal']);
+            $table->enum('tipo', ['soporte', 'ajuste', 'desarrollo', 'capacitacion']);
+            $table->enum('estado', ['creada', 'asignada', 'atendida', 'resuelta'])->default('creada');
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('funcionario_id')->references('id')->on('funcionarios');
         });
     }
 

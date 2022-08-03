@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
+use App\Models\Funcionario;
+use App\Models\Soporte;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
 {
@@ -14,7 +19,8 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $tickets = Ticket::all();
+        return view('tickets.index', compact('tickets'));
     }
 
     /**
@@ -24,7 +30,9 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        $clientes = Cliente::all();
+        $funcionarios = Funcionario::all();
+        return view('tickets.create', compact('clientes', 'funcionarios'));
     }
 
     /**
@@ -35,7 +43,16 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(Ticket::$rules);
+        $ticket = Ticket::create($request->all());
+        if ($request->hasfile('soportes')) {
+            foreach ($request->file('soportes') as $file) {
+                $path = $file->store('soportes');
+                $name = $file->getClientOriginalName();
+                Soporte::create(["nombre" => $name, "ruta" => $path, "ticket_id" => $ticket->id]);
+            }
+        }
+        return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
     }
 
     /**
@@ -46,7 +63,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        return view('tickets.show', compact('ticket'));
     }
 
     /**
@@ -57,7 +74,8 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        $funcionarios = Funcionario::all();
+        return view('tickets.edit', compact('ticket', 'funcionarios'));
     }
 
     /**
@@ -69,7 +87,14 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        $request->validate([
+            'descripcion' => 'required',
+            'prioridad' => 'required',
+            'tipo' => 'required',
+            'funcionario_id' => 'required'
+        ]);
+        $ticket->update($request->all());
+        return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
     }
 
     /**
@@ -80,6 +105,15 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $ticket->delete();
+            DB::commit();
+            return redirect()->back()->with("success", 'Cliente eliminado correctamente');
+        } catch (\Exception $e) {
+            Log::alert("Error al eliminar cliente", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 }
