@@ -56,7 +56,7 @@ class FuncionarioController extends Controller
                 'password' => bcrypt($request->identificacion)
             ]);
 
-            $user->assignRole('cliente');
+            $user->assignRole('funcionario');
 
             Funcionario::create([
                 'cargo' => $request->cargo,

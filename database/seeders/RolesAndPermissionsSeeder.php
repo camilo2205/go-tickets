@@ -48,6 +48,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin->assignRole($superadmin);
 
         $cliente = Role::firstOrCreate(['name' => 'cliente', 'description' => 'Cliente']);
+        $funcionario = Role::firstOrCreate(['name' => 'funcionario', 'description' => 'Funcionario']);
+        $administrativo = Role::firstOrCreate(['name' => 'administrativo', 'description' => 'Administrativo']);
         $cliente->givePermissionTo([$dashboard, $tickets_index, $tickets_create, $tickets_edit, $tickets_show, $tickets_destroy]);
+        $funcionario->givePermissionTo([$dashboard, $tickets_index, $tickets_create, $tickets_edit, $tickets_show, $tickets_destroy]);
     }
 }

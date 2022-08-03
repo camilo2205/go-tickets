@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,15 +52,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'identificacion' => 'required',
-            'name' => 'required',
-            'direccion' => 'required',
-            'telefono' => 'required',
-            'celular' => 'required',
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $request->validate(User::$rules);
 
         try {
             DB::beginTransaction();
@@ -72,10 +65,10 @@ class UserController extends Controller
                 'celular' => $request->celular,
                 'password' => bcrypt($request->password)
             ]);
-            DB::rollback();
-            
-            // DB::commit();
-            return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
+            $user->syncRoles($request->roles);
+            $user->syncPermissions($request->permisos);
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
         } catch (\Exception $e) {
             Log::alert("Error al crear usuario", [$e->getMessage() => $e]);
             DB::rollback();
@@ -102,7 +95,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $roles = Role::all();
+        $permisos = Permission::all();
+        return view('users.edit', compact('user', 'roles', 'permisos'));
     }
 
     /**
@@ -114,7 +109,36 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'identificacion' => 'required',
+            'name' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'celular' => 'required',
+            'email' => [
+                'required', 'email',
+                Rule::unique('users', 'email')->ignore($user->id)
+            ],
+            'roles' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            if ($request->password) {
+                $user->update($request->all());   
+            } else {
+                $user->update($request->except('password'));
+            }
+            $user->syncRoles($request->roles);
+            $user->syncPermissions($request->permisos);
+
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
+        } catch (\Exception $e) {
+            Log::alert("Error al crear usuario", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 
     /**

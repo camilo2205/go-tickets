@@ -3,12 +3,12 @@
         <div class="flex flex-row content-end">
             <div class="basis-1/3">
                 <span class="text-sm text-gray-800"><a class="underline" href="{{ route('users.index') }}">Usuarios</a> /
-                    <span class="font-bold">Crear</span>
+                    <span class="font-bold">Editar</span>
                 </span>
             </div>
             <div class="basis-1/3 self-end">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-                    {{ __('CREAR USUARIO') }}
+                    {{ __('EDITAR USUARIO') }}
                 </h2>
             </div>
             @if (session('error'))
@@ -20,9 +20,14 @@
         </div>
     </x-slot>
 
-    <form action="{{ route('users.store') }}" method="post" class="flex flex-row flex-wrap space-y-4">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+    <form action="{{ route('users.update', $user->id) }}" method="post" class="flex flex-row flex-wrap space-y-4">
         @csrf
-
+        @method('PUT')
         <!-- Guardar -->
         <div class="basis-full px-2">
             <x-button>Guardar</x-button>
@@ -32,7 +37,7 @@
         <div class="md:basis-1/6 basis-1/3 px-2">
             <x-label for="identificacion" :value="__('Identificación')" />
             <x-input id="identificacion" class="block mt-1 w-full" type="text" name="identificacion"
-                :value="old('identificacion')" autofocus />
+                :value="old('identificacion') ? old('identificacion') : $user->identificacion" autofocus />
             @error('identificacion')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -40,7 +45,7 @@
         <!-- Nombre -->
         <div class="md:basis-4/12 basis-2/3 px-2">
             <x-label for="name" :value="__('Nombres')" />
-            <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" />
+            <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name') ? old('name') : $user->name" />
             @error('name')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -48,7 +53,7 @@
         <!-- Dirección -->
         <div class="md:basis-5/12 basis-full px-2">
             <x-label for="direccion" :value="__('Dirección')" />
-            <x-input id="direccion" class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion')" />
+            <x-input id="direccion" class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion') ? old('direccion') : $user->direccion" />
             @error('direccion')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -56,7 +61,7 @@
         <!-- Teléfono -->
         <div class="md:basis-2/12 basis-4/12 px-2">
             <x-label for="telefono" :value="__('Teléfono')" />
-            <x-input id="telefono" class="block mt-1 w-full" type="text" name="telefono" :value="old('telefono')" />
+            <x-input id="telefono" class="block mt-1 w-full" type="text" name="telefono" :value="old('telefono') ? old('telefono') : $user->telefono" />
             @error('telefono')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -64,7 +69,7 @@
         <!-- Celular -->
         <div class="md:basis-2/12 basis-4/12 px-2">
             <x-label for="celular" :value="__('Celular')" />
-            <x-input id="celular" class="block mt-1 w-full" type="text" name="celular" :value="old('celular')" />
+            <x-input id="celular" class="block mt-1 w-full" type="text" name="celular" :value="old('celular') ? old('celular') : $user->celular" />
             @error('celular')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -72,7 +77,7 @@
         <!-- Email -->
         <div class="md:basis-1/4 basis-1/2 px-2">
             <x-label for="email" :value="__('Email')" />
-            <x-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email')"
+            <x-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email') ? old('email') : $user->email"
                 autocomplete="new-email" />
             @error('email')
                 <x-small>{{ $message }}</x-small>
@@ -105,17 +110,16 @@
             <ul class="mt-2 ml-2 space-y-2">
                 @foreach ($roles as $role)
                     <li>
-                        <input type="checkbox" {{ old("roles") ? (in_array($role->name, old("roles")) ? "checked" : '') : '' }} name="roles[]"
-                            id="{{ $role->name }}" value="{{ $role->name }}">
+                        <input type="checkbox"
+                            {{ old('roles') ? (in_array($role->name, old('roles')) ? 'checked' : '') : '' }}
+                            @if ($user->hasRole($role->name)) checked @endif name="roles[]" id="{{ $role->name }}"
+                            value="{{ $role->name }}">
                         <label class="ml-2" for="{{ $role->name }}">
                             <span class="font-semibold">{{ $role->description }}</span>
                         </label>
                     </li>
                 @endforeach
             </ul>
-            @error('roles')
-                <x-small>{{ $message }}</x-small>
-            @enderror
         </div>
         <div class="basis-2/3 px-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -125,17 +129,16 @@
             <ul class="mt-5 ml-2 space-y-2">
                 @foreach ($permisos as $permiso)
                     <li id="permiso-{{ $permiso->id }}" class="permiso">
-                        <input type="checkbox" {{ old("permisos") ? (in_array($permiso->name, old("permisos")) ? "checked" : '') : '' }}
-                            name="permisos[]" id="{{ $permiso->name }}" value="{{ $permiso->name }}">
+                        <input type="checkbox"
+                            {{ old('permisos') ? (in_array($permiso->name, old('permisos')) ? 'checked' : '') : '' }}
+                            @if ($user->can($permiso->name)) checked @endif name="permisos[]"
+                            id="{{ $permiso->name }}" value="{{ $permiso->name }}">
                         <label class="ml-2" for="{{ $permiso->name }}">
                             <span class="font-semibold">{{ $permiso->name }}</span> - {{ $permiso->description }}
                         </label>
                     </li>
                 @endforeach
             </ul>
-            @error('permisos')
-                <x-small>{{ $message }}</x-small>
-            @enderror
         </div>
     </form>
 

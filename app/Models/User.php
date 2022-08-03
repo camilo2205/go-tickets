@@ -47,4 +47,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static $rules = [
+        'identificacion' => 'required',
+        'name' => 'required',
+        'direccion' => 'required',
+        'telefono' => 'required',
+        'celular' => 'required',
+        'email' => 'required|email',
+        'password' => 'required',
+        'roles' => 'required'
+    ];
 }

@@ -25,6 +25,7 @@
             <tr>
                 <th class="border border-slate-300 px-5 py-1">Identificación</th>
                 <th class="border border-slate-300 px-5 py-1">Nombre</th>
+                <th class="border border-slate-300 px-5 py-1">Role</th>
                 <th class="border border-slate-300 px-5 py-1">Correo</th>
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>
             </tr>
@@ -34,6 +35,11 @@
                 <tr>
                     <td nowrap class="border border-slate-300 px-5 py-1">{{ $user->identificacion }}</td>
                     <td class="border border-slate-300 px-5 py-1">{{ $user->name }}</td>
+                    <td class="border border-slate-300 px-5 py-1">
+                        @foreach ($user->roles as $role)
+                            {{ ucfirst($role->name) }}
+                        @endforeach
+                    </td>
                     <td class="border border-slate-300 px-5 py-1">{{ $user->email }}</td>
                     <td class="border border-slate-300 px-5 py-1">
                         <div class="flex flex-row space-x-2">
