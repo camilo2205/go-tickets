@@ -22,7 +22,7 @@
 
     <form action="{{ route('tickets.store') }}" method="post" class="flex flex-row flex-wrap space-y-4" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="estado" value="creada">
+        <input type="hidden" name="estado" id="estado" value="creado">
         <!-- Guardar -->
         <div class="basis-full px-2">
             <x-button>Guardar</x-button>
@@ -101,4 +101,5 @@
             @enderror
         </div>
     </form>
+    <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
 </x-app-layout>

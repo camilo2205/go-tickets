@@ -26,6 +26,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $clientes_show = Permission::firstOrCreate(['name' => 'clientes.show', 'description' => 'Permite ver un cliente.']);
         $clientes_destroy = Permission::firstOrCreate(['name' => 'clientes.destroy', 'description' => 'Permite eliminar un cliente.']);
 
+        // Permisos Funcionarios
+        $funcionarios_index = Permission::firstOrCreate(['name' => 'funcionarios.index', 'description' => 'Permite ver el listado de funcionarios.']);
+        $funcionarios_create = Permission::firstOrCreate(['name' => 'funcionarios.create', 'description' => 'Permite crear un funcionario.']);
+        $funcionarios_edit = Permission::firstOrCreate(['name' => 'funcionarios.edit', 'description' => 'Permite editar un funcionario.']);
+        $funcionarios_show = Permission::firstOrCreate(['name' => 'funcionarios.show', 'description' => 'Permite ver un funcionario.']);
+        $funcionarios_destroy = Permission::firstOrCreate(['name' => 'funcionarios.destroy', 'description' => 'Permite eliminar un funcionario.']);
+
         // Permisos Tickets
         $tickets_index = Permission::firstOrCreate(['name' => 'tickets.index', 'description' => 'Permite ver el listado de tickets.']);
         $tickets_create = Permission::firstOrCreate(['name' => 'tickets.create', 'description' => 'Permite crear un ticket.']);

@@ -20,7 +20,7 @@ class CreateTicketsTable extends Migration
             $table->text('descripcion');
             $table->enum('prioridad', ['urgente', 'normal']);
             $table->enum('tipo', ['soporte', 'ajuste', 'desarrollo', 'capacitacion']);
-            $table->enum('estado', ['creada', 'asignada', 'atendida', 'resuelta'])->default('creada');
+            $table->enum('estado', ['creado', 'asignado', 'atendido', 'resuelto'])->default('creado');
             $table->timestamps();
             $table->softDeletes();
 

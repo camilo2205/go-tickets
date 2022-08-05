@@ -56,4 +56,14 @@ class Ticket extends Model
     {
         return $this->hasMany(Soporte::class);
     }
+
+    /**
+     * Get all of the respuestas for the Ticket
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function respuestas()
+    {
+        return $this->hasMany(Respuesta::class);
+    }
 }

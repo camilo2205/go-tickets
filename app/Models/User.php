@@ -58,4 +58,14 @@ class User extends Authenticatable
         'password' => 'required',
         'roles' => 'required'
     ];
+
+    /**
+     * Get the cliente associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class);
+    }
 }

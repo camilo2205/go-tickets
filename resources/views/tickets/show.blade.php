@@ -28,7 +28,7 @@
             </td>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Encargado: </strong><br>
-                {{ $ticket->funcionario ? $ticket->funcionario->name : 'Sin asignar' }}
+                {{ $ticket->funcionario ? $ticket->funcionario->user->name : 'Sin asignar' }}
             </td>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Tipo: </strong><br>
@@ -61,6 +61,49 @@
                         </tr>
                     </table>
                 @endforeach
+            </td>
+        </tr>
+        <tr>
+            <td class="border border-slate-300 px-5 py-1" colspan="4">
+                @foreach ($ticket->respuestas as $respuesta)
+                    <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
+                        <div
+                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                            <strong>{{ $respuesta->user->name }}:</strong><br>
+                            {{ $respuesta->cuerpo }}
+                        </div>
+                    </div>
+                @endforeach
+            </td>
+        </tr>
+        <tr>
+            <td class="border border-slate-300 px-5 py-1" colspan="4">
+                <form action="{{ route('respuestas.store') }}" method="post"
+                    class="flex flex-row flex-wrap space-y-4">
+                    @csrf
+                    <!-- Responder -->
+                    <div class="basis-2/3 px-2">
+                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                        <x-label for="cuerpo" :value="__('Responder')" />
+                        <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
+                            :value="old('cuerpo')" autofocus required />
+                        @error('cuerpo')
+                            <x-small>{{ $message }}</x-small>
+                        @enderror
+                    </div>
+                    <!-- Guardar -->
+                    <div class="basis-full px-2">
+                        <x-button type='submit'>
+                            Enviar &nbsp;&nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </x-button>
+                    </div>
+                </form>
             </td>
         </tr>
     </table>

@@ -11,6 +11,15 @@
                     {{ __('EDITAR TICKET') }}
                 </h2>
             </div>
+            @if (session('success'))
+                <div class="basis-1/3 self-start">
+                    <div class="basis-full">
+                        <x-small-message class="bg-green-200 text-green-600 text-center w-full p-1 rounded font-bold">
+                            {{ session('success') }}
+                        </x-small-message>
+                    </div>
+                </div>
+            @endif
             @if (session('error'))
                 <div class="basis-1/3">
                     <x-small-message class="bg-red-200 text-red-600 w-fit p-1 rounded font-bold">{{ session('error') }}
@@ -29,56 +38,74 @@
             <x-button>Guardar</x-button>
         </div>
 
-        <table class="border-collapse border border-slate-400">
+        <table class="border-collapse border border-slate-400 w-full">
             <tr>
                 <td class="border border-slate-300 px-5 py-1">
                     <strong>Cliente: </strong><br>
                     {{ $ticket->cliente->razon_social }}
                 </td>
                 <td class="border border-slate-300 px-5 py-1">
-                    <strong>Asignar: </strong><br>
-                    <x-select name="funcionario_id" id="funcionario_id">
-                        @foreach ($funcionarios as $funcionario)
-                            <option value="{{ $funcionario->id }}" @if ($funcionario->id == $ticket->funcionario_id) selected @endif>
-                                {{ $funcionario->user->name }}
-                            </option>
-                        @endforeach
-                    </x-select>
+                    <strong>Encargado: </strong><br>
+                    @if (!$ticket->estado == 'creado')
+                        {{ $ticket->funcionario ? $ticket->funcionario->user->name : 'Sin asignar' }}
+                    @else
+                        <x-select name="funcionario_id" id="funcionario_id">
+                            @foreach ($funcionarios as $funcionario)
+                                <option value="{{ $funcionario->id }}"
+                                    @if ($funcionario->id == $ticket->funcionario_id) selected @endif>
+                                    {{ $funcionario->user->name }}
+                                </option>
+                            @endforeach
+                        </x-select>
+                    @endif
                     @error('funcionario_id')
                         <x-small>{{ $message }}</x-small>
                     @enderror
                 </td>
                 <td class="border border-slate-300 px-5 py-1">
                     <strong>Tipo: </strong><br>
-                    <x-select name="tipo" id="tipo">
-                        <option value="soporte" @if ($ticket->tipo == 'soporte') selected @endif>Soporte</option>
-                        <option value="ajuste" @if ($ticket->tipo == 'ajuste') selected @endif>Ajuste</option>
-                        <option value="desarrollo" @if ($ticket->tipo == 'desarrollo') selected @endif>Desarrollo</option>
-                        <option value="capacitacion" @if ($ticket->tipo == 'capacitacion') selected @endif>Capacitacion
-                        </option>
-                    </x-select>
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-select name="tipo" id="tipo">
+                            <option value="soporte" @if ($ticket->tipo == 'soporte') selected @endif>Soporte</option>
+                            <option value="ajuste" @if ($ticket->tipo == 'ajuste') selected @endif>Ajuste</option>
+                            <option value="desarrollo" @if ($ticket->tipo == 'desarrollo') selected @endif>Desarrollo
+                            </option>
+                            <option value="capacitacion" @if ($ticket->tipo == 'capacitacion') selected @endif>Capacitacion
+                            </option>
+                        </x-select>
+                    @else
+                        {{ ucfirst($ticket->estado) }}
+                    @endif
                     @error('tipo')
                         <x-small>{{ $message }}</x-small>
                     @enderror
                 </td>
-                <td class="border border-slate-300 px-5 py-1">
+                <td class="border border-slate-300 px-5 py-1" colspan="3">
                     <strong>Prioridad: </strong><br>
-                    <x-select name="prioridad" id="prioridad">
-                        <option value="normal" @if ($ticket->prioridad == 'normal') selected @endif>Normal</option>
-                        <option value="urgente" @if ($ticket->prioridad == 'urgente') selected @endif>Urgente</option>
-                    </x-select>
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-select name="prioridad" id="prioridad">
+                            <option value="normal" @if ($ticket->prioridad == 'normal') selected @endif>Normal</option>
+                            <option value="urgente" @if ($ticket->prioridad == 'urgente') selected @endif>Urgente</option>
+                        </x-select>
+                    @else
+                        {{ ucfirst($ticket->prioridad) }}
+                    @endif
                     @error('prioridad')
                         <x-small>{{ $message }}</x-small>
                     @enderror
                 </td>
             </tr>
             <tr>
-                <td class="border border-slate-300 px-5 py-1" colspan="4">
+                <td class="border border-slate-300 px-5 py-1" colspan="6">
                     <strong>Descripción: </strong><br>
-                    <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion"
-                        :value="old('descripcion')">
-                        {{ $ticket->descripcion }}
-                    </x-textarea>
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion"
+                            :value="old('descripcion')">
+                            {{ $ticket->descripcion }}
+                        </x-textarea>
+                    @else
+                        <p style="font-size: 12px">{{ $ticket->descripcion }}</p>
+                    @endif
                     @error('descripcion')
                         <x-small>{{ $message }}</x-small>
                     @enderror
@@ -86,23 +113,40 @@
             </tr>
             <tr>
                 <td class="border border-slate-300 px-5 py-1" colspan="4">
-                    <strong>Soportes: </strong><br>
-                    @foreach ($ticket->soportes as $soporte)
-                        <table class="w-full border-collapse border border-slate-400">
-                            <tr x-data="{ expanded: false }" class="py-1">
-                                <td class="border border-slate-300">
-                                    <button type="button" @click="expanded = ! expanded" class="w-full ml-2">Soporte
-                                        {{ $loop->iteration }}</button>
-                                    <p x-show="expanded" x-collapse>
-                                        <img src="/{{ $soporte->ruta }}" alt="Soporte_{{ $soporte->id }}"
-                                            class="mt-2">
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    @endforeach
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full"
+                            accept="image/*" multiple />
+                    @endif
+                </td>
+                <td class="border border-slate-300 px-5 py-1" colspan="2">
+                    <input type="hidden" name="estado" id="estado" value="creado">
+                    <strong>Estado:</strong> {{ ucfirst($ticket->estado) }}
                 </td>
             </tr>
         </table>
     </form>
+    <table class="w-full">
+        @foreach ($ticket->soportes as $soporte)
+            <tr x-data="{ expanded: false }" class="py-1">
+                <td class="border border-slate-300 py-1 px-5">
+                    <button type="button" @click="expanded = ! expanded" class="basis-11/12 ml-2 my-1">
+                        Soporte {{ $loop->iteration }}
+                    </button>
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-delete-button class="basis-1/2 eliminar ml-2"
+                            data-form="eliminar-soporte-{{ $soporte->id }}" data-model="Soporte" href="#">
+                        </x-delete-button>
+                        <x-delete-form id="eliminar-soporte-{{ $soporte->id }}"
+                            action="{{ route('soportes.destroy', $soporte->id) }}">
+                        </x-delete-form>
+                    @endif
+                    <p x-show="expanded" x-collapse>
+                        <img src="/{{ $soporte->ruta }}" alt="Soporte_{{ $soporte->id }}" class="mt-2">
+                    </p>
+                    <br>
+                </td>
+            </tr>
+        @endforeach
+    </table>
+    <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
 </x-app-layout>

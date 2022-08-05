@@ -13,7 +13,8 @@
                 @if (session('success'))
                     <div class="basis-full">
                         <x-small-message class="bg-green-200 text-green-600 text-center w-full p-1 rounded font-bold">
-                            {{ session('success') }}</x-small-message>
+                            {{ session('success') }}
+                        </x-small-message>
                     </div>
                 @endif
             </div>
@@ -28,6 +29,7 @@
                 <th class="border border-slate-300 px-5 py-1">Encargado</th>
                 <th class="border border-slate-300 px-5 py-1">Tipo</th>
                 <th class="border border-slate-300 px-5 py-1">Prioridad</th>
+                <th class="border border-slate-300 px-5 py-1">Estado</th>
             </tr>
         </thead>
         <tbody>
@@ -37,20 +39,25 @@
                         <div class="flex flex-row space-x-2">
                             <x-show-button class="basis-1/2" href="{{ route('tickets.show', $ticket->id) }}">
                             </x-show-button>
-                            <x-edit-button class="basis-1/2" href="{{ route('tickets.edit', $ticket->id) }}">
-                            </x-edit-button>
-                            <x-delete-button class="basis-1/2 eliminar" data-form="eliminar-ticket-{{ $ticket->id }}"
-                                data-model="Ticket" href="#">
-                            </x-delete-button>
-                            <x-delete-form id="eliminar-ticket-{{ $ticket->id }}"
-                                action="{{ route('tickets.destroy', $ticket->id) }}">
-                            </x-delete-form>
+                            @if ($ticket->estado == 'creado' || !$cliente)
+                                <x-edit-button class="basis-1/2" href="{{ route('tickets.edit', $ticket->id) }}">
+                                </x-edit-button>
+                                <x-delete-button class="basis-1/2 eliminar"
+                                    data-form="eliminar-ticket-{{ $ticket->id }}" data-model="Ticket" href="#">
+                                </x-delete-button>
+                                <x-delete-form id="eliminar-ticket-{{ $ticket->id }}"
+                                    action="{{ route('tickets.destroy', $ticket->id) }}">
+                                </x-delete-form>
+                            @endif
                         </div>
                     </td>
                     <td nowrap class="border border-slate-300 px-5 py-1">{{ $ticket->cliente->razon_social }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ $ticket->funcionario ? $ticket->funcionario->name : '' }}</td>
+                    <td class="border border-slate-300 px-5 py-1">
+                        {{ $ticket->funcionario ? $ticket->funcionario->user->name : '' }}
+                    </td>
                     <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->tipo) }}</td>
                     <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->prioridad) }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->estado) }}</td>
                 </tr>
             @endforeach
         </tbody>

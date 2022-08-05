@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Soporte;
 use App\Models\Ticket;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,8 +20,13 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::all();
-        return view('tickets.index', compact('tickets'));
+        $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        if ($cliente) {
+            $tickets = Ticket::where('cliente_id', $cliente->id)->get();
+        } else {
+            $tickets = Ticket::all();
+        }
+        return view('tickets.index', compact('tickets', 'cliente'));
     }
 
     /**
@@ -44,15 +50,24 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $request->validate(Ticket::$rules);
-        $ticket = Ticket::create($request->all());
-        if ($request->hasfile('soportes')) {
-            foreach ($request->file('soportes') as $file) {
-                $path = $file->store('soportes');
-                $name = $file->getClientOriginalName();
-                Soporte::create(["nombre" => $name, "ruta" => $path, "ticket_id" => $ticket->id]);
+
+        try {
+            DB::beginTransaction();
+            $ticket = Ticket::create($request->all());
+            if ($request->hasfile('soportes')) {
+                foreach ($request->file('soportes') as $file) {
+                    $path = $file->store('soportes');
+                    $name = $file->getClientOriginalName();
+                    Soporte::create(["nombre" => $name, "ruta" => $path, "ticket_id" => $ticket->id]);
+                }
             }
+            DB::commit();
+            return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
+        } catch (Exception $e) {
+            Log::alert("Error al crear ticket", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
-        return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
     }
 
     /**
@@ -75,7 +90,8 @@ class TicketController extends Controller
     public function edit(Ticket $ticket)
     {
         $funcionarios = Funcionario::all();
-        return view('tickets.edit', compact('ticket', 'funcionarios'));
+        $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente'));
     }
 
     /**
@@ -90,11 +106,26 @@ class TicketController extends Controller
         $request->validate([
             'descripcion' => 'required',
             'prioridad' => 'required',
-            'tipo' => 'required',
-            'funcionario_id' => 'required'
+            'tipo' => 'required'
         ]);
-        $ticket->update($request->all());
-        return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
+
+        try {
+            DB::beginTransaction();
+            $ticket->update($request->all());
+            if ($request->hasfile('soportes')) {
+                foreach ($request->file('soportes') as $file) {
+                    $path = $file->store('soportes');
+                    $name = $file->getClientOriginalName();
+                    Soporte::create(["nombre" => $name, "ruta" => $path, "ticket_id" => $ticket->id]);
+                }
+            }
+            DB::commit();
+            return redirect()->route('tickets.edit', $ticket->id)->with('success', 'Ticket actualizado.');
+        } catch (Exception $e) {
+            Log::alert("Error al actualizar ticket", [$e->getMessage() => $e]);
+            DB::rollback();
+            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+        }
     }
 
     /**

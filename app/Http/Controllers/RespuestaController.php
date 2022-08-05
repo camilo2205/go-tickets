@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Soporte;
+use App\Models\Respuesta;
 use Illuminate\Http\Request;
 
-class SoporteController extends Controller
+class RespuestaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,16 +35,17 @@ class SoporteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Respuesta::create($request->all());
+        return redirect()->back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Soporte  $soporte
+     * @param  \App\Models\Respuesta  $respuesta
      * @return \Illuminate\Http\Response
      */
-    public function show(Soporte $soporte)
+    public function show(Respuesta $respuesta)
     {
         //
     }
@@ -52,10 +53,10 @@ class SoporteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Soporte  $soporte
+     * @param  \App\Models\Respuesta  $respuesta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Soporte $soporte)
+    public function edit(Respuesta $respuesta)
     {
         //
     }
@@ -64,10 +65,10 @@ class SoporteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Soporte  $soporte
+     * @param  \App\Models\Respuesta  $respuesta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Soporte $soporte)
+    public function update(Request $request, Respuesta $respuesta)
     {
         //
     }
@@ -75,13 +76,11 @@ class SoporteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Soporte  $soporte
+     * @param  \App\Models\Respuesta  $respuesta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Soporte $soporte)
+    public function destroy(Respuesta $respuesta)
     {
-        $ticket = $soporte->ticket;
-        $soporte->delete();
-        return redirect()->route('tickets.edit', $ticket->id)->with('success', 'Soporte eliminado.');
+        //
     }
 }
