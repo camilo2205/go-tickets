@@ -21,12 +21,17 @@ class TicketController extends Controller
     public function index()
     {
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         if ($cliente) {
             $tickets = Ticket::where('cliente_id', $cliente->id)->get();
+        } elseif ($funcionario) {
+            $tickets = Ticket::where('funcionario_id', $funcionario->id)
+            ->orWhereNull('funcionario_id')
+            ->get();
         } else {
             $tickets = Ticket::all();
         }
-        return view('tickets.index', compact('tickets', 'cliente'));
+        return view('tickets.index', compact('tickets', 'cliente', 'funcionario'));
     }
 
     /**
@@ -36,9 +41,15 @@ class TicketController extends Controller
      */
     public function create()
     {
+        $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $clientes = Cliente::all();
-        $funcionarios = Funcionario::all();
-        return view('tickets.create', compact('clientes', 'funcionarios'));
+        if ($funcionario) {
+            $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
+        } else {
+            $funcionarios = Funcionario::all();
+        }
+        return view('tickets.create', compact('clientes', 'funcionarios', 'funcionario', 'cliente'));
     }
 
     /**
@@ -91,7 +102,13 @@ class TicketController extends Controller
     {
         $funcionarios = Funcionario::all();
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
-        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente'));
+        $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
+        if ($funcionario) {
+            $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
+        } else {
+            $funcionarios = Funcionario::all();
+        }
+        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente', 'funcionario'));
     }
 
     /**

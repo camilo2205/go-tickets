@@ -20,7 +20,8 @@
         </div>
     </x-slot>
 
-    <form action="{{ route('tickets.store') }}" method="post" class="flex flex-row flex-wrap space-y-4" enctype="multipart/form-data">
+    <form action="{{ route('tickets.store') }}" method="post" class="flex flex-row flex-wrap space-y-4"
+        enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="estado" id="estado" value="creado">
         <!-- Guardar -->
@@ -31,36 +32,48 @@
         <!-- Cliente -->
         <div class="md:basis-1/3 px-2">
             <x-label for="cliente_id" :value="__('Cliente')" />
-            <x-select name="cliente_id" id="cliente_id">
-                @foreach ($clientes as $cliente)
-                    <option value="{{ $cliente->id }}">{{ $cliente->razon_social }}</option>
-                @endforeach
-            </x-select>
+            @if ($cliente)
+                <strong>{{ $cliente->razon_social }}</strong>
+                <input type="hidden" id="cliente_id" name="cliente_id" value="{{ $cliente->id }}">
+            @else
+                <x-select name="cliente_id" id="cliente_id">
+                    @foreach ($clientes as $client)
+                        <option value="{{ $client->id }}" @if ($client->id == old('cliente_id')) selected @endif>
+                            {{ $client->razon_social }}
+                        </option>
+                    @endforeach
+                </x-select>
+            @endif
             @error('cliente_id')
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
 
-        <!-- Encargado -->
-        <div class="md:basis-1/3 px-2">
-            <x-label for="funcionario_id" :value="__('Encargado')" />
-            <x-select name="funcionario_id" id="funcionario_id">
-                @foreach ($funcionarios as $funcionario)
-                    <option value="{{ $funcionario->id }}">({{ $funcionario->cargo }}) {{ $funcionario->user->name }}
-                    </option>
-                @endforeach
-            </x-select>
-            @error('funcionario_id')
-                <x-small>{{ $message }}</x-small>
-            @enderror
-        </div>
+        @if (!$cliente)
+            <!-- Encargado -->
+            <div class="md:basis-1/3 px-2">
+                <x-label for="funcionario_id" :value="__('Encargado')" />
+                <x-select name="funcionario_id" id="funcionario_id">
+                    @foreach ($funcionarios as $funcionario)
+                        <option value="{{ $funcionario->id }}" @if ($funcionario->id == old('funcionario_id')) selected @endif>
+                            ({{ $funcionario->cargo }})
+                            {{ $funcionario->user->name }}
+                        </option>
+                    @endforeach
+                </x-select>
+                @error('funcionario_id')
+                    <x-small>{{ $message }}</x-small>
+                @enderror
+            </div>
+
+        @endif
 
         <!-- Prioridad -->
         <div class="md:basis-1/6 px-2">
             <x-label for="prioridad" :value="__('Prioridad')" />
             <x-select name="prioridad" id="prioridad">
-                <option value="urgente">Urgente</option>
-                <option value="normal">Normal</option>
+                <option value="urgente" @if ('urgente' == old('prioridad')) selected @endif>Urgente</option>
+                <option value="normal" @if ('normal' == old('prioridad')) selected @endif>Normal</option>
             </x-select>
             @error('prioridad')
                 <x-small>{{ $message }}</x-small>
@@ -71,10 +84,10 @@
         <div class="md:basis-1/6 px-2">
             <x-label for="tipo" :value="__('Tipo')" />
             <x-select name="tipo" id="tipo">
-                <option value="soporte">Soporte</option>
-                <option value="ajuste">Ajuste</option>
-                <option value="desarrollo">Desarrollo</option>
-                <option value="capacitacion">Capacitacion</option>
+                <option value="soporte" @if ('soporte' == old('tipo')) selected @endif>Soporte</option>
+                <option value="ajuste" @if ('ajuste' == old('tipo')) selected @endif>Ajuste</option>
+                <option value="desarrollo" @if ('desarrollo' == old('tipo')) selected @endif>Desarrollo</option>
+                <option value="capacitacion" @if ('capacitacion' == old('tipo')) selected @endif>Capacitacion</option>
             </x-select>
             @error('tipo')
                 <x-small>{{ $message }}</x-small>
@@ -84,8 +97,9 @@
         <!-- Descripción -->
         <div class="md:basis-1/2 px-2">
             <x-label for="descripcion" :value="__('Descripción')" />
-            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion"
-                :value="old('descripcion')" />
+            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion">
+                {{ old('descripcion') }}
+            </x-textarea>
             @error('descripcion')
                 <x-small>{{ $message }}</x-small>
             @enderror

@@ -46,9 +46,7 @@
                 </td>
                 <td class="border border-slate-300 px-5 py-1">
                     <strong>Encargado: </strong><br>
-                    @if (!$ticket->estado == 'creado')
-                        {{ $ticket->funcionario ? $ticket->funcionario->user->name : 'Sin asignar' }}
-                    @else
+                    @if ($ticket->estado == 'creado')
                         <x-select name="funcionario_id" id="funcionario_id">
                             @foreach ($funcionarios as $funcionario)
                                 <option value="{{ $funcionario->id }}"
@@ -57,6 +55,8 @@
                                 </option>
                             @endforeach
                         </x-select>
+                    @else
+                        {{ $ticket->funcionario ? $ticket->funcionario->user->name : 'Sin asignar' }}
                     @endif
                     @error('funcionario_id')
                         <x-small>{{ $message }}</x-small>

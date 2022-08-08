@@ -23,8 +23,7 @@ class Ticket extends Model
         'cliente_id' => 'required',
         'descripcion' => 'required',
         'prioridad' => 'required',
-        'tipo' => 'required',
-        'soportes' => 'required'
+        'tipo' => 'required'
     ];
 
     /**

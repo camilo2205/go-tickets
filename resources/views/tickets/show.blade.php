@@ -69,7 +69,7 @@
                     <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
                         <div
                             class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                            <strong>{{ $respuesta->user->name }}:</strong><br>
+                            <strong>{{ $respuesta->user->name }} ({{$respuesta->user->cliente ? 'Cliente' : 'Encargado'}}):</strong><br>
                             {{ $respuesta->cuerpo }}
                         </div>
                     </div>
