@@ -17,6 +17,7 @@ class CreateTicketsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('funcionario_id')->nullable();
+            $table->unsignedBigInteger('cerrado_por')->nullable();
             $table->text('descripcion');
             $table->enum('prioridad', ['urgente', 'normal']);
             $table->enum('tipo', ['soporte', 'ajuste', 'desarrollo', 'capacitacion']);
@@ -26,6 +27,7 @@ class CreateTicketsTable extends Migration
 
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->foreign('funcionario_id')->references('id')->on('funcionarios');
+            $table->foreign('cerrado_por')->references('id')->on('users');
         });
     }
 

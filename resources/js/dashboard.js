@@ -76,7 +76,7 @@ $.ajax({
                 backgroundColor: 'rgb(54, 252, 35)',
                 borderColor: 'rgb(54, 252, 35)',
                 data: lineaResueltosArray
-            },{
+            }, {
                 label: 'Tickets Creados',
                 backgroundColor: 'rgb(99, 132, 255)',
                 borderColor: 'rgb(99, 132, 255)',
@@ -114,8 +114,9 @@ $.ajax({
                 type: "get",
                 url: "/estadisticas",
                 success: function (response) {
+
                     response.ticketsArray.forEach(element => {
-                        max = max > element ? max : element + 3;
+                        max = max > element ? max : element;
                     });
                     let i = 0;
                     let lineaArray = [];
@@ -123,7 +124,18 @@ $.ajax({
                         lineaArray[i - 1] = response.ticketsArray[i];
                         i++;
                     }
+                    response.ticketsResueltosArray.forEach(element => {
+                        max = max > element ? max : element;
+                    });
+                    max = max + 3;
+                    i = 0;
+                    let lineaResueltosArray = [];
+                    while (moment().month() >= i - 1) {
+                        lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
+                        i++;
+                    }
                     myChart2.data.datasets[0].data = lineaArray;
+                    myChart2.data.datasets[0].data = lineaResueltosArray;
                     myChart2.update();
                 }
             });

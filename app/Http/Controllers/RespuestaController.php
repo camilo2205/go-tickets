@@ -42,6 +42,7 @@ class RespuestaController extends Controller
         if ($request->cerrar == 0 && !$cliente) {
             $ticket->estado = 'atendido';
         } else {
+            $ticket->cerrado_por = auth()->user()->id;
             $ticket->estado = 'resuelto';
         }
         $ticket->save();
