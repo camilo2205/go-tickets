@@ -89,7 +89,8 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return view('tickets.show', compact('ticket'));
+        $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
+        return view('tickets.show', compact('ticket', 'funcionario'));
     }
 
     /**

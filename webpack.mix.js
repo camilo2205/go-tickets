@@ -17,3 +17,4 @@ mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'pub
     require('autoprefixer'),
 ]);
 mix.js('resources/js/tickets.js', 'public/js/cruds/tickets.js')
+mix.js('resources/js/dashboard.js', 'public/js/dashboard.js')

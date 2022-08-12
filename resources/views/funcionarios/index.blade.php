@@ -21,7 +21,7 @@
         </div>
     </x-slot>
 
-    <table class="border-collapse border border-slate-400">
+    <table class="border-collapse border border-slate-400 w-full">
         <thead>
             <tr>
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>

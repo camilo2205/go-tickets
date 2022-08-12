@@ -20,7 +20,7 @@
         </div>
     </x-slot>
 
-    <table class="border-collapse border border-slate-400">
+    <table class="border-collapse border border-slate-400 w-full">
         <tr>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Cliente: </strong><br>
@@ -63,48 +63,65 @@
                 @endforeach
             </td>
         </tr>
-        <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
-                @foreach ($ticket->respuestas as $respuesta)
-                    <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
-                        <div
-                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                            <strong>{{ $respuesta->user->name }} ({{$respuesta->user->cliente ? 'Cliente' : 'Encargado'}}):</strong><br>
-                            {{ $respuesta->cuerpo }}
+        @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
+            <tr>
+                <td class="border border-slate-300 px-5 py-1" colspan="4">
+                    @foreach ($ticket->respuestas as $respuesta)
+                        <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
+                            <div
+                                class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                                <strong>{{ $respuesta->user->name }}
+                                    ({{ $respuesta->user->cliente ? 'Cliente' : 'Encargado' }})
+                                    :</strong><br>
+                                {{ $respuesta->cuerpo }}
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            </td>
-        </tr>
-        <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
-                <form action="{{ route('respuestas.store') }}" method="post"
-                    class="flex flex-row flex-wrap space-y-4">
-                    @csrf
-                    <!-- Responder -->
-                    <div class="basis-2/3 px-2">
-                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                        <x-label for="cuerpo" :value="__('Responder')" />
-                        <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
-                            :value="old('cuerpo')" autofocus required />
-                        @error('cuerpo')
-                            <x-small>{{ $message }}</x-small>
-                        @enderror
-                    </div>
-                    <!-- Guardar -->
-                    <div class="basis-full px-2">
-                        <x-button type='submit'>
-                            Enviar &nbsp;&nbsp;
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                        </x-button>
-                    </div>
-                </form>
-            </td>
-        </tr>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
+                <td class="border border-slate-300 px-5 py-1" colspan="4">
+                    <form action="{{ route('respuestas.store') }}" method="post"
+                        class="flex flex-row flex-wrap space-y-4">
+                        @csrf
+                        <!-- Responder -->
+                        <div class="basis-2/3 px-2">
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                            <x-label for="cuerpo" :value="__('Responder')" />
+                            <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
+                                :value="old('cuerpo')" autofocus required />
+                            @error('cuerpo')
+                                <x-small>{{ $message }}</x-small>
+                            @enderror
+                        </div>
+                        <!-- Guardar -->
+                        <div class="basis-full px-2 pb-2">
+                            <input type="hidden" name="cerrar" id="cerrar" value="0">
+                            <x-button type='submit' id="enviar">
+                                Enviar &nbsp;&nbsp;
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </x-button>
+                            @if (!$funcionario)
+                                <x-button type='button' id="cerrar_ticket"
+                                    class="ml-3 bg-green-800 hover:bg-green-700 active:bg-green-900 focus:border-green-700 ring-green-300">
+                                    Cerrar &nbsp;&nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </x-button>
+                            @endif
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        @endif
     </table>
+    <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
 </x-app-layout>

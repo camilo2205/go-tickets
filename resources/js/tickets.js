@@ -9,4 +9,10 @@ $(document).ready(function () {
         }
     });
     $('#funcionario_id').trigger('change');
+
+    $('#cerrar_ticket').click(function (e) { 
+        e.preventDefault();
+        $('#cerrar').val(1)
+        $('#enviar').click();
+    });
 });

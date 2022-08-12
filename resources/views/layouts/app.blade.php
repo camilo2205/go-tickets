@@ -31,7 +31,7 @@
                 @auth
                     @include('layouts.sidebar')
                 @endauth
-                <section class="overflow-auto mt-16">
+                <section class="overflow-auto mt-16 w-full">
                     <div id="main" class="main-content flex-1 bg-white mt-12 md:mt-3 pb-24 md:pb-5">
                         <!-- Page Heading -->
                         <header class="bg-white">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Respuesta;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,15 @@ class RespuestaController extends Controller
      */
     public function store(Request $request)
     {
-        Respuesta::create($request->all());
+        $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        $respuesta = Respuesta::create($request->all());
+        $ticket = $respuesta->ticket;
+        if ($request->cerrar == 0 && !$cliente) {
+            $ticket->estado = 'atendido';
+        } else {
+            $ticket->estado = 'resuelto';
+        }
+        $ticket->save();
         return redirect()->back();
     }
 

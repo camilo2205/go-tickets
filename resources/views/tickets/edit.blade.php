@@ -46,7 +46,7 @@
                 </td>
                 <td class="border border-slate-300 px-5 py-1">
                     <strong>Encargado: </strong><br>
-                    @if ($ticket->estado == 'creado')
+                    @if ($ticket->estado == 'creado' && !$cliente)
                         <x-select name="funcionario_id" id="funcionario_id">
                             @foreach ($funcionarios as $funcionario)
                                 <option value="{{ $funcionario->id }}"
