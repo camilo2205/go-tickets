@@ -63,22 +63,22 @@
                 @endforeach
             </td>
         </tr>
-        @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
-            <tr>
-                <td class="border border-slate-300 px-5 py-1" colspan="4">
-                    @foreach ($ticket->respuestas as $respuesta)
-                        <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
-                            <div
-                                class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                                <strong>{{ $respuesta->user->name }}
-                                    ({{ $respuesta->user->cliente ? 'Cliente' : 'Encargado' }})
-                                    :</strong><br>
-                                {{ $respuesta->cuerpo }}
-                            </div>
+        <tr>
+            <td class="border border-slate-300 px-5 py-1" colspan="4">
+                @foreach ($ticket->respuestas as $respuesta)
+                    <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
+                        <div
+                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                            <strong>{{ $respuesta->user->name }}
+                                ({{ $respuesta->user->cliente ? 'Cliente' : 'Encargado' }})
+                                :</strong><br>
+                            {{ $respuesta->cuerpo }}
                         </div>
-                    @endforeach
-                </td>
-            </tr>
+                    </div>
+                @endforeach
+            </td>
+        </tr>
+        @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
             <tr>
                 <td class="border border-slate-300 px-5 py-1" colspan="4">
                     <form action="{{ route('respuestas.store') }}" method="post"
