@@ -39,8 +39,10 @@ class RespuestaController extends Controller
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $respuesta = Respuesta::create($request->all());
         $ticket = $respuesta->ticket;
-        if ($request->cerrar == 0 && !$cliente) {
-            $ticket->estado = 'atendido';
+        if ($request->cerrar == 0) {
+            if (!$cliente) {
+                $ticket->estado = 'atendido';
+            }
         } else {
             $ticket->cerrado_por = auth()->user()->id;
             $ticket->estado = 'resuelto';

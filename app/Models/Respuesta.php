@@ -13,7 +13,8 @@ class Respuesta extends Model
     public $fillable = [
         'user_id',
         'ticket_id',
-        'cuerpo'
+        'cuerpo',
+        'cerrar'
     ];
 
     /**

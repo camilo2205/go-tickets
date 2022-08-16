@@ -18,6 +18,7 @@ class CreateRespuestasTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ticket_id');
             $table->text('cuerpo');
+            $table->boolean('cerrar')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

@@ -8,7 +8,7 @@
             </div>
             <div class="basis-1/3 self-end">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-                    {{ __('VER TICKET') }}
+                    {{ __('TICKET') }} #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}
                 </h2>
             </div>
             @if (session('error'))
@@ -70,8 +70,9 @@
                         <div
                             class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
                             <strong>{{ $respuesta->user->name }}
-                                ({{ $respuesta->user->cliente ? 'Cliente' : 'Encargado' }})
-                                :</strong><br>
+                                ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Encargado' : 'Admin') }})
+                                - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }} {{ $respuesta->cerrar ? '(Cerrado)' : ''}}
+                            </strong><br>
                             {{ $respuesta->cuerpo }}
                         </div>
                     </div>
