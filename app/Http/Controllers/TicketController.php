@@ -138,11 +138,11 @@ class TicketController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('tickets.edit', $ticket->id)->with('success', 'Ticket actualizado.');
+            return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
         } catch (Exception $e) {
             Log::alert("Error al actualizar ticket", [$e->getMessage() => $e]);
             DB::rollback();
-            return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
+            return redirect()->route('tickets.index')->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
     }
 

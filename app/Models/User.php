@@ -68,4 +68,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Cliente::class);
     }
+
+    /**
+     * Get the funcionario associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function funcionario()
+    {
+        return $this->hasOne(Funcionario::class);
+    }
 }
