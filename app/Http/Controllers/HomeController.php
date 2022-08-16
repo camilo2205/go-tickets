@@ -25,44 +25,48 @@ class HomeController extends Controller
         $ticketsArray = [];
         $ticketsAsignadosArray = [];
         $ticketsSinAsignarArray = [];
-        for ($i = 0; $i < 12; $i++) {
+        $meses = [];
+        $hoy = Carbon::now();
+        for ($i = 5; $i >= 0; $i--) {
+            $mes = $hoy->month - $i <= 0 ? ($hoy->month - $i + 6) : $hoy->month - $i;
+            $meses[] = $mes;
             $cliente = Cliente::where('user_id', auth()->user()->id)->first();
             $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
             if ($cliente) {
                 $tickets = Ticket::where('cliente_id', $cliente->id)->whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->count();
                 $ticketsResueltos = Ticket::where('cliente_id', $cliente->id)->whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->where('estado', 'resuelto')
                     ->count();
             } elseif ($funcionario) {
                 $tickets = Ticket::where(function ($query) use ($funcionario) {
                     $query->where('funcionario_id', $funcionario->id)
                         ->orWhereNull('funcionario_id');
-                    })
+                })
                     ->whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->count();
                 $ticketsResueltos = Ticket::where(function ($query) use ($funcionario) {
                     $query->where('funcionario_id', $funcionario->id)
                         ->orWhereNull('funcionario_id');
-                    })
+                })
                     ->whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->where('estado', 'resuelto')
                     ->count();
             } else {
                 $tickets = Ticket::whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->count();
                 $ticketsResueltos = Ticket::whereYear("created_at", Carbon::now())
-                    ->whereMonth('created_at', $i)
+                    ->whereMonth('created_at', $mes)
                     ->where('estado', 'resuelto')
                     ->count();
             }
-            $ticketsArray[$i] = $tickets;
-            $ticketsResueltosArray[$i] = $ticketsResueltos;
+            $ticketsArray[] = $tickets;
+            $ticketsResueltosArray[] = $ticketsResueltos;
         }
 
         if ($cliente) {
@@ -112,6 +116,6 @@ class HomeController extends Controller
             $cantidadTicketsResueltos = Ticket::where('estado', 'resuelto')->count();
             $dataPie = [$cantidadTicketsSinAsignar, $cantidadTicketsAsignados, $cantidadTicketsAtendidos, $cantidadTicketsResueltos];
         }
-        return response()->json(compact('ticketsArray', 'ticketsResueltosArray', 'dataPie'));
+        return response()->json(compact('ticketsArray', 'ticketsResueltosArray', 'dataPie', 'meses'));
     }
 }

@@ -3,6 +3,7 @@ import {
     registerables
 } from "chart.js";
 import $ from 'jquery';
+import { capitalize } from "lodash";
 var moment = require('moment')
 
 Chart.register(...registerables);
@@ -53,34 +54,28 @@ $.ajax({
         response.ticketsArray.forEach(element => {
             max = max > element ? max : element;
         });
+        let etiquetas = [];
         let i = 0;
-        let lineaArray = [];
-        while (moment().month() >= i - 1) {
-            lineaArray[i - 1] = response.ticketsArray[i];
+        response.meses.forEach(mes => {
+            etiquetas[i] = capitalize(moment().set("M", mes-1).format("MMMM"));
             i++;
-        }
+        });
         response.ticketsResueltosArray.forEach(element => {
             max = max > element ? max : element;
         });
         max = max + 3;
-        i = 0;
-        let lineaResueltosArray = [];
-        while (moment().month() >= i - 1) {
-            lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
-            i++;
-        }
         const data2 = {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            labels: etiquetas,
             datasets: [{
                 label: 'Tickets Resueltos',
                 backgroundColor: 'rgb(54, 252, 35)',
                 borderColor: 'rgb(54, 252, 35)',
-                data: lineaResueltosArray
+                data: response.ticketsResueltosArray
             }, {
                 label: 'Tickets Creados',
                 backgroundColor: 'rgb(99, 132, 255)',
                 borderColor: 'rgb(99, 132, 255)',
-                data: lineaArray
+                data: response.ticketsArray
             }]
         };
         const config2 = {
@@ -118,24 +113,24 @@ $.ajax({
                     response.ticketsArray.forEach(element => {
                         max = max > element ? max : element;
                     });
-                    let i = 0;
-                    let lineaArray = [];
-                    while (moment().month() >= i - 1) {
-                        lineaArray[i - 1] = response.ticketsArray[i];
-                        i++;
-                    }
+                    // let i = 0;
+                    // let lineaArray = [];
+                    // while (moment().month() >= i - 1) {
+                    //     lineaArray[i - 1] = response.ticketsArray[i];
+                    //     i++;
+                    // }
                     response.ticketsResueltosArray.forEach(element => {
                         max = max > element ? max : element;
                     });
                     max = max + 3;
-                    i = 0;
-                    let lineaResueltosArray = [];
-                    while (moment().month() >= i - 1) {
-                        lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
-                        i++;
-                    }
-                    myChart2.data.datasets[0].data = lineaArray;
-                    myChart2.data.datasets[0].data = lineaResueltosArray;
+                    // i = 0;
+                    // let lineaResueltosArray = [];
+                    // while (moment().month() >= i - 1) {
+                    //     lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
+                    //     i++;
+                    // }
+                    myChart2.data.datasets[0].data = response.ticketsArray;
+                    myChart2.data.datasets[0].data = response.ticketsResueltosArray;
                     myChart2.update();
                 }
             });
