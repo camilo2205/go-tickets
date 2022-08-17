@@ -30,6 +30,9 @@ Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth'])
 Route::get('/estadisticas', [HomeController::class, 'estadisticas'])->middleware(['auth'])
     ->middleware('can:dashboard')
     ->name('estadisticas');
+Route::get('/tickets/{ticket}/respuestas', [TicketController::class, 'getRespuestas'])->middleware(['auth'])
+    ->middleware('can:tickets.edit')
+    ->name('tickets:repuestas');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);

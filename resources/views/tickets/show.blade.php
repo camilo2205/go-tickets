@@ -64,7 +64,7 @@
             </td>
         </tr>
         <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
+            <td class="border border-slate-300 px-5 py-1" colspan="4" id="td-respuestas">
                 @foreach ($ticket->respuestas as $respuesta)
                     <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
                         <div
@@ -82,7 +82,7 @@
         @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
             <tr>
                 <td class="border border-slate-300 px-5 py-1" colspan="4">
-                    <form action="{{ route('respuestas.store') }}" method="post"
+                    <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form"
                         class="flex flex-row flex-wrap space-y-4">
                         @csrf
                         <!-- Responder -->
@@ -125,4 +125,7 @@
         @endif
     </table>
     <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
+    <script>
+        let ticket = "@json($ticket->id)"
+    </script>
 </x-app-layout>

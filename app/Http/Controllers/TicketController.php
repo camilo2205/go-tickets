@@ -165,4 +165,9 @@ class TicketController extends Controller
             return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
     }
+
+    public function getRespuestas(Ticket $ticket)
+    {
+        return response()->json(['respuestas' => $ticket->respuestas()->with(['user.cliente', 'user.funcionario'])->get()]);
+    }
 }

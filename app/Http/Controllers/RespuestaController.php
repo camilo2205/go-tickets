@@ -36,6 +36,9 @@ class RespuestaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'cuerpo' => 'required'
+        ]);
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $respuesta = Respuesta::create($request->all());
         $ticket = $respuesta->ticket;
