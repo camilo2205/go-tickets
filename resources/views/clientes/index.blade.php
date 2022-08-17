@@ -1,5 +1,4 @@
 <x-app-layout>
-    <link rel="stylesheet" href="{{ asset('css/cruds/clientes.css') }}">
     <x-slot name="header">
         <div class="flex flex-row content-end">
             <div class="basis-1/3">
@@ -56,5 +55,4 @@
             @endforeach
         </tbody>
     </table>
-    <script src="{{ asset('js/cruds/clientes.js') }}" defer></script>
 </x-app-layout>
