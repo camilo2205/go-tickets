@@ -27,9 +27,7 @@
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>
                 <th class="border border-slate-300 px-5 py-1">Cliente</th>
                 <th class="border border-slate-300 px-5 py-1">Encargado</th>
-                <th class="border border-slate-300 px-5 py-1">Tipo</th>
-                <th class="border border-slate-300 px-5 py-1">Prioridad</th>
-                <th class="border border-slate-300 px-5 py-1">Estado</th>
+                <th class="border border-slate-300 px-5 py-1">Descripción</th>
             </tr>
         </thead>
         <tbody>
@@ -55,9 +53,7 @@
                     <td class="border border-slate-300 px-5 py-1">
                         {{ $ticket->funcionario ? $ticket->funcionario->user->name : '' }}
                     </td>
-                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->tipo) }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->prioridad) }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->estado) }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($ticket->descripcion) }}</td>
                 </tr>
             @endforeach
         </tbody>
