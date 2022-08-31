@@ -8,7 +8,7 @@
             </div>
             <div class="basis-2/3 self-end">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-                    {{ __('TICKET') }} #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }} ({{ formatDate($ticket->created_at)}})
+                    {{ __('TICKET') }} #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }} ({{ formatDate($ticket->created_at, 'd/m/Y h:i A')}})
                 </h2>
             </div>
             @if (session('error'))
