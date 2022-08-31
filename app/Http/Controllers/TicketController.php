@@ -23,13 +23,13 @@ class TicketController extends Controller
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         if ($cliente) {
-            $tickets = Ticket::where('cliente_id', $cliente->id)->get();
+            $tickets = Ticket::where('cliente_id', $cliente->id)->orderBy('id', 'desc')->get();
         } elseif ($funcionario) {
             $tickets = Ticket::where('funcionario_id', $funcionario->id)
             ->orWhereNull('funcionario_id')
-            ->get();
+            ->orderBy('id', 'desc')->get();
         } else {
-            $tickets = Ticket::all();
+            $tickets = Ticket::orderBy('id', 'desc')->get();
         }
         return view('tickets.index', compact('tickets', 'cliente', 'funcionario'));
     }

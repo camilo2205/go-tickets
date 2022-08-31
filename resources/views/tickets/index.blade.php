@@ -26,6 +26,7 @@
             <tr>
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>
                 <th class="border border-slate-300 px-5 py-1">Cliente</th>
+                <th class="border border-slate-300 px-5 py-1">Fecha</th>
                 <th class="border border-slate-300 px-5 py-1">Encargado</th>
                 <th class="border border-slate-300 px-5 py-1">Descripción</th>
             </tr>
@@ -49,7 +50,8 @@
                             @endif
                         </div>
                     </td>
-                    <td nowrap class="border border-slate-300 px-5 py-1">{{ $ticket->cliente->razon_social }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ $ticket->cliente->razon_social }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ formatDate($ticket->created_at) }}</td>
                     <td class="border border-slate-300 px-5 py-1">
                         {{ $ticket->funcionario ? $ticket->funcionario->user->name : '' }}
                     </td>
