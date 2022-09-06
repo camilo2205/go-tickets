@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TicketsExport;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Soporte;
@@ -10,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Excel;
 
 class TicketController extends Controller
 {
@@ -18,20 +20,40 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $fechas = explode(' - ', $request->fecha);
+        $cliente_id = $request->cliente_id;
+        $estado = $request->estado;
+
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
-        if ($cliente) {
-            $tickets = Ticket::where('cliente_id', $cliente->id)->orderBy('id', 'desc')->get();
-        } elseif ($funcionario) {
-            $tickets = Ticket::where('funcionario_id', $funcionario->id)
-            ->orWhereNull('funcionario_id')
-            ->orderBy('id', 'desc')->get();
-        } else {
-            $tickets = Ticket::orderBy('id', 'desc')->get();
+        $consulta = Ticket::query();
+
+        if (isset($fechas[1])) {
+            $consulta->whereDate('created_at', '>=', $fechas[0])
+                ->whereDate('created_at', '<=', $fechas[1]);
         }
-        return view('tickets.index', compact('tickets', 'cliente', 'funcionario'));
+        if ($estado) {
+            $consulta->where('estado', $estado);
+        }
+        if ($cliente_id) {
+            $consulta->where('cliente_id', $cliente_id);
+        }
+
+        if ($cliente) {
+            $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
+            $clientes = [];
+        } elseif ($funcionario) {
+            $tickets = $consulta->where('funcionario_id', $funcionario->id)
+                ->orWhereNull('funcionario_id')
+                ->orderBy('id', 'desc')->paginate(10);
+            $clientes = Cliente::all();
+        } else {
+            $tickets = $consulta->orderBy('id', 'desc')->paginate(10);
+            $clientes = Cliente::all();
+        }
+        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado'));
     }
 
     /**
@@ -169,5 +191,18 @@ class TicketController extends Controller
     public function getRespuestas(Ticket $ticket)
     {
         return response()->json(['respuestas' => $ticket->respuestas()->with(['user.cliente', 'user.funcionario'])->get()]);
+    }
+
+    public function reporte(Request $request)
+    {
+        $fechas = explode(' - ', $request->fecha);
+        $cliente_id = $request->cliente_id;
+        $estado = $request->estado;
+
+        $razon_social = is_null($cliente_id) ? '' : " en " . Cliente::find($cliente_id)->razon_social;
+        $_estado = is_null($estado) ? "" : " $estado" . "s";
+        $_fechas = isset($fechas[1]) ? " entre $fechas[0] y $fechas[1]" : '';
+
+        return Excel::download(new TicketsExport($cliente_id, $estado, $fechas), "Tickets$_estado$razon_social$_fechas.xlsx");
     }
 }

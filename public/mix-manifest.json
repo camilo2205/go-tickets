@@ -2,5 +2,6 @@
     "/js/app.js": "/js/app.js",
     "/js/cruds/tickets.js": "/js/cruds/tickets.js",
     "/js/dashboard.js": "/js/dashboard.js",
+    "/css/cruds/tickets.css": "/css/cruds/tickets.css",
     "/css/app.css": "/css/app.css"
 }

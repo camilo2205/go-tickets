@@ -1,0 +1,17 @@
+@import 'daterangepicker/daterangepicker.css';
+
+.creado {
+    background-color: rgb(255, 99, 132);
+}
+
+.asignado {
+    background-color: rgb(254, 162, 135);
+}
+
+.atendido {
+    background-color: rgb(54, 202, 35)
+}
+
+.resuelto {
+    background-color: rgb(54, 252, 35);
+}

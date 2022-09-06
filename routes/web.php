@@ -33,6 +33,9 @@ Route::get('/estadisticas', [HomeController::class, 'estadisticas'])->middleware
 Route::get('/tickets/{ticket}/respuestas', [TicketController::class, 'getRespuestas'])->middleware(['auth'])
     ->middleware('can:tickets.edit')
     ->name('tickets:repuestas');
+Route::get('/tickets/reporte', [TicketController::class, 'reporte'])->middleware(['auth'])
+    ->middleware('can:tickets.index')
+    ->name('tickets:reporte');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);
