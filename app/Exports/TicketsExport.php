@@ -94,7 +94,8 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             1    => ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]],
-            "A:G"  => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER]]
+            "C:G"  => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]],
+            "A:G"  => ['alignment' => ['vertical' => Alignment::VERTICAL_CENTER]]
         ];
     }
 }
