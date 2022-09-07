@@ -105,6 +105,6 @@
         </tbody>
     </table>
     <br>
-    {{ $tickets->links() }}
+    {{ $tickets->appends(request()->input())->links() }}
     <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
 </x-app-layout>
