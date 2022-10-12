@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InstructivoController;
 use App\Http\Controllers\RespuestaController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\TicketController;
@@ -44,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tickets', TicketController::class);
     Route::resource('soportes', SoporteController::class);
     Route::resource('respuestas', RespuestaController::class);
+    Route::resource('posts', InstructivoController::class);
 });
 
 require __DIR__ . '/auth.php';
