@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Funcionario;
 use App\Models\Respuesta;
 use Illuminate\Http\Request;
 
@@ -40,12 +41,16 @@ class RespuestaController extends Controller
             'cuerpo' => 'required'
         ]);
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
+        $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $respuesta = Respuesta::create($request->all());
         $ticket = $respuesta->ticket;
         if ($request->cerrar == 0) {
             if (!$cliente) {
                 $ticket->estado = 'atendido';
                 sendSMS($ticket->cliente->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
+                if (!$funcionario) {
+                    sendSMS($ticket->funcionario->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
+                }
             } else {
                 sendSMS($ticket->funcionario->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
             }
