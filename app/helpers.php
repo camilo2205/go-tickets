@@ -23,7 +23,7 @@ function sendSMS($telefono, $body)
         $indicativo = config('app.indicativo', '+58');
 
         $client = new Client($account_sid, $auth_token);
-        dd($account_sid, $auth_token, $twilio_number);
+        // dd($account_sid, $auth_token, $twilio_number);
 
         $client->messages->create(
             // Where to send a text message (your cell phone?)
