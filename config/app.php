@@ -232,5 +232,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    
+    'TWILIO_SID' => env('TWILIO_SID', null),
+    'TWILIO_AUTH_TOKEN' => env('TWILIO_AUTH_TOKEN', null),
+    'TWILIO_NUMBER' => env('TWILIO_NUMBER', null),
+    'indicativo' => env('INDICATIVO', '+57'),
 ];
