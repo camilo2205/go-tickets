@@ -3,5 +3,6 @@
     "/js/cruds/tickets.js": "/js/cruds/tickets.js",
     "/js/dashboard.js": "/js/dashboard.js",
     "/css/cruds/tickets.css": "/css/cruds/tickets.css",
+    "/css/posts.css": "/css/posts.css",
     "/css/app.css": "/css/app.css"
 }

@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'Daytona Pro';
+    font-style: italic;
+    src: url('../fonts/DaytonaPro-Italic.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Daytona Pro';
+    font-style: bold;
+    src: url('../fonts/DaytonaPro-Bold.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Daytona Pro';
+    font-style: normal;
+    src: url('../fonts/DaytonaPro-Regular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Daytona Pro Light';
+    src: url('../fonts/DaytonaPro-Light.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Daytona Pro Thin';
+    src: url('../fonts/DaytonaPro-Thin.ttf') format("truetype");
+}
+
+.titulo {
+    font-family:'Daytona Pro Light';
+}
+
+.cuerpo {
+    font-family:'Daytona Pro Light';
+}
+
+.boton {
+    font-family: 'Daytona Pro';
+}
