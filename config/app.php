@@ -237,4 +237,6 @@ return [
     'TWILIO_AUTH_TOKEN' => env('TWILIO_AUTH_TOKEN', null),
     'TWILIO_NUMBER' => env('TWILIO_NUMBER', null),
     'indicativo' => env('INDICATIVO', '+57'),
+    'WATOKEN' => env('WATOKEN', null),
+    'WAINSTANCE' => env('WAINSTANCE', null)
 ];

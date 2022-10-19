@@ -95,6 +95,13 @@ class TicketController extends Controller
                 }
             }
             DB::commit();
+            if ($request->funcionario_id) {
+                sendToWhatsApp($ticket->funcionario->user->celular, "GoTelemedicina SAS te informa que se te ha asignado un nuevo ticket (Ticket #$ticket->id).");
+            } else {
+                foreach (Funcionario::all() as $funcionario) {
+                    sendToWhatsApp($funcionario->user->celular, "GoTelemedicina SAS informa que un nuevo ticket ha sido creado (Ticket #$ticket->id).");
+                }
+            }
             return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
         } catch (Exception $e) {
             Log::alert("Error al crear ticket", [$e->getMessage() => $e]);
@@ -148,6 +155,7 @@ class TicketController extends Controller
             'prioridad' => 'required',
             'tipo' => 'required'
         ]);
+        $sendWhatpsApp = $request->funcionario_id != $ticket->funcionario_id;
 
         try {
             DB::beginTransaction();
@@ -160,6 +168,9 @@ class TicketController extends Controller
                 }
             }
             DB::commit();
+            if ($sendWhatpsApp) {
+                sendToWhatsApp($ticket->funcionario->user->celular, "GoTelemedicina SAS te informa que se te ha asignado un nuevo ticket (Ticket #$ticket->id).");
+            }
             return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
         } catch (Exception $e) {
             Log::alert("Error al actualizar ticket", [$e->getMessage() => $e]);

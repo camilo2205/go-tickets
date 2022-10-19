@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Log;
+use UltraMsg\WhatsAppApi;
 
 function formatDate($date, $format = 'd/m/Y')
 {
@@ -27,7 +28,7 @@ function sendSMS($telefono, $body)
 
         $client->messages->create(
             // Where to send a text message (your cell phone?)
-            $indicativo.$telefono,
+            $indicativo . $telefono,
             array(
                 'from' => $twilio_number,
                 'body' => $body
@@ -36,4 +37,14 @@ function sendSMS($telefono, $body)
     } catch (\Exception $e) {
         Log::debug("No notificado", ["Contexto" => "Notificación de ticket", "Error" => $e->getMessage()]);
     }
+}
+
+function sendToWhatsApp($to, $body)
+{
+    $token = config("app.WATOKEN", null);//""; // Ultramsg.com token
+    $instance_id = config("app.WAINSTANCE", null);//""; // Ultramsg.com instance id
+    $client = new WhatsAppApi($token, $instance_id);
+
+    $api = $client->sendChatMessage($to, $body);
+    Log::info($api);
 }
