@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\MensajeEnviado;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -22,19 +24,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('send-sms', function (Request $request) {
-    try {
-        $token = json_decode(Storage::get('token.json'))->token;
-        $response = Http::withHeaders(['api-key' => config('app.SMS_APIKEY')])
-            ->withToken($token)
-            ->post("https://api.cellvoz.com/v2/sms/single", [
-                'number' => config('app.indicativo') . $request->input('destino'),
-                'message' => $request->input('mensaje'),
-                'type' => 1
-            ]);
+    $token = json_decode(Storage::get('token.json'))->token;
+    $response = Http::withHeaders(['api-key' => config('app.SMS_APIKEY')])
+        ->withToken($token)
+        ->post("https://api.cellvoz.com/v2/sms/single", [
+            'number' => config('app.indicativo') . $request->input('destino'),
+            'message' => $request->input('mensaje'),
+            'type' => 1
+        ]);
 
-        return $response;
-    } catch (Exception $e) {
-        Log::error($e->getMessage());
-        return response()->json(['error' => 'Error del servidor. Mensaje no enviado.'], 500);
-    }
+        if ($response->status() == 500) {
+            return response($response, 500);
+        } else {
+            MensajeEnviado::create([
+                'user_id' => $request->user()->id,
+                'to' => $request->input('destino'),
+                'body' => $request->input('mensaje')
+            ]);
+            return response($response);
+        }
 })->middleware('auth:sanctum');
