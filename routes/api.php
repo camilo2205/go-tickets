@@ -28,7 +28,7 @@ Route::post('send-sms', function (Request $request) {
     $response = Http::withHeaders(['api-key' => config('app.SMS_APIKEY')])
         ->withToken($token)
         ->post("https://api.cellvoz.com/v2/sms/single", [
-            'number' => config('app.indicativo') . $request->input('destino'),
+            'number' => $request->input('destino'),
             'message' => $request->input('mensaje'),
             'type' => 1
         ]);
