@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('send-sms', function (Request $request) {
+    Log::channel('sms')->info($request->all());
     $token = json_decode(Storage::get('token.json'))->token;
     $response = Http::withHeaders(['api-key' => config('app.SMS_APIKEY')])
         ->withToken($token)
