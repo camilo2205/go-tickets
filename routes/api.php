@@ -33,14 +33,16 @@ Route::post('send-sms', function (Request $request) {
             'type' => 1
         ]);
 
-        if ($response->status() == 500) {
-            return response($response, 500);
+        $respuesta = json_decode($response->getBody());
+
+        if ($response->status() == 500 || !$respuesta->success) {
+            Log::channel('sms')->info($response);
         } else {
             MensajeEnviado::create([
                 'user_id' => $request->user()->id,
                 'to' => $request->input('destino'),
                 'body' => $request->input('mensaje')
             ]);
-            return response($response);
+            Log::channel('sms')->info($response);
         }
 })->middleware('auth:sanctum');

@@ -110,6 +110,11 @@ return [
             'handler' => NullHandler::class,
         ],
 
+        'sms' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sms.log'),
+        ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
