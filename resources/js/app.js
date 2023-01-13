@@ -2,10 +2,15 @@ require('./bootstrap');
 
 import Alpine from 'alpinejs';
 import $ from 'jquery';
+import Push from 'push.js';
 
 window.Alpine = Alpine;
 
 Alpine.start();
+
+Push.config({
+    serviceWorker: '/sw.js'
+})
 
 $(document).ready(function () {
     $('.eliminar').click(function (e) {
@@ -63,7 +68,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#superadmin').change(function (e) { 
+    $('#superadmin').change(function (e) {
         if ($('#superadmin').prop('checked')) {
             $('.permiso > input').prop('checked', true)
             $('.permiso > input').prop('disabled', true)
@@ -77,5 +82,5 @@ $(document).ready(function () {
         }
     });
 
-    $('.small-message').fadeOut(5000);
+    $('.small-message').fadeOut(5000); 
 });

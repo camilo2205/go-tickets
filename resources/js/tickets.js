@@ -3,6 +3,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import swal from 'sweetalert';
 
+
 $(function () {
     $('input[name="fecha"]').daterangepicker({
         autoUpdateInput: false,
@@ -102,14 +103,14 @@ $(document).ready(function () {
                     $('#td-respuestas').html('');
                     let respuestas = response.respuestas
                     respuestas.forEach(respuesta => {
-                        $('#td-respuestas').append(`<div class="flex ${ respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse' } space-x-2">
+                        $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
                             <div
-                                class="rounded-xl m-1 p-3 basis-7/12 ${ respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200' }">
-                                <strong>${ respuesta.user.name }
-                                    (${ respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin') })
-                                    - ${ moment(respuesta.created_at).format('DD/MM/YYYY H:m A') } ${ respuesta.cerrar ? '(Cerrado)' : ''}
+                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200'}">
+                                <strong>${respuesta.user.name}
+                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
+                                    - ${moment(respuesta.created_at).format('DD/MM/YYYY H:m A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
                                 </strong><br>
-                                ${ respuesta.cuerpo }
+                                ${respuesta.cuerpo}
                             </div>
                         </div>`)
                     });
@@ -118,7 +119,7 @@ $(document).ready(function () {
         }
     }, 5000);
 
-    $('.filtro').change(function (e) { 
+    $('.filtro').change(function (e) {
         e.preventDefault();
         $('#filtrar').submit();
     });
