@@ -17,7 +17,6 @@ class CreatePushSubscriptionsTable extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
-            $table->unsignedBigInteger('user_id');
             $table->string('endpoint', 255)->unique();
             $table->string('public_key')->nullable();
             $table->string('auth_token')->nullable();
@@ -25,8 +24,6 @@ class CreatePushSubscriptionsTable extends Migration
             $table->string('subscribable_id')->nullable();
             $table->string('subscribable_type')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
