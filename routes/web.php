@@ -40,7 +40,7 @@ Route::get('/tickets/reporte', [TicketController::class, 'reporte'])->middleware
     ->name('tickets:reporte');
 Route::get('/tickets/notificar', [TicketController::class, 'notificar'])->middleware(['auth'])
     ->name('tickets:notificar');
-Route::get('/push', [PushController::class, 'push'])->middleware(['auth']);
+Route::get('/getToken', [PushController::class, 'getToken'])->middleware(['auth']);
 Route::post('/push', [PushController::class, 'store'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {

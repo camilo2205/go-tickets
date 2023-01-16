@@ -33,8 +33,7 @@ class PushController extends Controller
         $user = Auth::user();
         if ($user->funcionario) {
             $user->updatePushSubscription($endpoint, $key, $token);
-    
-        }        
+        }
         return response()->json(['success' => true], 200);
     }
     /**
@@ -43,9 +42,8 @@ class PushController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    /* public function push()
+    public function getToken()
     {
-        Notification::send(User::all(), new PushDemo);
-        return redirect()->back();
-    } */
+        return response()->json(["token" => config('webpush.vapid.public_key')]);
+    }
 }

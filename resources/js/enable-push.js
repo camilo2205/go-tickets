@@ -56,22 +56,23 @@ function initPush() {
  * Subscribe the user to push
  */
 function subscribeUser() {
-
-    swReady
-        .then((registration) => {
+    fetch('/getToken', {
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then((response) => response.json()).then((res) => {
+        swReady.then((registration) => {
             const subscribeOptions = {
                 userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(
-                    'BJV_FHsBq6sOteQWPgBL5BTmteWvaOxgGtZiieDrTAn4qa1CErQMeDBFHAUPUyLWVW1k9hZQOGex616zXXx9TRk'
-                )
+                applicationServerKey: urlBase64ToUint8Array(res.token)
             };
 
             return registration.pushManager.subscribe(subscribeOptions);
-        })
-        .then((pushSubscription) => {
+        }).then((pushSubscription) => {
             console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
             storePushSubscription(pushSubscription);
         });
+    })
 }
 
 /**
@@ -88,16 +89,13 @@ function storePushSubscription(pushSubscription) {
             'Content-Type': 'application/json',
             'X-CSRF-Token': token
         }
-    })
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            console.log(res)
-        })
-        .catch((err) => {
-            console.log(err)
-        });
+    }).then((res) => {
+        return res.json();
+    }).then((res) => {
+        console.log(res)
+    }).catch((err) => {
+        console.log(err)
+    });
 }
 
 /**
