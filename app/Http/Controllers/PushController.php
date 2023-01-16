@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Notifications\PushDemo;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 use Illuminate\Support\Facades\Notification;
 
@@ -29,9 +30,11 @@ class PushController extends Controller
         $endpoint = $request->endpoint;
         $token = $request->keys['auth'];
         $key = $request->keys['p256dh'];
-        $user = User::find(1);
-        $user->updatePushSubscription($endpoint, $key, $token);
-
+        $user = Auth::user();
+        if ($user->funcionario) {
+            $user->updatePushSubscription($endpoint, $key, $token);
+    
+        }        
         return response()->json(['success' => true], 200);
     }
     /**
