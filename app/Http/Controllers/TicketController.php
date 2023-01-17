@@ -122,6 +122,13 @@ class TicketController extends Controller
         return view('tickets.show', compact('ticket', 'funcionario'));
     }
 
+    public function notificar(Request $request)
+    {
+        $estado = "asignado";
+        $notificar = Ticket::where('estado', $estado)->get();
+        return response()->json(['notificar' => $notificar]);        
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

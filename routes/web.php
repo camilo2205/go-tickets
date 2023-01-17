@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PushController;
 use App\Http\Controllers\InstructivoController;
 use App\Http\Controllers\RespuestaController;
 use App\Http\Controllers\SoporteController;
@@ -37,6 +38,10 @@ Route::get('/tickets/{ticket}/respuestas', [TicketController::class, 'getRespues
 Route::get('/tickets/reporte', [TicketController::class, 'reporte'])->middleware(['auth'])
     ->middleware('can:tickets.index')
     ->name('tickets:reporte');
+Route::get('/tickets/notificar', [TicketController::class, 'notificar'])->middleware(['auth'])
+    ->name('tickets:notificar');
+Route::get('/getToken', [PushController::class, 'getToken'])->middleware(['auth']);
+Route::post('/push', [PushController::class, 'store'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);
