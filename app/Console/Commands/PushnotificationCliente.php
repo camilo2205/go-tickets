@@ -7,6 +7,7 @@ use App\Models\Respuesta;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\PushDemo;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth as Auth;
 use Illuminate\Support\Facades\Notification as Notification;
@@ -45,7 +46,9 @@ class PushnotificationCliente extends Command
      */
     public function handle()
     {
-        $respuestas = Respuesta::where('notificado', 0)->get();
+        $respuestas = Respuesta::where('notificado', 0)
+        ->whereDate('created_at', Carbon::now())
+        ->get();
         foreach ($respuestas as $respuesta) {
             $user = $respuesta->user;
 
