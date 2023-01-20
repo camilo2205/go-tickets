@@ -99,6 +99,7 @@
                         <!-- Guardar -->
                         <div class="basis-full px-2 pb-2">
                             <input type="hidden" name="cerrar" id="cerrar" value="0">
+                            <input type="hidden" name="notificado" id="notificado" value="0">
                             <x-button type='submit' id="enviar">
                                 Enviar &nbsp;&nbsp;
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"

@@ -16,17 +16,20 @@ class PushDemo extends Notification
 
     private $title;
     private $body;
+    private $action;
+    private $data;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($title, $body)
+    public function __construct($title, $body, $action = "verTickets", $data = NULL)
     {
         $this->title = $title;
         $this->body = $body;
-      
-
+        $this->action = $action;
+        $this->data = $data;
     }
 
     /**
@@ -55,7 +58,7 @@ class PushDemo extends Notification
             ->title($this->title)
             ->icon('/img/logo.png')
             ->body($this->body)
-            ->action('Ver', "notificationclick")
-            ->vibrate(100);
+            ->action('Ver', $this->action)
+            ->data($this->data);
     }
 }

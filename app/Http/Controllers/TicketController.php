@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\TicketsExport;
 use App\Models\Cliente;
 use App\Models\Funcionario;
+use App\Models\Respuesta;
 use App\Models\Soporte;
 use App\Models\Ticket;
 use Exception;
@@ -122,13 +123,6 @@ class TicketController extends Controller
         return view('tickets.show', compact('ticket', 'funcionario'));
     }
 
-    public function notificar(Request $request)
-    {
-        $estado = "asignado";
-        $notificar = Ticket::where('estado', $estado)->get();
-        return response()->json(['notificar' => $notificar]);        
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -211,6 +205,16 @@ class TicketController extends Controller
         return response()->json(['respuestas' => $ticket->respuestas()->with(['user.cliente', 'user.funcionario'])->get()]);
     }
 
+    public function updateRespuestas($id)
+    {
+        $respuestas = Respuesta::where('ticket_id', $id)->where('notificado', 0)->get();
+        foreach ($respuestas as $respuesta) {
+            $respuesta->update(['notificado' => 1]);
+        }
+        /*  
+        $respuestas = $tickets->respuestas()->where('notificado', 0)->update(['notificado' => 1]); */
+        return response()->json(['respuestas_tickets' => $respuestas]);
+    }
     public function reporte(Request $request)
     {
         $fechas = explode(' - ', $request->fecha);

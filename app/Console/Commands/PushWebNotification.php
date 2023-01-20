@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification as Notification;
+use Illuminate\Support\Facades\Auth;
 
 class PushWebNotification extends Command
 {
@@ -47,7 +48,8 @@ class PushWebNotification extends Command
         $estado = "creado";
         $tickets = Ticket::where('estado', $estado);
         $cantidad_tickets = $tickets->count();
-    
+
+        $users = User::has('funcionario')->get();
 
         $clientes = $tickets->join('clientes', 'clientes.id', '=', 'cliente_id')
             ->select('razon_social', DB::raw('count(*) as cantidad'))
@@ -59,7 +61,7 @@ class PushWebNotification extends Command
             foreach ($clientes as $cliente) {
                 $body .= "$cliente->razon_social ($cliente->cantidad) \n";
             }
-        Notification::send(User::all(), new PushDemo("Tienes " . $cantidad_tickets . " tickets nuevos", $body));
+            Notification::send($users, new PushDemo("Tienes " . $cantidad_tickets . " tickets nuevos", $body, "verTickets"));
         }
     }
 }
