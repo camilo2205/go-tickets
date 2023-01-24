@@ -125,7 +125,9 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             if ($request->password) {
-                $user->update($request->all());   
+                $password = bcrypt($request->password);
+                $user->update($request->except('password'));  
+                $user->update(compact('password'));   
             } else {
                 $user->update($request->except('password'));
             }
@@ -133,7 +135,7 @@ class UserController extends Controller
             $user->syncPermissions($request->permisos);
 
             DB::commit();
-            return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
+            return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
         } catch (\Exception $e) {
             Log::alert("Error al crear usuario", [$e->getMessage() => $e]);
             DB::rollback();
