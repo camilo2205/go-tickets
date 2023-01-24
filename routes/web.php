@@ -42,6 +42,7 @@ Route::get('/tickets/notificar', [TicketController::class, 'notificar'])->middle
     ->name('tickets:notificar');
 Route::get('/getToken', [PushController::class, 'getToken'])->middleware(['auth']);
 Route::post('/push', [PushController::class, 'store'])->middleware(['auth']);
+Route::get('/tickets/respuestas/{id}', [TicketController::class, 'updateRespuestas'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);

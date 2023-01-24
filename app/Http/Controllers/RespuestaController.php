@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RespuestaController extends Controller
 {
@@ -47,17 +48,17 @@ class RespuestaController extends Controller
         if ($request->cerrar == 0) {
             if (!$cliente) {
                 $ticket->estado = 'atendido';
-                sendSMS($ticket->cliente->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
+                sendSMS($ticket->cliente->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 if (!$funcionario) {
-                    sendSMS($ticket->funcionario->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
+                    sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 }
             } else {
-                sendSMS($ticket->funcionario->user->telefono, "Su ticket número ".$ticket->id." ha sido respondido:\n \"".$respuesta->cuerpo."\"");
+                sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
             }
         } else {
             $ticket->cerrado_por = auth()->user()->id;
             $ticket->estado = 'resuelto';
-            sendSMS($ticket->funcionario->user->telefono, "Su ticket número ".$ticket->id." ha sido cerrado:\n \"".$respuesta->cuerpo."\"");
+            sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido cerrado:\n \"" . $respuesta->cuerpo . "\"");
         }
         $ticket->save();
         return redirect()->back();
@@ -84,6 +85,7 @@ class RespuestaController extends Controller
     {
         //
     }
+
 
     /**
      * Update the specified resource in storage.
