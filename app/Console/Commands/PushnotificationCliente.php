@@ -55,10 +55,9 @@ class PushnotificationCliente extends Command
             if ($user->funcionario) {
                 $body = $respuesta->cuerpo;
                 Notification::send($respuesta->ticket->cliente->user, new PushDemo("Respuesta Ticket #$respuesta->ticket_id", $body, "verTicket", ['ticket' => $respuesta->ticket_id]));
-                /* if ($respuesta->ticket->cliente->user->id == $respuesta->ticket->cliente->user_id) {
-                    $respuesta->notificado = 1;
-                    $respuesta->save();
-                } */
+            } elseif ($user->cliente) {
+                $body = $respuesta->cuerpo;
+                Notification::send($respuesta->ticket->funcionario->user, new PushDemo("Respuesta Ticket #$respuesta->ticket_id", $body, "verTicket", ['ticket' => $respuesta->ticket_id]));
             }
         }
     }
