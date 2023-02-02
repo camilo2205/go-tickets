@@ -65,9 +65,19 @@
                     <x-small>{{ $message }}</x-small>
                 @enderror
             </div>
-
         @endif
-
+        <!-- Tags -->
+        <div class="md:basis-1/3 px-5">
+            <x-label for="Tags" :value="__('Tags')" />
+            <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag->id}}"> {{ $tag->nombre }}</option>
+                @endforeach
+            </x-select>
+            @error('tags')
+                <x-small>{{ $message }}</x-small>
+            @enderror
+        </div>
         <!-- Prioridad -->
         <div class="md:basis-1/6 px-2">
             <x-label for="prioridad" :value="__('Prioridad')" />

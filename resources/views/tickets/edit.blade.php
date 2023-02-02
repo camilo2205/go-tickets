@@ -112,7 +112,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="border border-slate-300 px-5 py-1" colspan="4">
+                <td class="border border-slate-300 px-5 py-1" colspan="1">
                     @if (!$cliente || $ticket->estado == 'creado')
                         <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full"
                             accept="image/*" multiple />
@@ -121,6 +121,22 @@
                 <td class="border border-slate-300 px-5 py-1" colspan="2">
                     <input type="hidden" name="estado" id="estado" value="creado">
                     <strong>Estado:</strong> {{ ucfirst($ticket->estado) }}
+                </td>
+                <td class="border border-slate-300 px-5 py-1" colspan="3">
+                    <strong>Tags</strong><br>
+                 
+                        <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->id }}" {{in_array($tag->id, $selectags) ? 'selected' : ''}}>
+                                {{$tag->nombre}} </option>
+                            @endforeach
+                        </x-select>
+                   
+                  
+              
+                    @error('tags')
+                        <x-small>{{ $message }}</x-small>
+                    @enderror
                 </td>
             </tr>
         </table>
@@ -149,4 +165,28 @@
         @endforeach
     </table>
     <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
+    @php
+        $tags_array = [];
+    @endphp
+
+    @foreach ($ticket->tags as $tag)
+        @php
+            array_push($tags_array, $tag->id);
+        @endphp
+    @endforeach
+    <script>
+        $(document).ready(function () {
+            $(".tags").select2();
+            /*   tags: true,
+              data = [];
+              data = <?php echo json_encode($tags); ?>;
+              theme: "classic",
+              allowClear: true, */
+            data = [];
+            data = <?php echo json_encode($tags_array); ?>;
+            console.log(data);
+            $(".tags").val(data);
+            $(".tags").trigger('change');
+        });
+    </script>
 </x-app-layout>

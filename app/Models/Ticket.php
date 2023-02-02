@@ -16,14 +16,15 @@ class Ticket extends Model
         'descripcion',
         'prioridad',
         'tipo',
-        'estado'
+        'estado',
     ];
 
     public static $rules = [
         'cliente_id' => 'required',
         'descripcion' => 'required',
         'prioridad' => 'required',
-        'tipo' => 'required'
+        'tipo' => 'required',
+ /*        'tags' => 'required' */
     ];
 
     /**
@@ -64,5 +65,10 @@ class Ticket extends Model
     public function respuestas()
     {
         return $this->hasMany(Respuesta::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class,'tags_tickets');
     }
 }
