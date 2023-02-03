@@ -107,15 +107,6 @@ class TicketController extends Controller
                     }
                 }
             }
-            /*   $tags = $request->tags;
-            $string = preg_grep("/[a-zA-Z]+/", $tags);
-            foreach ($string as $tag) {
-                Tag::create(['nombre' => $tag]);
-            }
-            $tasg = DB::table('tags')->whereIn('nombre', $string)->orWhereIn('id', $tags)->get();
-            foreach ($tasg as $tag1) {
-                Tag_ticket::create(['ticket_id' => $ticket->id, 'tag_id' => $tag1->id]);
-            } */
             if ($request->hasfile('soportes')) {
                 foreach ($request->file('soportes') as $file) {
                     $path = $file->store('soportes');
@@ -159,7 +150,6 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        /*   $tags = $ticket->tags; */
         $tags = DB::table('tags')->get();
         $selectags = $ticket->tags->pluck('id')->toArray();
         $funcionarios = Funcionario::all();
@@ -191,17 +181,6 @@ class TicketController extends Controller
         try {
             DB::beginTransaction();
             $ticket->update($request->all());
-            /*  $ticket->update([
-                'estado' => $request->estado,
-                'cliente_id' => $request->cliente_id,
-                'funcionario_id' => $request->funcionario_id,
-                'prioridad' => $request->prioridad,
-                'descripcion' => $request->descripcion,
-                'tipo' => $request->tipo,
-                'tags' => implode(', ', $request->tags),
-            ]); */
-
-
             $ticket_tag = DB::table('tags_tickets')->where('ticket_id', $ticket->id);
             $ticket_tag->delete();
             if ($request->has('tags')) {

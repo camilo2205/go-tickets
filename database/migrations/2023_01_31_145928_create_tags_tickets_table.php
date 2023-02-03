@@ -19,6 +19,7 @@ class CreateTagsTicketsTable extends Migration
             $table->unsignedBigInteger('tag_id');
             $table->timestamps();
             $table->softDeletes();
+            
             $table->foreign('ticket_id')->references('id')->on('tickets');
             $table->foreign('tag_id')->references('id')->on('tags');            
         });

@@ -51,13 +51,18 @@ $.ajax({
             config
         );
 
+        $('#grafico').click(function (e) {
+            e.preventDefault();
+            window.location.href = "/tickets";
+        });
+
         response.ticketsArray.forEach(element => {
             max = max > element ? max : element;
         });
         let etiquetas = [];
         let i = 0;
         response.meses.forEach(mes => {
-            etiquetas[i] = capitalize(moment().set("M", mes-1).format("MMMM"));
+            etiquetas[i] = capitalize(moment().set("M", mes - 1).format("MMMM"));
             i++;
         });
         response.ticketsResueltosArray.forEach(element => {
@@ -103,7 +108,11 @@ $.ajax({
             document.getElementById('grafico2'),
             config2
         );
-
+        /*    $('#grafico2').click(function (e) {
+               e.preventDefault();
+               window.location.href = "/tickets";
+           });
+    */
         setInterval(() => {
             $.ajax({
                 type: "get",

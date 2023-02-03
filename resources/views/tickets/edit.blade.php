@@ -124,16 +124,13 @@
                 </td>
                 <td class="border border-slate-300 px-5 py-1" colspan="3">
                     <strong>Tags</strong><br>
-                 
-                        <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
-                            @foreach ($tags as $tag)
-                                <option value="{{ $tag->id }}" {{in_array($tag->id, $selectags) ? 'selected' : ''}}>
-                                {{$tag->nombre}} </option>
-                            @endforeach
-                        </x-select>
-                   
-                  
-              
+                    <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}"
+                                {{ in_array($tag->id, $selectags) ? 'selected' : '' }}>
+                                {{ $tag->nombre }} </option>
+                        @endforeach
+                    </x-select>
                     @error('tags')
                         <x-small>{{ $message }}</x-small>
                     @enderror
@@ -175,7 +172,7 @@
         @endphp
     @endforeach
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $(".tags").select2();
             /*   tags: true,
               data = [];

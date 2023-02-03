@@ -120,23 +120,7 @@ $(document).ready(function () {
             });
         }
     }, 5000);
-/*    let tags = [];
-    $.ajax({
-        type: "get",
-        url: '/tickets/{id}',
-        success: function (response) {
-            tags = response.tags
-            console.log(tags)
-        }
-    });
-
-    let values = [];
-    tags.forEach(tag => {
-        values.push(tag.id);
-    });
-
-    $('.tags').val(values).change(); */
-
+    
     $('.filtro').change(function (e) {
         e.preventDefault();
         $('#filtrar').submit();
