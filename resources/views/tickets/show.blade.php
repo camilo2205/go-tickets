@@ -49,13 +49,16 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Tags:</strong><br>
-                @foreach ($ticket->tags as $tags)
-                    @if ($loop->last)
-                        {{ $tags->nombre }}
-                    @else
-                        {{ $tags->nombre }},
-                    @endif
-                @endforeach
+                <div class="flex flex-wrap space-x-2 items-end">
+                    @foreach ($ticket->tags as $tags)
+                        <div>
+                            <span
+                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease" >
+                                {{ $tags->nombre }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
             </td>
         </tr>
         <tr>

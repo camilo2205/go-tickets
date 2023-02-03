@@ -46,16 +46,33 @@ $.ajax({
                 }
             }
         };
+        const ctx = document.getElementById('grafico');
         const myChart = new Chart(
-            document.getElementById('grafico'),
+            ctx,
             config
         );
-
-        $('#grafico').click(function (e) {
-            e.preventDefault();
-            window.location.href = "/tickets";
-        });
-
+        function pieLink(click) {
+            const clickedInfo = myChart.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+            if (clickedInfo.length) {
+                const clickSeg = clickedInfo[0];
+                console.log(clickSeg.index);
+                if (clickSeg.index == 0) {
+                    window.location.href = "tickets?cliente_id=&estado=creado&fecha="
+                } else if (clickSeg.index == 1) {
+                    window.location.href = "tickets?cliente_id=&estado=asignado&fecha="
+                }
+                else if (clickSeg.index == 2) {
+                    window.location.href = "tickets?cliente_id=&estado=atendido&fecha="
+                }
+                else if (clickSeg.index == 3) {
+                    window.location.href = "tickets?cliente_id=&estado=resueltos&fecha="
+                }
+                /* const link = myChart.data.datasets[clickSeg.datasetIndex].data[0];
+                            console.log(link); */
+                /* window.open(link);  */
+            }
+        }
+        ctx.onclick = pieLink;
         response.ticketsArray.forEach(element => {
             max = max > element ? max : element;
         });
