@@ -82,14 +82,11 @@ $.ajax({
             etiquetas[i] = capitalize(moment().set("M", mes - 1).format("MMMM"));
             i++;
         });
-        response.ticketsResueltosArray.forEach(element => {
-            max = max > element ? max : element;
-        });
         max = max + 3;
         const data2 = {
             labels: etiquetas,
             datasets: [{
-                label: 'Tickets Resueltos',
+                label: 'Tickets Cerrados',
                 backgroundColor: 'rgb(54, 252, 35)',
                 borderColor: 'rgb(54, 252, 35)',
                 data: response.ticketsResueltosArray
@@ -135,28 +132,12 @@ $.ajax({
                 type: "get",
                 url: "/estadisticas",
                 success: function (response) {
-
                     response.ticketsArray.forEach(element => {
                         max = max > element ? max : element;
                     });
-                    // let i = 0;
-                    // let lineaArray = [];
-                    // while (moment().month() >= i - 1) {
-                    //     lineaArray[i - 1] = response.ticketsArray[i];
-                    //     i++;
-                    // }
-                    response.ticketsResueltosArray.forEach(element => {
-                        max = max > element ? max : element;
-                    });
                     max = max + 3;
-                    // i = 0;
-                    // let lineaResueltosArray = [];
-                    // while (moment().month() >= i - 1) {
-                    //     lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
-                    //     i++;
-                    // }
-                    myChart2.data.datasets[0].data = response.ticketsArray;
                     myChart2.data.datasets[0].data = response.ticketsResueltosArray;
+                    myChart2.data.datasets[1].data = response.ticketsArray;
                     myChart2.update();
                 }
             });
