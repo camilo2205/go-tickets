@@ -132,6 +132,4 @@ $(document).ready(function () {
         theme: "classic",
         allowClear: true,
     })
-
-
 });

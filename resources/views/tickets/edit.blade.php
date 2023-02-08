@@ -118,10 +118,6 @@
                             accept="image/*" multiple />
                     @endif
                 </td>
-                <td class="border border-slate-300 px-5 py-1" colspan="2">
-                    <input type="hidden" name="estado" id="estado" value="creado">
-                    <strong>Estado:</strong> {{ ucfirst($ticket->estado) }}
-                </td>
                 <td class="border border-slate-300 px-5 py-1" colspan="3">
                     <strong>Tags</strong><br>
                     <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
@@ -134,6 +130,10 @@
                     @error('tags')
                         <x-small>{{ $message }}</x-small>
                     @enderror
+                </td>
+                <td class="border border-slate-300 px-5 py-1" colspan="2">
+                    <input type="hidden" name="estado" id="estado" value="creado">
+                    <strong>Estado:</strong> {{ ucfirst($ticket->estado) }}
                 </td>
             </tr>
         </table>
@@ -162,28 +162,4 @@
         @endforeach
     </table>
     <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
-    @php
-        $tags_array = [];
-    @endphp
-
-    @foreach ($ticket->tags as $tag)
-        @php
-            array_push($tags_array, $tag->id);
-        @endphp
-    @endforeach
-    <script>
-        $(document).ready(function() {
-            $(".tags").select2();
-            /*   tags: true,
-              data = [];
-              data = <?php echo json_encode($tags); ?>;
-              theme: "classic",
-              allowClear: true, */
-            data = [];
-            data = <?php echo json_encode($tags_array); ?>;
-            console.log(data);
-            $(".tags").val(data);
-            $(".tags").trigger('change');
-        });
-    </script>
 </x-app-layout>

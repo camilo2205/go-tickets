@@ -53,7 +53,7 @@
                     @foreach ($ticket->tags as $tags)
                         <div>
                             <span
-                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease" >
+                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease" >
                                 {{ $tags->nombre }}
                             </span>
                         </div>

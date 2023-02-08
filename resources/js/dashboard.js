@@ -55,17 +55,14 @@ $.ajax({
             const clickedInfo = myChart.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
             if (clickedInfo.length) {
                 const clickSeg = clickedInfo[0];
-                console.log(clickSeg.index);
                 if (clickSeg.index == 0) {
                     window.location.href = "tickets?cliente_id=&estado=creado&fecha="
                 } else if (clickSeg.index == 1) {
                     window.location.href = "tickets?cliente_id=&estado=asignado&fecha="
-                }
-                else if (clickSeg.index == 2) {
+                } else if (clickSeg.index == 2) {
                     window.location.href = "tickets?cliente_id=&estado=atendido&fecha="
-                }
-                else if (clickSeg.index == 3) {
-                    window.location.href = "tickets?cliente_id=&estado=resueltos&fecha="
+                } else if (clickSeg.index == 3) {
+                    window.location.href = "tickets?cliente_id=&estado=resuelto&fecha="
                 }
                 /* const link = myChart.data.datasets[clickSeg.datasetIndex].data[0];
                             console.log(link); */
@@ -73,6 +70,7 @@ $.ajax({
             }
         }
         ctx.onclick = pieLink;
+
         response.ticketsArray.forEach(element => {
             max = max > element ? max : element;
         });
@@ -122,11 +120,6 @@ $.ajax({
             document.getElementById('grafico2'),
             config2
         );
-        /*    $('#grafico2').click(function (e) {
-               e.preventDefault();
-               window.location.href = "/tickets";
-           });
-    */
         setInterval(() => {
             $.ajax({
                 type: "get",

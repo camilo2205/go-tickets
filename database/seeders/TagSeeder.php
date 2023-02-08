@@ -14,7 +14,7 @@ class TagSeeder extends Seeder
      */
     public function run()
     {
-        Tag::firstOrCreate(['nombre' => 'Correción cedula']);
+        Tag::firstOrCreate(['nombre' => 'Corrección cedula']);
         Tag::firstOrCreate(['nombre' => 'Borrar ingreso']);
         Tag::firstOrCreate(['nombre' => 'Corregir nombre paciente']);
     }
