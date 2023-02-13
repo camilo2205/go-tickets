@@ -46,10 +46,30 @@ $.ajax({
                 }
             }
         };
+        const ctx = document.getElementById('grafico');
         const myChart = new Chart(
-            document.getElementById('grafico'),
+            ctx,
             config
         );
+        function pieLink(click) {
+            const clickedInfo = myChart.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+            if (clickedInfo.length) {
+                const clickSeg = clickedInfo[0];
+                if (clickSeg.index == 0) {
+                    window.location.href = "tickets?cliente_id=&estado=creado&fecha="
+                } else if (clickSeg.index == 1) {
+                    window.location.href = "tickets?cliente_id=&estado=asignado&fecha="
+                } else if (clickSeg.index == 2) {
+                    window.location.href = "tickets?cliente_id=&estado=atendido&fecha="
+                } else if (clickSeg.index == 3) {
+                    window.location.href = "tickets?cliente_id=&estado=resuelto&fecha="
+                }
+                /* const link = myChart.data.datasets[clickSeg.datasetIndex].data[0];
+                            console.log(link); */
+                /* window.open(link);  */
+            }
+        }
+        ctx.onclick = pieLink;
 
         response.ticketsArray.forEach(element => {
             max = max > element ? max : element;
@@ -57,17 +77,14 @@ $.ajax({
         let etiquetas = [];
         let i = 0;
         response.meses.forEach(mes => {
-            etiquetas[i] = capitalize(moment().set("M", mes-1).format("MMMM"));
+            etiquetas[i] = capitalize(moment().set("M", mes - 1).format("MMMM"));
             i++;
-        });
-        response.ticketsResueltosArray.forEach(element => {
-            max = max > element ? max : element;
         });
         max = max + 3;
         const data2 = {
             labels: etiquetas,
             datasets: [{
-                label: 'Tickets Resueltos',
+                label: 'Tickets Cerrados',
                 backgroundColor: 'rgb(54, 252, 35)',
                 borderColor: 'rgb(54, 252, 35)',
                 data: response.ticketsResueltosArray
@@ -103,34 +120,17 @@ $.ajax({
             document.getElementById('grafico2'),
             config2
         );
-
         setInterval(() => {
             $.ajax({
                 type: "get",
                 url: "/estadisticas",
                 success: function (response) {
-
                     response.ticketsArray.forEach(element => {
                         max = max > element ? max : element;
                     });
-                    // let i = 0;
-                    // let lineaArray = [];
-                    // while (moment().month() >= i - 1) {
-                    //     lineaArray[i - 1] = response.ticketsArray[i];
-                    //     i++;
-                    // }
-                    response.ticketsResueltosArray.forEach(element => {
-                        max = max > element ? max : element;
-                    });
                     max = max + 3;
-                    // i = 0;
-                    // let lineaResueltosArray = [];
-                    // while (moment().month() >= i - 1) {
-                    //     lineaResueltosArray[i - 1] = response.ticketsResueltosArray[i];
-                    //     i++;
-                    // }
-                    myChart2.data.datasets[0].data = response.ticketsArray;
                     myChart2.data.datasets[0].data = response.ticketsResueltosArray;
+                    myChart2.data.datasets[1].data = response.ticketsArray;
                     myChart2.update();
                 }
             });

@@ -8,7 +8,8 @@
             </div>
             <div class="basis-2/3 self-end">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-                    {{ __('TICKET') }} #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }} ({{ formatDate($ticket->created_at, 'd/m/Y h:i A')}})
+                    {{ __('TICKET') }} #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}
+                    ({{ formatDate($ticket->created_at, 'd/m/Y h:i A') }})
                 </h2>
             </div>
             @if (session('error'))
@@ -47,6 +48,21 @@
         </tr>
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
+                <strong>Tags:</strong><br>
+                <div class="flex flex-wrap space-x-2 items-end">
+                    @foreach ($ticket->tags as $tags)
+                        <div>
+                            <span
+                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease" >
+                                {{ $tags->nombre }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Soportes: </strong><br>
                 @foreach ($ticket->soportes as $soporte)
                     <table class="w-full border-collapse border border-slate-400">
@@ -71,7 +87,8 @@
                             class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
                             <strong>{{ $respuesta->user->name }}
                                 ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Encargado' : 'Admin') }})
-                                - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }} {{ $respuesta->cerrar ? '(Cerrado)' : ''}}
+                                - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
+                                {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
                             </strong><br>
                             {{ $respuesta->cuerpo }}
                         </div>

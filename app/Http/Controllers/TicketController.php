@@ -7,6 +7,8 @@ use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
 use App\Models\Soporte;
+use App\Models\Tag;
+use App\Models\Tag_ticket;
 use App\Models\Ticket;
 use Exception;
 use Illuminate\Http\Request;
@@ -67,12 +69,13 @@ class TicketController extends Controller
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $clientes = Cliente::all();
+        $tags = Tag::all();
         if ($funcionario) {
             $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
         } else {
             $funcionarios = Funcionario::all();
         }
-        return view('tickets.create', compact('clientes', 'funcionarios', 'funcionario', 'cliente'));
+        return view('tickets.create', compact('clientes', 'funcionarios', 'funcionario', 'cliente', 'tags'));
     }
 
     /**
@@ -84,10 +87,26 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $request->validate(Ticket::$rules);
-
         try {
             DB::beginTransaction();
-            $ticket = Ticket::create($request->all());
+            $ticket = Ticket::create([
+                'estado' => $request->estado,
+                'cliente_id' => $request->cliente_id,
+                'funcionario_id' => $request->funcionario_id,
+                'prioridad' => $request->prioridad,
+                'descripcion' => $request->descripcion,
+                'tipo' => $request->tipo,
+            ]);
+            if ($request->has('tags')) {
+                foreach ($request->tags as $tag) {
+                    if (is_numeric($tag)) {
+                        $ticket->tags()->attach($tag);
+                    } else {
+                        $newTag = Tag::create(['nombre' => $tag]);
+                        $ticket->tags()->attach($newTag->id);
+                    }
+                }
+            }
             if ($request->hasfile('soportes')) {
                 foreach ($request->file('soportes') as $file) {
                     $path = $file->store('soportes');
@@ -131,6 +150,8 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
+        $tags = DB::table('tags')->get();
+        $selectags = $ticket->tags->pluck('id')->toArray();
         $funcionarios = Funcionario::all();
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
@@ -139,7 +160,7 @@ class TicketController extends Controller
         } else {
             $funcionarios = Funcionario::all();
         }
-        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente', 'funcionario'));
+        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente', 'funcionario', 'tags', 'selectags'));
     }
 
     /**
@@ -157,10 +178,21 @@ class TicketController extends Controller
             'tipo' => 'required'
         ]);
         $sendWhatpsApp = $request->funcionario_id != $ticket->funcionario_id;
-
         try {
             DB::beginTransaction();
             $ticket->update($request->all());
+            $ticket_tag = DB::table('tags_tickets')->where('ticket_id', $ticket->id);
+            $ticket_tag->delete();
+            if ($request->has('tags')) {
+                foreach ($request->tags as $tag) {
+                    if (is_numeric($tag)) {
+                        $ticket->tags()->attach($tag);
+                    } else {
+                        $newTag = Tag::create(['nombre' => $tag]);
+                        $ticket->tags()->attach($newTag->id);
+                    }
+                }
+            }
             if ($request->hasfile('soportes')) {
                 foreach ($request->file('soportes') as $file) {
                     $path = $file->store('soportes');

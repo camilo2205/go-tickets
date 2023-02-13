@@ -1,8 +1,9 @@
 import daterangepicker from 'daterangepicker';
 import $ from 'jquery';
 import moment from 'moment';
+import select2 from 'select2';
 import swal from 'sweetalert';
-
+import 'select2/dist/css/select2.css';
 
 $(function () {
     $('input[name="fecha"]').daterangepicker({
@@ -63,6 +64,7 @@ $(function () {
     });
 });
 
+
 $(document).ready(function () {
     $('#funcionario_id').change(function (e) {
         if ($('#funcionario_id').val() == '') {
@@ -118,9 +120,16 @@ $(document).ready(function () {
             });
         }
     }, 5000);
-
+    
     $('.filtro').change(function (e) {
         e.preventDefault();
         $('#filtrar').submit();
     });
+
+    $(".tags").select2({
+        tags: true,
+        placeholder: '-- seleccione tags--',
+        theme: "classic",
+        allowClear: true,
+    })
 });

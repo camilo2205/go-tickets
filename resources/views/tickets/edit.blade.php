@@ -112,11 +112,24 @@
                 </td>
             </tr>
             <tr>
-                <td class="border border-slate-300 px-5 py-1" colspan="4">
+                <td class="border border-slate-300 px-5 py-1" colspan="1">
                     @if (!$cliente || $ticket->estado == 'creado')
                         <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full"
                             accept="image/*" multiple />
                     @endif
+                </td>
+                <td class="border border-slate-300 px-5 py-1" colspan="3">
+                    <strong>Tags</strong><br>
+                    <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}"
+                                {{ in_array($tag->id, $selectags) ? 'selected' : '' }}>
+                                {{ $tag->nombre }} </option>
+                        @endforeach
+                    </x-select>
+                    @error('tags')
+                        <x-small>{{ $message }}</x-small>
+                    @enderror
                 </td>
                 <td class="border border-slate-300 px-5 py-1" colspan="2">
                     <input type="hidden" name="estado" id="estado" value="creado">
