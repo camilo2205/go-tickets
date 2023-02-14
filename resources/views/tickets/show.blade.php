@@ -49,12 +49,13 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Tags:</strong><br>
-                <div class="flex flex-wrap space-x-2 items-end">
-                    @foreach ($ticket->tags as $tags)
+                <div class="flex flex-wrap space-x-2 items-end" id="tagsTickets">
+                    @foreach ($ticket->tags as $tag)
                         <div>
-                            <span
-                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease" >
-                                {{ $tags->nombre }}
+                            <span id="chip"
+                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease"
+                                data-id="{{ $tag->id }}">
+                                {{ $tag->nombre }}
                             </span>
                         </div>
                     @endforeach

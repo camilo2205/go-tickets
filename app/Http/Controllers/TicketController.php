@@ -27,8 +27,9 @@ class TicketController extends Controller
     {
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
+        $tags = Tag::all();
+        $tags_id = $request->tags_id ? $request->tags_id : [];
         $estado = $request->estado;
-
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $consulta = Ticket::query();
@@ -40,10 +41,14 @@ class TicketController extends Controller
         if ($estado) {
             $consulta->where('estado', $estado);
         }
+        if ($tags_id) {
+            $consulta->whereHas('tags', function ($query) use ($tags_id) {
+                $query->whereIn('tag_id', $tags_id);
+            });
+        }
         if ($cliente_id) {
             $consulta->where('cliente_id', $cliente_id);
         }
-
         if ($cliente) {
             $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
             $clientes = [];
@@ -56,7 +61,8 @@ class TicketController extends Controller
             $tickets = $consulta->orderBy('id', 'desc')->paginate(10);
             $clientes = Cliente::all();
         }
-        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado'));
+
+        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado', 'tags', 'tags_id'));
     }
 
     /**
@@ -252,11 +258,11 @@ class TicketController extends Controller
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
         $estado = $request->estado;
-
+        $tags_id = $request->tags_id;
         $razon_social = is_null($cliente_id) ? '' : " en " . Cliente::find($cliente_id)->razon_social;
         $_estado = is_null($estado) ? "" : " $estado" . "s";
         $_fechas = isset($fechas[1]) ? " entre $fechas[0] y $fechas[1]" : '';
 
-        return Excel::download(new TicketsExport($cliente_id, $estado, $fechas), "Tickets$_estado$razon_social$_fechas.xlsx");
+        return Excel::download(new TicketsExport($cliente_id, $estado, $fechas, $tags_id), "Tickets$_estado$razon_social$_fechas.xlsx");
     }
 }

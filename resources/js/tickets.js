@@ -120,7 +120,13 @@ $(document).ready(function () {
             });
         }
     }, 5000);
-    
+
+    $('#tagsTickets #chip').click(function (e) {
+        e.preventDefault();
+        let tagsId = $(this).data('id');
+        window.location.href = `/tickets?tags_id%5B%5D=${tagsId}`; 
+    });
+
     $('.filtro').change(function (e) {
         e.preventDefault();
         $('#filtrar').submit();

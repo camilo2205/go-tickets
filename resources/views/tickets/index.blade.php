@@ -10,7 +10,7 @@
                 </h2>
             </div>
             <div>
-                <x-anchor href="/tickets/reporte?cliente_id={{ $cliente_id }}&estado={{ $estado }}&fecha={{ isset($fechas[1]) ? $fechas[0].' - '.$fechas[1] : '' }}" target="_blank">
+                <x-anchor href="{{ route('tickets:reporte', ['cliente_id' => $cliente_id, 'tags_id' => $tags_id, 'estado'=> $estado, 'fecha'=> isset($fechas[1]) ? $fechas[0].' - '.$fechas[1] : '']) }}" target="_blank">
                     Reporte &nbsp;
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
@@ -31,7 +31,8 @@
                         <x-select name='cliente_id' class="filtro">
                             @foreach ($clientes as $element)
                                 <option value="{{ $element->id }}" {{ $cliente_id == $element->id ? 'selected' : '' }}>
-                                    {{ $element->razon_social }}</option>
+                                    {{ $element->razon_social }}
+                                </option>
                             @endforeach
                         </x-select>
                     </div>
@@ -49,6 +50,14 @@
                     <x-label for="fecha" :value="__('Filtrar por fecha')" />
                     <x-input type="text" id="fecha" class="w-full filtro" name="fecha"
                         value='{{ isset($fechas[1]) ? "$fechas[0] - $fechas[1]" : "" }}' autocomplete='off' />
+                </div>
+                <div class="px-2 mt-2" style="width: 270px">
+                    <x-label for="tags_id" :value="__('Filtrar por tags')" />
+                    <x-select  multiple="multiple" name='tags_id[]' class="filtro tags form-control" >
+                        @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}" {{ in_array($tag->id, $tags_id) ? 'selected' : '' }}>{{ $tag->nombre }}</option>
+                    @endforeach
+                    </x-select>
                 </div>
             </form>
             <div>
