@@ -64,8 +64,8 @@ class PushWebNotification extends Command
                     $body .= "$cliente->razon_social ($cliente->cantidad) \n";
                 }
                 Notification::send($users, new PushDemo("Tienes " . $cantidad_tickets . " tickets nuevos", $body, "verTickets"));
+                $tickets->update(['notificado' => 1]);
             }
-            $tickets->update(['notificado' => 1]);
         }
     }
 }
