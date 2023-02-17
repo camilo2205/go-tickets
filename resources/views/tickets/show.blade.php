@@ -43,7 +43,7 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Descripción: </strong><br>
-                {{ $ticket->descripcion }}
+                <p>{!! nl2br(e($ticket->descripcion))!!}</p>
             </td>
         </tr>
         <tr>
