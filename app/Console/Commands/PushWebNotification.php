@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\PushDemo;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,22 +47,25 @@ class PushWebNotification extends Command
     public function handle()
     {
         $estado = "creado";
-        $tickets = Ticket::where('estado', $estado);
+        $tickets = Ticket::where('estado', $estado)->where('notificado', 0);
         $cantidad_tickets = $tickets->count();
 
         $users = User::has('funcionario')->get();
 
-        $clientes = $tickets->join('clientes', 'clientes.id', '=', 'cliente_id')
-            ->select('razon_social', DB::raw('count(*) as cantidad'))
-            ->groupBy('razon_social')
-            ->get();
+        if ($users) {
+            $clientes = $tickets->join('clientes', 'clientes.id', '=', 'cliente_id')
+                ->select('razon_social', DB::raw('count(*) as cantidad'))
+                ->groupBy('razon_social')
+                ->get();
 
-        $body = "";
-        if ($cantidad_tickets != 0) {
-            foreach ($clientes as $cliente) {
-                $body .= "$cliente->razon_social ($cliente->cantidad) \n";
+            $body = "";
+            if ($cantidad_tickets != 0) {
+                foreach ($clientes as $cliente) {
+                    $body .= "$cliente->razon_social ($cliente->cantidad) \n";
+                }
+                Notification::send($users, new PushDemo("Tienes " . $cantidad_tickets . " tickets nuevos", $body, "verTickets"));
             }
-            Notification::send($users, new PushDemo("Tienes " . $cantidad_tickets . " tickets nuevos", $body, "verTickets"));
+            $tickets->update(['notificado' => 1]);
         }
     }
 }
