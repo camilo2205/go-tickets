@@ -105,26 +105,42 @@ $(document).ready(function () {
                     $('#td-respuestas').html('');
                     let respuestas = response.respuestas
                     respuestas.forEach(respuesta => {
-                        $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
+                        /* muestra mensaje no visto  */
+                        if (respuesta.visto == 0) {
+                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
                             <div
                                 class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200'}">
                                 <strong>${respuesta.user.name}
                                     (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
-                                    - ${moment(respuesta.created_at).format('DD/MM/YYYY H:m A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
-                                </strong><br>
+                                    - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
+                                </strong> <i class="fa-solid fa-check-double"></i><br>
                                 ${respuesta.cuerpo}
                             </div>
                         </div>`)
+                        }
+                        /* muestra mensaje en visto  */
+                        else {
+                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
+                            <div
+                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200'}">
+                                <strong>${respuesta.user.name}
+                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
+                                    - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
+                                </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
+                                ${respuesta.cuerpo}
+                            </div>
+                        </div>`)
+                        }
                     });
                 }
             });
         }
-    }, 5000);
+    }, 4000);
 
     $('#tagsTickets #chip').click(function (e) {
         e.preventDefault();
         let tagsId = $(this).data('id');
-        window.location.href = `/tickets?tags_id%5B%5D=${tagsId}`; 
+        window.location.href = `/tickets?tags_id%5B%5D=${tagsId}`;
     });
 
     $('.filtro').change(function (e) {

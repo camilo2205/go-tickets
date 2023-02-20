@@ -10,11 +10,13 @@ use App\Models\Soporte;
 use App\Models\Tag;
 use App\Models\Tag_ticket;
 use App\Models\Ticket;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Excel;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -240,6 +242,22 @@ class TicketController extends Controller
 
     public function getRespuestas(Ticket $ticket)
     {
+        $userAuth = Auth::user();
+        $users = User::WhereHas('roles', function ($query) {
+            $query->whereIn('name', ['administrativo', 'funcionario', 'superadmin']);
+        })->get();
+
+        if ($ticket->cliente->user_id == $userAuth->id) {
+            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id', $ticket->funcionario->user_id)->get();
+            foreach ($respuestaFuncionarios as $respuestaFuncionario) {
+                $respuestaFuncionario->update(['visto' => 1]);
+            }
+        } elseif ($users->contains('id', $userAuth->id)) {
+            $respuestaClientes = $ticket->respuestas()->where('visto', 0)->where('user_id', $ticket->cliente->user_id)->get();
+            foreach ($respuestaClientes as $respuestaCliente) {
+                $respuestaCliente->update(['visto' => 1]);
+            }
+        }
         return response()->json(['respuestas' => $ticket->respuestas()->with(['user.cliente', 'user.funcionario'])->get()]);
     }
 
@@ -253,6 +271,7 @@ class TicketController extends Controller
         $respuestas = $tickets->respuestas()->where('notificado', 0)->update(['notificado' => 1]); */
         return response()->json(['respuestas_tickets' => $respuestas]);
     }
+
     public function reporte(Request $request)
     {
         $fechas = explode(' - ', $request->fecha);

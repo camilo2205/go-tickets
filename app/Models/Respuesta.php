@@ -15,7 +15,8 @@ class Respuesta extends Model
         'ticket_id',
         'cuerpo',
         'cerrar',
-        'notificado'
+        'notificado',
+        'visto'
     ];
 
     /**

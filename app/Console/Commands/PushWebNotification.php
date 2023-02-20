@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Cliente;
+use App\Models\Funcionario;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\PushDemo;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification as Notification;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class PushWebNotification extends Command
 {
@@ -50,7 +52,9 @@ class PushWebNotification extends Command
         $tickets = Ticket::where('estado', $estado)->where('notificado', 0);
         $cantidad_tickets = $tickets->count();
 
-        $users = User::has('funcionario')->get();
+        $users = User::WhereHas('roles', function ($query) {
+            $query->whereIn('name', ['administrativo', 'funcionario', 'superadmin']);
+        })->get();
 
         if ($users) {
             $clientes = $tickets->join('clientes', 'clientes.id', '=', 'cliente_id')
