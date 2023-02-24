@@ -96,7 +96,7 @@ $(document).ready(function () {
         $('#respuesta-form').submit();
     });
 
-    setInterval(() => {
+    function getRepuestas(params) {
         if (typeof ticket !== 'undefined') {
             $.ajax({
                 type: "get",
@@ -135,7 +135,13 @@ $(document).ready(function () {
                 }
             });
         }
-    }, 4000);
+    }
+    
+    getRepuestas();
+
+    setInterval(() => {
+        getRepuestas();
+    }, 5000);
 
     $('#tagsTickets #chip').click(function (e) {
         e.preventDefault();
