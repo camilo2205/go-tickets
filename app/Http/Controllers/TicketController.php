@@ -10,11 +10,13 @@ use App\Models\Soporte;
 use App\Models\Tag;
 use App\Models\Tag_ticket;
 use App\Models\Ticket;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Excel;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -27,8 +29,9 @@ class TicketController extends Controller
     {
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
+        $tags = Tag::all();
+        $tags_id = $request->tags_id ? $request->tags_id : [];
         $estado = $request->estado;
-
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $consulta = Ticket::query();
@@ -40,10 +43,14 @@ class TicketController extends Controller
         if ($estado) {
             $consulta->where('estado', $estado);
         }
+        if ($tags_id) {
+            $consulta->whereHas('tags', function ($query) use ($tags_id) {
+                $query->whereIn('tag_id', $tags_id);
+            });
+        }
         if ($cliente_id) {
             $consulta->where('cliente_id', $cliente_id);
         }
-
         if ($cliente) {
             $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
             $clientes = [];
@@ -56,7 +63,8 @@ class TicketController extends Controller
             $tickets = $consulta->orderBy('id', 'desc')->paginate(10);
             $clientes = Cliente::all();
         }
-        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado'));
+
+        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado', 'tags', 'tags_id'));
     }
 
     /**
@@ -234,6 +242,24 @@ class TicketController extends Controller
 
     public function getRespuestas(Ticket $ticket)
     {
+        $userAuth = Auth::user();
+        $users = User::WhereHas('roles', function ($query) {
+            $query->whereIn('name', ['administrativo', 'funcionario', 'superadmin']);
+        })->get();
+        
+        /* visto que actualiza el ciente */
+        if ($ticket->cliente->user_id == $userAuth->id) {
+            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id','<>',$ticket->cliente->user_id)->get();
+            foreach ($respuestaFuncionarios as $respuestaFuncionario) {
+                $respuestaFuncionario->update(['visto' => 1]);
+            }
+            /* visto que actualiza los administradores y funcionario */
+        } elseif ($users->contains('id', $userAuth->id)) {
+            $respuestaClientes = $ticket->respuestas()->where('visto', 0)->where('user_id', $ticket->cliente->user_id)->get();
+            foreach ($respuestaClientes as $respuestaCliente) {
+                $respuestaCliente->update(['visto' => 1]);
+            }
+        }
         return response()->json(['respuestas' => $ticket->respuestas()->with(['user.cliente', 'user.funcionario'])->get()]);
     }
 
@@ -247,16 +273,17 @@ class TicketController extends Controller
         $respuestas = $tickets->respuestas()->where('notificado', 0)->update(['notificado' => 1]); */
         return response()->json(['respuestas_tickets' => $respuestas]);
     }
+
     public function reporte(Request $request)
     {
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
         $estado = $request->estado;
-
+        $tags_id = $request->tags_id;
         $razon_social = is_null($cliente_id) ? '' : " en " . Cliente::find($cliente_id)->razon_social;
         $_estado = is_null($estado) ? "" : " $estado" . "s";
         $_fechas = isset($fechas[1]) ? " entre $fechas[0] y $fechas[1]" : '';
 
-        return Excel::download(new TicketsExport($cliente_id, $estado, $fechas), "Tickets$_estado$razon_social$_fechas.xlsx");
+        return Excel::download(new TicketsExport($cliente_id, $estado, $fechas, $tags_id), "Tickets$_estado$razon_social$_fechas.xlsx");
     }
 }

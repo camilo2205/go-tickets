@@ -43,18 +43,19 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Descripción: </strong><br>
-                {{ $ticket->descripcion }}
+                <p>{!! nl2br(e($ticket->descripcion))!!}</p>
             </td>
         </tr>
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Tags:</strong><br>
-                <div class="flex flex-wrap space-x-2 items-end">
-                    @foreach ($ticket->tags as $tags)
+                <div class="flex flex-wrap space-x-2 items-end" id="tagsTickets">
+                    @foreach ($ticket->tags as $tag)
                         <div>
-                            <span
-                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease" >
-                                {{ $tags->nombre }}
+                            <span id="chip"
+                                class="px-4 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm flex align-center w-max cursor-pointer active:bg-gray-300 hover:scale-110 hover:bg-sky-100 transition duration-300 ease"
+                                data-id="{{ $tag->id }}">
+                                {{ $tag->nombre }}
                             </span>
                         </div>
                     @endforeach
@@ -84,13 +85,23 @@
                 @foreach ($ticket->respuestas as $respuesta)
                     <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
                         <div
-                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                            <strong>{{ $respuesta->user->name }}
-                                ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Encargado' : 'Admin') }})
-                                - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
-                                {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
-                            </strong><br>
-                            {{ $respuesta->cuerpo }}
+                        @if ($respuesta->visto == 0)
+                        class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                        <strong>{{ $respuesta->user->name }}
+                            ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Encargado' : 'Admin') }})
+                            - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
+                            {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
+                        </strong><i class="fa-solid fa-check-double"></i><br>
+                        {{$respuesta->cuerpo}}
+                        @else
+                        class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                        <strong>{{ $respuesta->user->name }}
+                            ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Encargado' : 'Admin') }})
+                            - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
+                            {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
+                        </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
+                       {{$respuesta->cuerpo}}
+                        @endif
                         </div>
                     </div>
                 @endforeach

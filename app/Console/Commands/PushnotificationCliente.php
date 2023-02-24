@@ -47,8 +47,8 @@ class PushnotificationCliente extends Command
     public function handle()
     {
         $respuestas = Respuesta::where('notificado', 0)
-        ->whereDate('created_at', Carbon::now())
-        ->get();
+            ->whereDate('created_at', Carbon::now())
+            ->get();
         foreach ($respuestas as $respuesta) {
             $user = $respuesta->user;
 
@@ -59,6 +59,7 @@ class PushnotificationCliente extends Command
                 $body = $respuesta->cuerpo;
                 Notification::send($respuesta->ticket->funcionario->user, new PushDemo("Respuesta Ticket #$respuesta->ticket_id", $body, "verTicket", ['ticket' => $respuesta->ticket_id]));
             }
+            $respuesta->update(['notificado' => 1]);
         }
     }
 }

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     {{ isset($styles) ? $styles : '' }}
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
@@ -54,8 +55,8 @@
         </main>
     </div>
     @auth
-    <script src="{{ asset('js/enable-push.js') }}" defer></script>
-@endauth
+        <script src="{{ asset('js/enable-push.js') }}" defer></script>
+    @endauth
 </body>
 
 </html>

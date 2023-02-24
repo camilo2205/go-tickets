@@ -17,11 +17,12 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithColumnWidths, WithStyles, WithMapping
 {
-    public function __construct($cliente_id, $estado, $fechas)
+    public function __construct($cliente_id, $estado, $fechas, $tags_id)
     {
         $this->cliente_id = $cliente_id;
         $this->estado = $estado;
         $this->fechas = $fechas;
+        $this->tags_id = $tags_id;
     }
 
     public function headings(): array
@@ -33,7 +34,8 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             'ENCARGADO',
             'FECHA',
             'FECHA ATENCION',
-            'FECHA RESOLUCIÓN'
+            'FECHA RESOLUCIÓN',
+            'TAGS'
         ];
     }
 
@@ -44,6 +46,7 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
     {
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
+        $tags_id = $this->tags_id;
         $consulta = Ticket::query();
 
         if (isset($this->fechas[1])) {
@@ -55,6 +58,11 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
         }
         if ($this->cliente_id) {
             $consulta->where('cliente_id', $this->cliente_id);
+        }
+        if ($tags_id) {
+            $consulta->whereHas('tags', function ($query) use ($tags_id) {
+                $query->whereIn('tag_id', $tags_id);
+            });
         }
 
         if ($cliente) {
@@ -72,6 +80,14 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
 
     public function map($ticket): array
     {
+        $tagsName = '';
+        foreach ($ticket->tags as $first_loop  => $tags) {
+            if ($first_loop == count($ticket->tags) - 1) {
+                $tagsName .= $tags->nombre . '.';
+            } else {
+                $tagsName .= $tags->nombre . ', ';
+            }
+        }
         return [
             $ticket->cliente->razon_social,
             $ticket->descripcion,
@@ -80,13 +96,15 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             Date::parse($ticket->created_at),
             $ticket->respuestas()->first() ? $ticket->respuestas()->first()->created_at : '',
             $ticket->respuestas()->where('cerrar', 1)->first() ? $ticket->respuestas()->where('cerrar', 1)->first()->created_at : '',
+            $tagsName,
         ];
     }
 
     public function columnWidths(): array
     {
         return [
-            'B' => 45
+            'B' => 45,
+            'D' => 30
         ];
     }
 
