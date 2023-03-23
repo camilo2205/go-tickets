@@ -6,7 +6,7 @@
             </a>
         @endif
         <div class="p-5">
-            <a href="#">
+            <a href="{{ $url }}">
                 <h5 class="text-center text-gray-900 font-bold text-2xl tracking-tight mb-2 titulo">
                     {{ $title }}
                 </h5>
