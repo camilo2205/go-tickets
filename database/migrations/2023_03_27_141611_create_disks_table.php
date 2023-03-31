@@ -11,7 +11,7 @@ class CreateDisksTable extends Migration
     {
         Schema::create('disks', function (Blueprint $table) {
             $table->id();
-            $table->integer('capacity');
+            $table->bigInteger('capacity');
             $table->integer('used');
             $table->text('mounted');
             $table->unsignedBigInteger('server_id')->nullable();

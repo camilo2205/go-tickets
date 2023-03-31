@@ -12,7 +12,7 @@ class CreateServersTable extends Migration
         Schema::create('servers', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->integer('disk_capacidad');
+            $table->bigInteger('disk_capacidad');
             $table->string('ram');
             $table->string('nit');
             $table->unsignedBigInteger('cliente_id')->nullable();
