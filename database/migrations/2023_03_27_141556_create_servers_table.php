@@ -13,7 +13,7 @@ class CreateServersTable extends Migration
             $table->id();
             $table->string('nombre');
             $table->bigInteger('disk_capacidad');
-            $table->string('ram');
+            $table->string('ram')->nullable();
             $table->string('nit');
             $table->unsignedBigInteger('cliente_id')->nullable();
             $table->timestamps();
