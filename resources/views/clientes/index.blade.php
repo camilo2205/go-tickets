@@ -36,7 +36,7 @@
                 @php
                     $diskProp = [];
                     $disk = [];
-                    if ($cliente->server->disks) {
+                    if ($cliente->server !== '') {
                         foreach ($cliente->server->disks as $disk) {
                             $diskProp[] = [
                                 'mounted' => $disk->mounted,
@@ -44,7 +44,6 @@
                             ];
                         }
                     }
-                    
                 @endphp
                 <tr>
                     <td class="border border-slate-300 px-5 py-2">
