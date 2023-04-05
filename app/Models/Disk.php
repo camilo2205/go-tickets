@@ -10,13 +10,14 @@ class Disk extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['capacity', 'used','mounted', 'server_id'];
+    protected $fillable = ['capacity', 'used','mounted', 'server_id', 'notificable'];
 
     protected $casts = [
         'capacity' => 'integer',
         'used' => 'integer',
         'mounted' => 'string',
         'server_id' => 'integer',
+        'notificable' =>'boolean'
     ];
 
     public static $rules = [

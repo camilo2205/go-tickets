@@ -1,6 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/js/cruds/tickets.js": "/js/cruds/tickets.js",
+    "/js/cruds/clientes.js": "/js/cruds/clientes.js",
     "/sw.js": "/sw.js",
     "/js/enable-push.js": "/js/enable-push.js",
     "/js/dashboard.js": "/js/dashboard.js",

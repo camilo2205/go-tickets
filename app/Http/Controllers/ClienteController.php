@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Disk;
+use App\Models\Server;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,7 +30,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::with('server.disks')->get();
         return view('clientes.index', compact('clientes'));
     }
 
@@ -92,8 +94,22 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        dd('¿Aquí?');
+        $cliente->load('server');
+        return view('clientes.show', ['cliente' => $cliente, 'server' => $cliente->server]);
     }
+
+    public function updateDisk(Request $request, $id)
+    {
+        $server = Server::where('cliente_id', $id)->first();
+        $discos = $server->disks;
+        $discoAsoc = $discos->where('id', $request->id);
+        foreach ($discoAsoc as $disco) {
+            $disco->notificable = $request->notificable === 'true' ? 1 : 0;
+            $disco->save();
+        }
+        return response()->json(['disks' => $discoAsoc]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -123,7 +139,7 @@ class ClienteController extends Controller
             'celular' => 'required',
             'correo' => [
                 'required',
-                Rule::unique('users','email')->ignore($cliente->user->id)
+                Rule::unique('users', 'email')->ignore($cliente->user->id)
             ]
         ]);
 
