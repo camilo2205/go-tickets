@@ -48,13 +48,14 @@ class PushNotificationServer extends Command
         })->get();
         foreach ($clientes as $cliente) {
             $server = $cliente->server;
+            $body = "";
             if ($server) {
-                foreach ($server->disks as $disk) {
-                    $body = "";
-                    if ($disk->notificable && $disk->used >= 90) {
-                        Notification::send($users, new PushDemo("El servidor" .$server->nombre . " tiene el almacenamiento en" . $disk->used, $body, "verDatos"));
+                foreach ($server->disks as $disk) {   
+                    if ($disk->notificable === 'true' && $disk->used >= 90) {
+                        $body .= "Tiene el almacenamiento en ".$disk->used;
                     }
                 }
+                Notification::send($users, new PushDemo("El servidor ".$server->nombre." -- ".$server->cliente->razon_social, $body, "verTickets"));
             }
         }
     }
