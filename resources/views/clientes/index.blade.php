@@ -36,14 +36,17 @@
                 @php
                     $diskProp = [];
                     $disk = [];
-                    if ($cliente->server !== '') {
-                        foreach ($cliente->server->disks as $disk) {
-                            $diskProp[] = [
-                                'mounted' => $disk->mounted,
-                                'used' => $disk->used,
-                            ];
+                    if ($cliente->server) {
+                        if ($cliente->server->disks !== '') {
+                            foreach ($cliente->server->disks as $disk) {
+                                $diskProp[] = [
+                                    'mounted' => $disk->mounted,
+                                    'used' => $disk->used,
+                                ];
+                            }
                         }
                     }
+                    
                 @endphp
                 <tr>
                     <td class="border border-slate-300 px-5 py-2">
