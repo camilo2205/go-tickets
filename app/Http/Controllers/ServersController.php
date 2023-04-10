@@ -73,17 +73,17 @@ class ServersController extends Controller
 
         foreach ($diskData['disks'] as $diskDataItem) {
             $disk = Disk::where('server_id', $server->id)
-                ->where('capacity', $diskDataItem['capacity'])
+                ->where('mounted', $diskDataItem['mounted'])
                 ->first();
 
             if (!$disk) {
                 $disk = new Disk;
                 $disk->server_id = $server->id;
-                $disk->capacity = $diskDataItem['capacity'];
+                $disk->mounted = $diskDataItem['mounted'];
+                
             }
 
-
-            $disk->mounted = $diskDataItem['mounted'];
+            $disk->capacity = $diskDataItem['capacity'];
             $disk->used = $diskDataItem['used'];
             $disk->save();
         }
