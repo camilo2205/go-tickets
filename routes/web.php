@@ -45,7 +45,9 @@ Route::get('/getToken', [PushController::class, 'getToken'])->middleware(['auth'
 Route::post('/push', [PushController::class, 'store'])->middleware(['auth']);
 Route::get('/tickets/respuestas/{id}', [TicketController::class, 'updateRespuestas'])->middleware(['auth']);
 Route::get('/servers', [ServersController::class, 'index'])->middleware('auth');
-Route::put('/clientes/{id}', [ClienteController::class, 'updateDisk'])->middleware(['auth']);
+Route::get('/clientes/{cliente}/server', [ClienteController::class, 'showServer'])->middleware(['auth'])
+    ->name('clientes.servidor');
+Route::put('/clientes/{cliente}/server', [ClienteController::class, 'updateDisk'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);

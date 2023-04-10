@@ -94,13 +94,17 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
+      dd('aqui?');
+    }
+
+    public function showServer(Cliente $cliente)
+    {
         $cliente->load('server');
         return view('clientes.show', ['cliente' => $cliente, 'server' => $cliente->server]);
     }
-
-    public function updateDisk(Request $request, $id)
+    public function updateDisk(Request $request, $cliente)
     {
-        $server = Server::where('cliente_id', $id)->first();
+        $server = Server::where('cliente_id', $cliente)->first();
         $discos = $server->disks;
         $discoAsoc = $discos->where('id', $request->id);
         foreach ($discoAsoc as $disco) {

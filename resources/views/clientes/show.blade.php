@@ -42,7 +42,7 @@
                 <div class="mb-2"><strong>Discos: </strong></div>
                 @if ($server)
                     @foreach ($server->disks as $disk)
-                        <div x-data="{ open: false }" class="w-[100] mx-auto bg-gray-50">
+                        <div x-data="{ open: false }" class="w-[100] mx-auto bg-gray-50 border-b border-gray-300">
                             <div :class="{ 'bg-red-100 rounded-md': {{ $disk->used }} >=
                                 90, 'bg-yellow-100 rounded-md': {{ $disk->used }} >= 60 && {{ $disk->used }} <
                                     90, 'bg-green-100 rounded-md': {{ $disk->used }} < 60 }"
@@ -67,7 +67,7 @@
                                         <strong>Capacidad: </strong>{{ $disk->capacity }}
                                     </li>
                                     <li
-                                        class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium  bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-device-ssd" viewBox="0 0 16 16">
                                             <path
@@ -86,7 +86,7 @@
                                 </li>
                                 </ul>
                             </div>
-                            <hr class="h-[0.1rem] bg-slate-200">
+                            
                         </div>
                     @endforeach
                 @endif

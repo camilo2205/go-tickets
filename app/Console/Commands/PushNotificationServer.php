@@ -42,21 +42,23 @@ class PushNotificationServer extends Command
      */
     public function handle()
     {
-        $clientes = Cliente::with('server')->get();
-        $users = User::WhereHas('roles', function ($query) {
+        $users = User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['administrativo', 'funcionario', 'superadmin']);
         })->get();
-        foreach ($clientes as $cliente) {
-            $server = $cliente->server;
-            $body = "";
-            if ($server) {
-                foreach ($server->disks as $disk) {   
-                    if ($disk->notificable === 'true' && $disk->used >= 90) {
-                        $body .= "Tiene el almacenamiento en ".$disk->used;
-                    }
+        Server::whereHas('disks', function ($query) {
+            $query->where('notificable', true)->where('used', '>=', 90);
+        })->with(['disks' => function ($query) {
+            $query->where('notificable', true)->where('used', '>=', 90);
+        }])->get()->each(function ($server) use ($users) {
+            $disks = $server->disks->where('notificable', true)->where('used', '>=', 90);
+            if ($disks->count() > 0) {
+                $body = "";
+                $message = "El servidor " . $server->nombre . " -- " . $server->cliente->razon_social . " almacenamiento lleno:\n";
+                foreach ($disks as $disk) {
+                    $body .= "- Disco montado en '" . $disk->mounted . " ' con (" . $disk->used . "%)\n";
                 }
-                Notification::send($users, new PushDemo("El servidor ".$server->nombre." -- ".$server->cliente->razon_social, $body, "verTickets"));
+                Notification::send($users, new PushDemo($message, $body, "verServidor", ['server' => $server->cliente_id]));
             }
-        }
+        });
     }
 }

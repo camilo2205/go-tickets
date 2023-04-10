@@ -61,7 +61,7 @@
                             </x-delete-form>
                             <x-server-button
                                 class="{{ collect($diskProp)->contains(function ($disk) {return $disk['mounted'] === '/etc' && $disk['used'] >= 90;})? 'bg-orange-400': 'bg-blue-400' }} rounded-md"
-                                href="{{ route('clientes.show', $cliente->id) }}">
+                                href="{{ route('clientes.servidor', $cliente->id) }}">
                             </x-server-button>
                         </div>
                     </td>

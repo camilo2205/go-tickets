@@ -27,7 +27,20 @@ self.addEventListener('notificationclick', (event) => {
               console.log(err)
             });
           return clients.openWindow(`/tickets/${event.notification.data.ticket}`);
-        } else {
+        }
+        else if (event.notification.actions[0].action === 'verServidor') {
+          console.log(event.notification.data)
+          console.log(event.notification.actions[0].action);
+          for (const client of clientList) {
+            if (client.url === "/" && "focus" in client) {
+              client.focus();
+              break;
+            }
+          }
+          if (clients.openWindow)
+            return clients.openWindow(`/clientes/${event.notification.data.server}/server`);
+        }
+        else {
           for (const client of clientList) {
             if (client.url === "/" && "focus" in client) {
               client.focus();
@@ -47,7 +60,6 @@ self.addEventListener('push', function (e) {
   }
   if (e.data) {
     var msg = e.data.json();
-    console.log(msg)
     e.waitUntil(self.registration.showNotification(msg.title, {
       body: msg.body,
       icon: msg.icon,

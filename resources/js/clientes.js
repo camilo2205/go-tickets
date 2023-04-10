@@ -11,10 +11,8 @@ $(document).ready(function () {
         
         var notificable = $(this).prop('checked');
         let diskId = $(this).data('id');
-        console.log(diskId);
-        console.log(notificable);
         $.ajax({
-            url: '/clientes/' + cliente,
+            url: `/clientes/${cliente}/server`,
             method: 'PUT',
             data: {
                 notificable: notificable,
@@ -24,10 +22,10 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
-                console.log(response);
+                
             },
             error: function (xhr, status, error) {
-                console.error(xhr.responseText);
+
             }
         });
     });
