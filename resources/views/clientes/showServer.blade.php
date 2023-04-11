@@ -25,11 +25,22 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Nombre servidor: </strong><br>
-                {{ $server ? $server->nombre : 'sin registro' }}
+                {{ $server ? $server->nombre : 'Sin registro' }}
             </td>
             <td class="border border-slate-300 px-5 py-1">
-                <strong>Capacidad total: </strong><br>
-                {{ $server ? $server->disk_capacidad : 'sin registro' }}
+                @if ($server)
+                    @if ($server->disk_capacidad / 1073741824 > 1)
+                        <strong>Capacidad total: </strong> <br>{{ round($server->disk_capacidad / 1073741824, 2) }} TB
+                    @elseif ($server->disk_capacidad / 1048576 > 1)
+                        <strong>Capacidad total: </strong> <br>{{ round($server->disk_capacidad / 1048576, 2) }} GB
+                    @elseif ($server->disk_capacidad / 1024 > 1)
+                        <strong>Capacidad total: </strong> <br>{{ round($server->disk_capacidad / 1024, 2) }} MB
+                    @else
+                        <strong>Capacidad total: </strong><br> {{ round($server->disk_capacidad , 2) }} KB
+                    @endif
+                @else
+                    <strong>Capacidad total: </strong> <br>Sin registro
+                @endif
             </td>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Cliente</strong><br>
@@ -43,16 +54,15 @@
                 @if ($server)
                     @foreach ($server->disks as $disk)
                         <div x-data="{ open: false }" class="w-[100] mx-auto bg-gray-50 border-b border-gray-300">
-                            <div :class="{
-                                'bg-red-100 rounded-md': {{ $disk->used }} >=
-                                    90,
-                                'bg-yellow-100 rounded-md': {{ $disk->used }} >= 60 && {{ $disk->used }} <
-                                    90,
-                                'bg-green-100 rounded-md': {{ $disk->used }} < 60
-                            }"
-                                class="flex justify-between items-center">
+                            <div @click="open=!open"
+                                :class="{
+                                    'bg-red-100 rounded-md': {{ $disk->used }} >= 90,
+                                    'bg-yellow-100 rounded-md': {{ $disk->used }} >= 60 && {{ $disk->used }} < 90,
+                                    'bg-green-100 rounded-md': {{ $disk->used }} < 60
+                                }"
+                                class="flex justify-between items-center cursor-pointer">
                                 <p class="px-4">{{ $disk->mounted }}</p>
-                                <button @click="open=!open" x-html="open ? '-' :'+' "
+                                <button @click.stop='open=!open' x-html="open ? '-' :'+' "
                                     class="px-2 text-black hover:text-gray-500 font-bold text-3xl"></button>
                             </div>
                             <div x-show="open" x-cloak class="mx-4 py-4" x-transition>
@@ -68,14 +78,14 @@
                                             <path
                                                 d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H4Z" />
                                         </svg>
-                                        @if ($disk->capacity / 1000000000 > 1)
-                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000000000, 2) }} TB 
-                                        @elseif ($disk->capacity / 1000000 > 1)
-                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000000, 2) }} GB 
-                                        @elseif ($disk->capacity / 1000 > 1)
-                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000, 2) }} MB 
+                                        @if ($disk->capacity / 1073741824 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1073741824, 2) }} TB
+                                        @elseif ($disk->capacity / 1048576 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1048576 , 2) }} GB
+                                        @elseif ($disk->capacity / 1024 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1024, 2) }} MB
                                         @else
-                                            <strong>Capacidad: </strong>{{ round($disk->capacity, 2) }} KB 
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity, 2) }} KB
                                         @endif
                                     </li>
                                     <li
@@ -98,7 +108,8 @@
                                             <path
                                                 d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                         </svg>
-                                        <strong>Fecha actualización: </strong>{{formatDate($disk->updated_at, 'd/m/Y h:i A')}}
+                                        <strong>Fecha actualización:
+                                        </strong>{{ formatDate($disk->updated_at, 'd/m/Y h:i A') }}
                                     </li>
                                     <li
                                         class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
