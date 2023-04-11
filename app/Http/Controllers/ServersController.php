@@ -43,7 +43,7 @@ class ServersController extends Controller
     public function store(Request $request)
     {
 
-        Log::info(["Request" => $request->all()]);
+        Log::channel('servers')->info(["Request" => $request->all()]);
         $serverData = $request->validate(Server::$rules);
         $diskData = $request->validate([
             'disks' => 'required|array|min:1',
@@ -89,7 +89,7 @@ class ServersController extends Controller
         }
 
         $server = Server::with('disks')->findOrFail($server->id);
-        Log::info($server);
+        Log::channel('servers')->info($server);
         return response()->json($server);
     }
 

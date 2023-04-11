@@ -17,9 +17,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('get:token')->everySixHours();
-        $schedule->command('send:webpush')->everyTwoMinutes();
-        $schedule->command('send:webpushcliente')->everyTwoMinutes();
-        $schedule->command('send:webpushserver')->everyFiveMinutes();
+        $schedule->command('send:webpush')->everyMinutes();
+        $schedule->command('send:webpushcliente')->everyMinutes();
+        $schedule->command('send:webpushserver')->everyTwoMinutes();
     }
 
     /**
