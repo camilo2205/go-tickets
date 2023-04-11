@@ -43,16 +43,20 @@
                 @if ($server)
                     @foreach ($server->disks as $disk)
                         <div x-data="{ open: false }" class="w-[100] mx-auto bg-gray-50 border-b border-gray-300">
-                            <div :class="{ 'bg-red-100 rounded-md': {{ $disk->used }} >=
-                                90, 'bg-yellow-100 rounded-md': {{ $disk->used }} >= 60 && {{ $disk->used }} <
-                                    90, 'bg-green-100 rounded-md': {{ $disk->used }} < 60 }"
+                            <div :class="{
+                                'bg-red-100 rounded-md': {{ $disk->used }} >=
+                                    90,
+                                'bg-yellow-100 rounded-md': {{ $disk->used }} >= 60 && {{ $disk->used }} <
+                                    90,
+                                'bg-green-100 rounded-md': {{ $disk->used }} < 60
+                            }"
                                 class="flex justify-between items-center">
                                 <p class="px-4">{{ $disk->mounted }}</p>
                                 <button @click="open=!open" x-html="open ? '-' :'+' "
                                     class="px-2 text-black hover:text-gray-500 font-bold text-3xl"></button>
                             </div>
                             <div x-show="open" x-cloak class="mx-4 py-4" x-transition>
-                                <ul class="max-w-xs flex flex-col">
+                                <ul class="w-max flex flex-col ">
                                     <li
                                         class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -78,22 +82,37 @@
                                         <strong>Usado: </strong>{{ $disk->used }}%
                                     </li>
                                     <li
-                                    class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-                                    <div class="flex items-center">
-                                        <input id="default-checkbox" type="checkbox"  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" data-id="{{$disk->id}}"  {{$disk->notificable === true ? "checked" :' '}}>
-                                        <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Notificable</label>
-                                    </div>
-                                </li>
+                                        class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium  bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-calendar-date" viewBox="0 0 16 16">
+                                            <path
+                                                d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z" />
+                                            <path
+                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                                        </svg>
+                                        <strong>Fecha actualización: </strong>{{formatDate($disk->updated_at, 'd/m/Y h:i A')}}
+                                    </li>
+                                    <li
+                                        class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                                        <div class="flex items-center">
+                                            <input id="default-checkbox" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                data-id="{{ $disk->id }}"
+                                                {{ $disk->notificable === true ? 'checked' : ' ' }}>
+                                            <label for="default-checkbox"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Notificable</label>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
-                            
+
                         </div>
                     @endforeach
                 @endif
             </td>
         </tr>
     </table>
-    <script src="{{ asset('js/cruds/clientes.js')}}" defer></script>
+    <script src="{{ asset('js/cruds/clientes.js') }}" defer></script>
     <script>
         let cliente = "@json($cliente->id)"
     </script>

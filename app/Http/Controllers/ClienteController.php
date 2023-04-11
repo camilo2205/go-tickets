@@ -100,7 +100,7 @@ class ClienteController extends Controller
     public function showServer(Cliente $cliente)
     {
         $cliente->load('server');
-        return view('clientes.show', ['cliente' => $cliente, 'server' => $cliente->server]);
+        return view('clientes.showServer', ['cliente' => $cliente, 'server' => $cliente->server]);
     }
     public function updateDisk(Request $request, $cliente)
     {
