@@ -68,7 +68,15 @@
                                             <path
                                                 d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H4Z" />
                                         </svg>
-                                        <strong>Capacidad: </strong>{{ $disk->capacity }}
+                                        @if ($disk->capacity / 1000000000 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000000000, 2) }} TB 
+                                        @elseif ($disk->capacity / 1000000 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000000, 2) }} GB 
+                                        @elseif ($disk->capacity / 1000 > 1)
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity / 1000, 2) }} MB 
+                                        @else
+                                            <strong>Capacidad: </strong>{{ round($disk->capacity, 2) }} KB 
+                                        @endif
                                     </li>
                                     <li
                                         class="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium  bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
