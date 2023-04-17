@@ -46,7 +46,7 @@ class TicketController extends Controller
         if ($tags_id) {
             $consulta->whereHas('tags', function ($query) use ($tags_id) {
                 $query->whereIn('tag_id', $tags_id);
-            });
+            }, '=', count($tags_id));
         }
         if ($cliente_id) {
             $consulta->where('cliente_id', $cliente_id);

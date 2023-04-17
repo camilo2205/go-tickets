@@ -43,7 +43,7 @@ class ServersController extends Controller
     public function store(Request $request)
     {
 
-        Log::channel('laravel')->info(["Request" => $request->all()]);
+        Log::channel('servers')->info(["Request" => $request->all()]);
         $serverData = $request->validate(Server::$rules);
         $diskData = $request->validate([
             'disks' => 'required|array|min:1',
@@ -73,23 +73,23 @@ class ServersController extends Controller
 
         foreach ($diskData['disks'] as $diskDataItem) {
             $disk = Disk::where('server_id', $server->id)
-                ->where('capacity', $diskDataItem['capacity'])
+                ->where('mounted', $diskDataItem['mounted'])
                 ->first();
 
             if (!$disk) {
                 $disk = new Disk;
                 $disk->server_id = $server->id;
-                $disk->capacity = $diskDataItem['capacity'];
+                $disk->mounted = $diskDataItem['mounted'];
+                
             }
 
-
-            $disk->mounted = $diskDataItem['mounted'];
+            $disk->capacity = $diskDataItem['capacity'];
             $disk->used = $diskDataItem['used'];
             $disk->save();
         }
 
         $server = Server::with('disks')->findOrFail($server->id);
-        Log::channel('laravel')->info($server);
+        Log::channel('servers')->info($server);
         return response()->json($server);
     }
 

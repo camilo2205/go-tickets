@@ -33,6 +33,22 @@
         </thead>
         <tbody>
             @foreach ($clientes as $cliente)
+                @php
+                    $diskProp = [];
+                    $disk = [];
+                    if ($cliente->server) {
+                        if ($cliente->server->disks !== '') {
+                            foreach ($cliente->server->disks as $disk) {
+                                $diskProp[] = [
+                                    'mounted' => $disk->mounted,
+                                    'used' => $disk->used,
+                                    'notificable' => $disk->notificable,
+                                ];
+                            }
+                        }
+                    }
+                    
+                @endphp
                 <tr>
                     <td class="border border-slate-300 px-5 py-2">
                         <div class="flex flex-row space-x-2">
@@ -44,6 +60,10 @@
                             <x-delete-form id="eliminar-cliente-{{ $cliente->id }}"
                                 action="{{ route('clientes.destroy', $cliente->id) }}">
                             </x-delete-form>
+                            <x-server-button
+                                class="{{ collect($diskProp)->contains(function ($disk) {return $disk['notificable'] === true && $disk['used'] >= 90;})? 'bg-orange-400': 'bg-blue-400' }} rounded-md"
+                                href="{{ route('clientes.servidor', $cliente->id) }}">
+                            </x-server-button>
                         </div>
                     </td>
                     <td nowrap class="border border-slate-300 px-5 py-1">{{ $cliente->nit }}</td>
@@ -55,4 +75,6 @@
             @endforeach
         </tbody>
     </table>
+
+    <script src="{{ asset('js/cruds/clientes.js') }}" defer></script>
 </x-app-layout>

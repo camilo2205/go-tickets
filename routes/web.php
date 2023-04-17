@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PushController;
 use App\Http\Controllers\InstructivoController;
 use App\Http\Controllers\RespuestaController;
+use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
@@ -43,6 +44,10 @@ Route::get('/tickets/notificar', [TicketController::class, 'notificar'])->middle
 Route::get('/getToken', [PushController::class, 'getToken'])->middleware(['auth']);
 Route::post('/push', [PushController::class, 'store'])->middleware(['auth']);
 Route::get('/tickets/respuestas/{id}', [TicketController::class, 'updateRespuestas'])->middleware(['auth']);
+Route::get('/servers', [ServersController::class, 'index'])->middleware('auth');
+Route::get('/clientes/{cliente}/server', [ClienteController::class, 'showServer'])->middleware(['auth'])
+    ->name('clientes.servidor');
+Route::put('/clientes/{cliente}/server', [ClienteController::class, 'updateDisk'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);
