@@ -55,7 +55,7 @@ class PushnotificationCliente extends Command
             if ($user->funcionario) {
                 $body = $respuesta->cuerpo;
                 Notification::send($respuesta->ticket->cliente->user, new PushDemo("Respuesta Ticket #$respuesta->ticket_id", $body, "verTicket", ['ticket' => $respuesta->ticket_id]));
-            } elseif ($user->cliente) {
+            } elseif ($user->cliente || $user->func_gotele) {
                 $body = $respuesta->cuerpo;
                 Notification::send($respuesta->ticket->funcionario->user, new PushDemo("Respuesta Ticket #$respuesta->ticket_id", $body, "verTicket", ['ticket' => $respuesta->ticket_id]));
             }

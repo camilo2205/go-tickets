@@ -107,9 +107,9 @@ $(document).ready(function () {
                     respuestas.forEach(respuesta => {
                         /* muestra mensaje no visto  */
                         if (respuesta.visto == 0) {
-                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
+                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente || respuesta.user.func_gotele ? 'flex-row' : 'flex-row-reverse'} space-x-2">
                             <div
-                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200'}">
+                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
                                 <strong>${respuesta.user.name}
                                     (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
@@ -120,9 +120,9 @@ $(document).ready(function () {
                         }
                         /* muestra mensaje en visto  */
                         else {
-                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente ? 'flex-row' : 'flex-row-reverse'} space-x-2">
+                            $('#td-respuestas').append(`<div class="flex ${respuesta.user.cliente || respuesta.user.func_gotele ? 'flex-row' : 'flex-row-reverse'} space-x-2">
                             <div
-                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente ? 'bg-cyan-300' : 'bg-green-200'}">
+                                class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
                                 <strong>${respuesta.user.name}
                                     (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
