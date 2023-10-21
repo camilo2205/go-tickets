@@ -17,6 +17,7 @@ class Ticket extends Model
         'prioridad',
         'tipo',
         'estado',
+        'created_by'
     ];
 
     public static $rules = [
@@ -24,7 +25,7 @@ class Ticket extends Model
         'descripcion' => 'required',
         'prioridad' => 'required',
         'tipo' => 'required',
- /*        'tags' => 'required' */
+        /*        'tags' => 'required' */
     ];
 
     /**
@@ -69,6 +70,11 @@ class Ticket extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class,'tags_tickets');
+        return $this->belongsToMany(Tag::class, 'tags_tickets');
+    }
+
+    public function user_created()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

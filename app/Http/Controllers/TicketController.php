@@ -104,6 +104,7 @@ class TicketController extends Controller
                 'prioridad' => $request->prioridad,
                 'descripcion' => $request->descripcion,
                 'tipo' => $request->tipo,
+                'created_by' => auth()->user()->id
             ]);
             if ($request->has('tags')) {
                 foreach ($request->tags as $tag) {
@@ -246,10 +247,10 @@ class TicketController extends Controller
         $users = User::WhereHas('roles', function ($query) {
             $query->whereIn('name', ['administrativo', 'funcionario', 'superadmin']);
         })->get();
-        
+
         /* visto que actualiza el ciente */
         if ($ticket->cliente->user_id == $userAuth->id) {
-            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id','<>',$ticket->cliente->user_id)->get();
+            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id', '<>', $ticket->cliente->user_id)->get();
             foreach ($respuestaFuncionarios as $respuestaFuncionario) {
                 $respuestaFuncionario->update(['visto' => 1]);
             }
