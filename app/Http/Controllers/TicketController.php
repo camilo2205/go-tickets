@@ -249,14 +249,14 @@ class TicketController extends Controller
         })->get();
 
         /* visto que actualiza el ciente */
-        if ($ticket->cliente->user_id == $userAuth->id) {
-            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id', '<>', $ticket->cliente->user_id)->get();
+        if ($ticket->cliente->user_id == $userAuth->id  || $ticket->created_by == $userAuth->id) {
+            $respuestaFuncionarios = $ticket->respuestas()->where('visto', 0)->where('user_id', '<>', $ticket->created_by)->get();
             foreach ($respuestaFuncionarios as $respuestaFuncionario) {
                 $respuestaFuncionario->update(['visto' => 1]);
             }
             /* visto que actualiza los administradores y funcionario */
         } elseif ($users->contains('id', $userAuth->id)) {
-            $respuestaClientes = $ticket->respuestas()->where('visto', 0)->where('user_id', $ticket->cliente->user_id)->get();
+            $respuestaClientes = $ticket->respuestas()->where('visto', 0)->where('user_id', $ticket->created_by)->get();
             foreach ($respuestaClientes as $respuestaCliente) {
                 $respuestaCliente->update(['visto' => 1]);
             }
