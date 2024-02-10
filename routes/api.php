@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/servers', [ServersController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/servers', [ServersController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/getServers', [ServersController::class, 'getServers'])->middleware('auth:sanctum');
 Route::get('servers/{server}', [ServersController::class, 'show'])->middleware('auth:sanctum');
 
 Route::post('send-sms', function (Request $request) {

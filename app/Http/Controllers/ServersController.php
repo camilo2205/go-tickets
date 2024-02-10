@@ -106,6 +106,13 @@ class ServersController extends Controller
         return response()->json($server);
     }
 
+    public function getServers()
+    {
+        $server = Server::with('disks', 'cliente')->get();
+        
+        return response()->json($server);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
