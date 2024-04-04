@@ -114,7 +114,7 @@ $(document).ready(function () {
                                     (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
                                 </strong> <i class="fa-solid fa-check-double"></i><br>
-                                ${$(respuesta.cuerpo).html()}
+                                ${respuesta.cuerpo}
                             </div>
                         </div>`)
                         }
@@ -127,7 +127,7 @@ $(document).ready(function () {
                                     (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
                                 </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
-                                ${$(respuesta.cuerpo).html()}
+                                ${respuesta.cuerpo}
                             </div>
                         </div>`)
                         }
