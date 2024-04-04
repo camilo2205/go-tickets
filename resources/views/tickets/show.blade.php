@@ -92,7 +92,7 @@
                             - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
                             {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
                         </strong><i class="fa-solid fa-check-double"></i><br>
-                        {{$respuesta->cuerpo}}
+                        {!! nl2br(e($respuesta->cuerpo))!!}
                         @else
                         class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
                         <strong>{{ $respuesta->user->name }}
@@ -100,7 +100,7 @@
                             - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
                             {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
                         </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
-                       {{$respuesta->cuerpo}}
+                        {!! nl2br(e($respuesta->cuerpo))!!}
                         @endif
                         </div>
                     </div>
