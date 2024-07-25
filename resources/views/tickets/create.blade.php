@@ -83,7 +83,7 @@
             <x-label for="prioridad" :value="__('Prioridad')" />
             <x-select name="prioridad" id="prioridad">
                 <option value="urgente" @if ('urgente' == old('prioridad')) selected @endif>Urgente</option>
-                <option value="normal" @if ('normal' == old('prioridad')) selected @endif>Normal</option>
+                <option value="normal" @if ('normal' == old('prioridad')) selected @elseif(!old('prioridad')) selected @endif>Normal</option>
             </x-select>
             @error('prioridad')
                 <x-small>{{ $message }}</x-small>
@@ -94,7 +94,7 @@
         <div class="md:basis-1/6 px-2">
             <x-label for="tipo" :value="__('Tipo')" />
             <x-select name="tipo" id="tipo">
-                <option value="soporte" @if ('soporte' == old('tipo')) selected @endif>Soporte</option>
+                <option value="soporte" @if ('soporte' == old('tipo')) selected @elseif(!old('tipo')) selected @endif>Soporte</option>
                 <option value="ajuste" @if ('ajuste' == old('tipo')) selected @endif>Ajuste</option>
                 <option value="desarrollo" @if ('desarrollo' == old('tipo')) selected @endif>Desarrollo</option>
                 <option value="capacitacion" @if ('capacitacion' == old('tipo')) selected @endif>Capacitacion</option>

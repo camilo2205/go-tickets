@@ -111,7 +111,7 @@ $(document).ready(function () {
                             <div
                                 class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
                                 <strong>${respuesta.user.name}
-                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
+                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Funcionario' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
                                 </strong> <i class="fa-solid fa-check-double"></i><br>
                                 ${respuesta.cuerpo}
@@ -124,7 +124,7 @@ $(document).ready(function () {
                             <div
                                 class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
                                 <strong>${respuesta.user.name}
-                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Encargado' : 'Admin')})
+                                    (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Funcionario' : 'Admin')})
                                     - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}
                                 </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
                                 ${respuesta.cuerpo}

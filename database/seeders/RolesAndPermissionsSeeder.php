@@ -44,13 +44,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin = User::firstOrCreate(
             [
                 'name' => 'Administrador',
-                'email' => 'gotelemedicinasas@gmail.com',
-                'direccion' => 'Manzana 50 Lote 4, Barrio Mogambo - Montería, Córdoba',
+                'email' => 'gomedical@gmail.com',
+                'direccion' => 'Carrera 12 #25-15 Centro Montería, Córdoba',
                 'telefono' => '3108357893',
                 'celular' => '3108357893',
                 'identificacion' => '901.515.694-0'
             ],
-            ['password' => bcrypt('G0Telemedicina')]
+            ['password' => bcrypt('G0M3dicalInt')]
         );
         $admin->assignRole($superadmin);
 

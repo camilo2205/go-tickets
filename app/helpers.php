@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Notifications\TicketNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use UltraMsg\WhatsAppApi;
@@ -12,6 +14,14 @@ function formatDate($date, $format = 'd/m/Y')
     } else {
         return '';
     }
+}
+
+function sendNotification(User $user, $message, $url, $ticket_id) {
+    $user->notify(new TicketNotification([
+        'message' => $message,
+        'url' => $url,
+        'ticket_id' => $ticket_id
+    ]));
 }
 
 function sendSMS($telefono, $body)

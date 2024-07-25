@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
+use App\Notifications\TicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,16 +49,20 @@ class RespuestaController extends Controller
         if ($request->cerrar == 0) {
             if (!$cliente) {
                 $ticket->estado = 'atendido';
+                sendNotification($ticket->cliente->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
                 sendSMS($ticket->cliente->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 if (!$funcionario) {
+                    sendNotification($ticket->fucnionario->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
                     sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 }
             } else {
+                sendNotification($ticket->funcionario->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
                 sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
             }
         } else {
             $ticket->cerrado_por = auth()->user()->id;
             $ticket->estado = 'resuelto';
+            sendNotification($ticket->funcionario->user, "Su ticket número " . $ticket->id . " ha sido cerrado", "/tickets/{$ticket->id}", $ticket->id);
             sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido cerrado:\n \"" . $respuesta->cuerpo . "\"");
         }
         $ticket->save();

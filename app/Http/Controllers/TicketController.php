@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Excel;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
@@ -125,9 +126,11 @@ class TicketController extends Controller
             }
             DB::commit();
             if ($request->funcionario_id) {
+                sendNotification($ticket->funcionario->user, "Se te ha asignado un nuevo ticket (Ticket #$ticket->id)", "/tickets/{$ticket->id}", $ticket->id);
                 sendToWhatsApp($ticket->funcionario->user->celular, "GoTelemedicina SAS te informa que se te ha asignado un nuevo ticket (Ticket #$ticket->id).");
             } else {
                 foreach (Funcionario::all() as $funcionario) {
+                    sendNotification($funcionario->user, "Un nuevo ticket ha sido creado (Ticket #$ticket->id)", "/tickets/{$ticket->id}/edit", $ticket->id);
                     sendToWhatsApp($funcionario->user->celular, "GoTelemedicina SAS informa que un nuevo ticket ha sido creado (Ticket #$ticket->id).");
                 }
             }
@@ -147,6 +150,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        foreach (auth()->user()->unreadNotifications as $notification) {
+            if ($notification->data['ticket_id'] == $ticket->id) {
+                $notification->markAsRead();
+            }
+        }
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         return view('tickets.show', compact('ticket', 'funcionario'));
     }
@@ -211,6 +219,15 @@ class TicketController extends Controller
             }
             DB::commit();
             if ($sendWhatpsApp) {
+                $funcionarios = Funcionario::all();
+                foreach ($funcionarios as $funcionario) {
+                    foreach ($funcionario->user->unreadNotifications as $notification) {
+                        if ($notification->data['ticket_id'] == $ticket->id) {
+                            $notification->delete();
+                        }
+                    }
+                }
+                sendNotification($ticket->funcionario->user, "Se te ha asignado un nuevo ticket (Ticket #$ticket->id)", "/tickets/{$ticket->id}", $ticket->id);
                 sendToWhatsApp($ticket->funcionario->user->celular, "GoTelemedicina SAS te informa que se te ha asignado un nuevo ticket (Ticket #$ticket->id).");
             }
             return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
