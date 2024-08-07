@@ -16,7 +16,10 @@ class Respuesta extends Model
         'cuerpo',
         'cerrar',
         'notificado',
-        'visto'
+        'visto',
+        'file_path',
+        'file_name',
+        'files'
     ];
 
     /**

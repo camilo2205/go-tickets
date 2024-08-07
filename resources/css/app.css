@@ -1,4 +1,5 @@
 @import 'tailwindcss/base';
+/* @import "@fancyapps/fancybox/dist/jquery.fancybox.min.css"; */
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import 'notie/dist/notie.css';

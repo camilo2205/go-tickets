@@ -3,6 +3,8 @@ require('./bootstrap');
 import Alpine from 'alpinejs';
 import $ from 'jquery';
 import Push from 'push.js';
+// import "@fancyapps/fancybox/dist/jquery.fancybox.min.css";
+// import "@fancyapps/fancybox";
 
 window.Alpine = Alpine;
 

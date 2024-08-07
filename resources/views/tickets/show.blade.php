@@ -43,7 +43,7 @@
         <tr>
             <td class="border border-slate-300 px-5 py-1" colspan="4">
                 <strong>Descripción: </strong><br>
-                <p>{!! nl2br(e($ticket->descripcion))!!}</p>
+                <p>{!! nl2br(e($ticket->descripcion)) !!}</p>
             </td>
         </tr>
         <tr>
@@ -85,23 +85,35 @@
                 @foreach ($ticket->respuestas as $respuesta)
                     <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
                         <div
-                        @if ($respuesta->visto == 0)
-                        class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                        <strong>{{ $respuesta->user->name }}
-                            ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Funcionario' : 'Admin') }})
-                            - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
-                            {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
-                        </strong><i class="fa-solid fa-check-double"></i><br>
-                        {!! nl2br(e($respuesta->cuerpo))!!}
-                        @else
-                        class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
-                        <strong>{{ $respuesta->user->name }}
-                            ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Funcionario' : 'Admin') }})
-                            - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
-                            {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
-                        </strong><i class="fa-solid fa-check-double text-blue-600"></i><br>
-                        {!! nl2br(e($respuesta->cuerpo))!!}
-                        @endif
+                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                            <strong>{{ $respuesta->user->name }}
+                                ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Funcionario' : 'Admin') }})
+                                - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
+                                {{ $respuesta->cerrar ? '(Cerrado)' : '' }}
+                            </strong>
+                            <i class="fa-solid fa-check-double {{ $respuesta->visto ? 'text-blue-600' : '' }}"></i><br>
+                            {!! nl2br(e($respuesta->cuerpo)) !!}
+
+                            @if ($respuesta->files)
+                                <br>
+                                @php
+                                    $files = json_decode($respuesta->files);
+                                @endphp
+                                @foreach ($files as $file)
+                                    @if (in_array(pathinfo($file->file_name, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                        <a data-fancybox="gallery" href="/{{ $file->file_path }}">
+                                            <img src="/{{ $file->file_path }}" alt="{{ $file->file_name }}"
+                                                class="w-32 h-32 object-cover">
+                                        </a>
+                                    @else
+                                        <a href="/{{ $file->file_path }}" target="_blank"
+                                            class="text-blue-500 underline">
+                                            {{ $file->file_name }}
+                                        </a>
+                                    @endif
+                                    <br>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -110,20 +122,53 @@
         @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
             <tr>
                 <td class="border border-slate-300 px-5 py-1" colspan="4">
-                    <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form"
-                        class="flex flex-row flex-wrap space-y-4">
+                    <!-- Formulario -->
+                    <form action="{{ route('respuestas.store') }}" name="dropzone-form" method="post" class="drozone"
+                        id="dropzone-form" enctype="multipart/form-data" class="flex flex-row flex-wrap space-y-4">
                         @csrf
-                        <!-- Responder -->
-                        <div class="basis-2/3 px-2">
-                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                            <x-label for="cuerpo" :value="__('Responder')" />
-                            <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
-                                :value="old('cuerpo')" autofocus required />
-                            @error('cuerpo')
-                                <x-small>{{ $message }}</x-small>
-                            @enderror
+                        <!-- Campos adicionales del formulario -->
+                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+
+                        <!-- Contenedor flex para los campos -->
+                        <div class="flex w-full space-x-4">
+                            <!-- Textarea -->
+                            <div class="w-3/4 px-2">
+                                <x-label for="cuerpo" :value="__('Responder')" />
+                                <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
+                                    :value="old('cuerpo')" autofocus required />
+                                @error('cuerpo')
+                                    <x-small>{{ $message }}</x-small>
+                                @enderror
+                            </div>
+
+                            <!-- Dropzone Area -->
+                            <div class="w-2/6 px-1">
+                                <div id="dropzoneDragArea"
+                                    class="!p-1 dropzone flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    <div class="dz-message flex flex-col items-center justify-center h-full">
+                                        <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400"><span
+                                                class="font-semibold">Haz
+                                                clic para subir</span> o arrastra y suelta</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Cualquier tipo de archivo
+                                            (MAX.
+                                            8MB)</p>
+                                    </div>
+                                </div>
+                                @error('file_message')
+                                    <x-small>{{ $message }}</x-small>
+                                @enderror
+                            </div>
+
+                            {{-- <div class="dropzone-previews"></div> --}}
                         </div>
+
                         <!-- Guardar -->
                         <div class="basis-full px-2 pb-2">
                             <input type="hidden" name="cerrar" id="cerrar" value="0">
@@ -149,6 +194,8 @@
                             @endif
                         </div>
                     </form>
+
+
                 </td>
             </tr>
         @endif
