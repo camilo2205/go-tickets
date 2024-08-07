@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <link href="/css/libreriasCSS/fancyboxui.min.css" rel="stylesheet">
+    <script src="/js/libreriasJS/fancyboxui.umd.js"></script>
 </head>
 
 <body class="font-sans antialiased">

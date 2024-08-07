@@ -8,6 +8,7 @@ use App\Models\Respuesta;
 use App\Notifications\TicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class RespuestaController extends Controller
 {
@@ -40,11 +41,33 @@ class RespuestaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'cuerpo' => 'required'
+            'cuerpo' => 'required|string',
+            'file_message.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,svg,pdf,doc,docx,txt,zip|max:8192', // max:8192 es 8MB
         ]);
+
+
+        $respuestaData = $request->only(['cuerpo', 'user_id', 'ticket_id', 'cerrar', 'notificado']);
+        $files = [];
+
+        // Manejar la carga de archivos
+        if ($request->hasFile('file_message')) {
+            foreach ($request->file('file_message') as $file) {
+                $filename = $file->getClientOriginalName();
+                $path = $file->storeAs('messages_file', $filename);
+
+                $files[] = [
+                    'file_name' => $filename,
+                    'file_path' => $path,
+                ];
+            }
+        }
+
+        $respuestaData['files'] = json_encode($files);
+        // Crear la respuesta
+        $respuesta = Respuesta::create($respuestaData);
+
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
-        $respuesta = Respuesta::create($request->all());
         $ticket = $respuesta->ticket;
         if ($request->cerrar == 0) {
             if (!$cliente) {
@@ -66,7 +89,7 @@ class RespuestaController extends Controller
             sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido cerrado:\n \"" . $respuesta->cuerpo . "\"");
         }
         $ticket->save();
-        return redirect()->back();
+        return response()->json(['status' => "success", 'respuesta' => $respuesta, 'ticket' => $ticket]);
     }
 
     /**

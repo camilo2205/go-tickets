@@ -69,6 +69,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('soportes') => storage_path('app/soportes'),
+        public_path('messages_file') => storage_path('app/messages_file'),
     ],
 
 ];
