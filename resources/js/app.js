@@ -3,9 +3,10 @@ require('./bootstrap');
 import Alpine from 'alpinejs';
 import $ from 'jquery';
 import Push from 'push.js';
+import Dropzone from 'dropzone';
+import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
 // import "@fancyapps/fancybox/dist/jquery.fancybox.min.css";
 // import "@fancyapps/fancybox";
-
 window.Alpine = Alpine;
 
 Alpine.start();

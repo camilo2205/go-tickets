@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
+Dropzone.autoDiscover = false;
 
 $(function () {
     $('input[name="fecha"]').daterangepicker({
@@ -92,91 +93,92 @@ $(document).ready(function () {
         })
     });
 
-    Dropzone.autoDiscover = false;
 
     let token = $('meta[name="csrf-token"]').attr('content');
 
-    var myDropzone = new Dropzone("#dropzoneDragArea", {
-        paramName: "file_message[]", // Cambia a un arreglo para manejar múltiples archivos si es necesario
-        url: "/respuestas",
-        // previewsContainer: 'div.dropzone-previews',
-        addRemoveLinks: true,
-        autoProcessQueue: false,
-        uploadMultiple: false,
-        parallelUploads: 1,
-        maxFiles: 1,
-        params: {
-            _token: token
-        },
-        init: function () {
-            var myDropzone = this;
+    if (document.getElementById('dropzoneDragArea')) {
+        var myDropzone = new Dropzone("#dropzoneDragArea", {
+            paramName: "file_message[]", // Cambia a un arreglo para manejar múltiples archivos si es necesario
+            url: "/respuestas",
+            // previewsContainer: 'div.dropzone-previews',
+            addRemoveLinks: true,
+            autoProcessQueue: false,
+            uploadMultiple: false,
+            parallelUploads: 1,
+            maxFiles: 1,
+            params: {
+                _token: token
+            },
+            init: function () {
+                var myDropzone = this;
 
-            // Maneja el envío del formulario
-            $("form#dropzone-form").submit(function (event) {
-                event.preventDefault(); // Prevenir el envío predeterminado del formulario
+                // Maneja el envío del formulario
+                $("form#dropzone-form").submit(function (event) {
+                    event.preventDefault(); // Prevenir el envío predeterminado del formulario
 
-                // Crea un objeto FormData que incluye los datos del formulario y los archivos de Dropzone
-                var formData = new FormData(this);
-                myDropzone.getQueuedFiles().forEach(function (file) {
-                    formData.append('file_message[]', file);
-                });
+                    // Crea un objeto FormData que incluye los datos del formulario y los archivos de Dropzone
+                    var formData = new FormData(this);
+                    myDropzone.getQueuedFiles().forEach(function (file) {
+                        formData.append('file_message[]', file);
+                    });
 
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-                        // Aquí puedes manejar la respuesta del servidor
-                        if (result.status === "success") {
-                            // Procesar la cola si es necesario
-                            // myDropzone.processQueue();
-                            getRespuestas();
-                            $('#cuerpo').val('');
-                            // Limpiar Dropzone y eliminar archivos
-                            myDropzone.removeAllFiles();
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('action'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            // Aquí puedes manejar la respuesta del servidor
+                            if (result.status === "success") {
+                                // Procesar la cola si es necesario
+                                // myDropzone.processQueue();
+                                getRespuestas();
+                                $('#cuerpo').val('');
+                                // Limpiar Dropzone y eliminar archivos
+                                myDropzone.removeAllFiles();
 
-                        } else {
-                            console.log("Error");
+                            } else {
+                                console.log("Error");
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error al enviar:", textStatus, errorThrown);
                         }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("Error al enviar:", textStatus, errorThrown);
-                    }
+                    });
                 });
-            });
 
-            // Manejar el envío de archivos
-            this.on('sending', function (file, xhr, formData) {
-                // Puedes agregar datos adicionales aquí si es necesario
-            });
+                // Manejar el envío de archivos
+                this.on('sending', function (file, xhr, formData) {
+                    // Puedes agregar datos adicionales aquí si es necesario
+                });
 
-            // Manejar la respuesta exitosa
-            this.on("success", function (file, response) {
-                // Restablecer el formulario y Dropzone
-                $('#dropzone-form')[0].reset();
-                $('.dropzone-previews').empty();
-            });
+                // Manejar la respuesta exitosa
+                this.on("success", function (file, response) {
+                    // Restablecer el formulario y Dropzone
+                    $('#dropzone-form')[0].reset();
+                    $('.dropzone-previews').empty();
+                });
 
-            this.on("queuecomplete", function () {
-                // Aquí puedes manejar el evento después de que la cola esté completa
-            });
+                this.on("queuecomplete", function () {
+                    // Aquí puedes manejar el evento después de que la cola esté completa
+                });
 
-            // Manejar múltiples archivos (si es necesario)
-            this.on("sendingmultiple", function () {
-                // Puedes manejar el envío de múltiples archivos aquí
-            });
+                // Manejar múltiples archivos (si es necesario)
+                this.on("sendingmultiple", function () {
+                    // Puedes manejar el envío de múltiples archivos aquí
+                });
 
-            this.on("successmultiple", function (files, response) {
-                // Manejar la respuesta cuando múltiples archivos se han enviado exitosamente
-            });
+                this.on("successmultiple", function (files, response) {
+                    // Manejar la respuesta cuando múltiples archivos se han enviado exitosamente
+                });
 
-            this.on("errormultiple", function (files, response) {
-                // Manejar errores al enviar múltiples archivos
-            });
-        }
-    });
+                this.on("errormultiple", function (files, response) {
+                    // Manejar errores al enviar múltiples archivos
+                });
+            }
+        });
+    }
 
     // $('#enviar').click(function (e) {
     //     e.preventDefault();
