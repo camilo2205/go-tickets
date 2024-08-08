@@ -115,5 +115,5 @@
     </table>
     <br>
     {{ $tickets->appends(request()->input())->links() }}
-    <script src="{{ asset('js/cruds/tickets.js?id=02') }}" defer></script>
+    <script src="{{ asset('js/cruds/tickets.js?id=03') }}" defer></script>
 </x-app-layout>

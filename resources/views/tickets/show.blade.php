@@ -200,7 +200,7 @@
             </tr>
         @endif
     </table>
-    <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
+    <script src="{{ asset('js/cruds/tickets.js?id=03') }}" defer></script>
     <script>
         let ticket = "@json($ticket->id)"
     </script>
