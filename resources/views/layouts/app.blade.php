@@ -21,8 +21,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <link href="{{ asset('css/libreriasCSS/fancyboxui.min.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/libreriasJS/fancyboxui.umd.js') }}"></script>    
+    <link href="{{ asset('librerias/fancyboxui.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('librerias/fancyboxui.umd.js') }}"></script>    
 </head>
 
 <body class="font-sans antialiased">
