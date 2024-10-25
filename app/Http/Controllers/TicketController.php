@@ -249,10 +249,18 @@ class TicketController extends Controller
         try {
             DB::beginTransaction();
             $ticket->delete();
+            $funcionarios = Funcionario::all();
+            foreach ($funcionarios as $funcionario) {
+                foreach ($funcionario->user->unreadNotifications as $notification) {
+                    if ($notification->data['ticket_id'] == $ticket->id) {
+                        $notification->delete();
+                    }
+                }
+            }
             DB::commit();
-            return redirect()->back()->with("success", 'Cliente eliminado correctamente');
+            return redirect()->back()->with("success", 'Ticket eliminado correctamente');
         } catch (\Exception $e) {
-            Log::alert("Error al eliminar cliente", [$e->getMessage() => $e]);
+            Log::alert("Error al eliminar ticket", [$e->getMessage() => $e]);
             DB::rollback();
             return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
