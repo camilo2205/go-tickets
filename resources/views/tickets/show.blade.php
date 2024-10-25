@@ -171,7 +171,7 @@
 
                         <!-- Guardar -->
                         <div class="basis-full px-2 pb-2">
-                            <input type="hidden" name="cerrar" id="cerrar" value="0">
+                            {{-- <input type="hidden" name="cerrar" id="cerrar" value="0"> --}}
                             <input type="hidden" name="notificado" id="notificado" value="0">
                             <x-button type='submit' id="enviar">
                                 Enviar &nbsp;&nbsp;
@@ -194,8 +194,13 @@
                             @endif
                         </div>
                     </form>
-
-
+                    <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form" >
+                        @csrf
+                        <input type="hidden" name="cerrar" id="cerrar" value="0">
+                        <input type="hidden" name="cuerpo" id="cuerpo_text" value="">
+                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                    </form>
                 </td>
             </tr>
         @endif

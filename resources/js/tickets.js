@@ -81,13 +81,15 @@ $(document).ready(function () {
     $('#cerrar_ticket').click(function (e) {
         e.preventDefault();
         swal({
-            title: 'ELIMINAR',
+            title: 'CERRAR',
             text: '¿Está seguro que desea cerrar este ticket?',
             icon: 'warning',
             buttons: ['No, conservar ticket', 'Sí, cerrar ticket']
         }).then(cerrar => {
             if (cerrar) {
                 $('#cerrar').val(1)
+                let cuerpo = $('#cuerpo').val();
+                $('#cuerpo_text').val(cuerpo)
                 $('#respuesta-form').submit();
             }
         })
