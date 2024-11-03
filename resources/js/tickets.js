@@ -260,6 +260,13 @@ $(document).ready(function () {
         $('#filtrar').submit();
     });
 
+    $(".cliente").select2({
+        tags: true,
+        placeholder: '-- seleccione tags--',
+        // theme: "classic",
+        allowClear: true,
+    })
+
     $(".tags").select2({
         tags: true,
         placeholder: '-- seleccione tags--',
