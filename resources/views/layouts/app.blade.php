@@ -60,6 +60,8 @@
     @auth
         <script src="{{ asset('js/enable-push.js') }}" defer></script>
     @endauth
+
+    {{ isset($scriptsjs) ? $scriptsjs : '' }}
 </body>
 
 </html>

@@ -43,6 +43,13 @@
                         {{ __('Instructivos') }}
                     </x-nav-link>
                 </li>
+                @can('bitacora.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('bitacora.index')" :active="request()->routeIs('bitacora.*')">
+                            {{ __('Bitacora') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
             </ul>
         </div>
     </div>

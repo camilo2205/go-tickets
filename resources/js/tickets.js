@@ -261,8 +261,7 @@ $(document).ready(function () {
     });
 
     $(".cliente").select2({
-        tags: true,
-        placeholder: '-- seleccione tags--',
+        placeholder: '-- seleccione cliente--',
         // theme: "classic",
         allowClear: true,
     })

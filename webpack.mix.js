@@ -17,9 +17,13 @@ mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'pub
     require('autoprefixer'),
 ]);
 mix.js('resources/js/tickets.js', 'public/js/cruds/tickets.js')
+mix.js('resources/js/bitacora.js', 'public/js/cruds/bitacora.js')
 mix.js('resources/js/clientes.js', 'public/js/cruds/clientes.js')
 mix.js('resources/js/sw.js', 'public/sw.js')
 mix.js('resources/js/enable-push.js', 'public/js/enable-push.js')
 mix.js('resources/js/dashboard.js', 'public/js/dashboard.js')
 mix.css('resources/css/tickets.css', 'public/css/cruds/tickets.css')
+mix.css('resources/css/bitacora.css', 'public/css/cruds/bitacora.css')
 mix.css('resources/css/posts.css', 'public/css/posts.css')
+
+mix.copyDirectory('vendor/tinymce/tinymce', 'public/js/tinymce');

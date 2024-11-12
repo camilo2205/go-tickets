@@ -57,7 +57,7 @@
                                     </span>
                                 </a>
                             </x-slot>
-                            <x-slot name="content">
+                            <x-slot name="content" style="overflow: scroll;height:50vh;">
                                 @foreach (auth()->user()->unReadNotifications as $notification)
                                     <a href="{{ $notification->data['url'] }}"
                                         class="block px-4 py-2 text-sm leading-5 bg-red-200">

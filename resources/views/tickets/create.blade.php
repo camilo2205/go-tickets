@@ -71,7 +71,10 @@
             <x-label for="Tags" :value="__('Tags')" />
             <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
                 @foreach ($tags as $tag)
-                    <option value="{{ $tag->id}}"> {{ $tag->nombre }}</option>
+                    <option value="{{ $tag->id}}" 
+                        @if(old('tags')) @if(in_array($tag->id, old('tags'))) selected @endif @endif>
+                        {{ $tag->nombre }}
+                    </option>
                 @endforeach
             </x-select>
             @error('tags')

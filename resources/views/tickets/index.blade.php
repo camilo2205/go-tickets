@@ -28,7 +28,7 @@
                 @if (is_null($cliente))
                     <div class="px-2">
                         <x-label for="cliente_id" :value="__('Filtrar por cliente')" />
-                        <x-select name='cliente_id' class="filtro cliente">
+                        <x-select name='cliente_id' class="filtro cliente form-control">
                             @foreach ($clientes as $element)
                                 <option value="{{ $element->id }}" {{ $cliente_id == $element->id ? 'selected' : '' }}>
                                     {{ $element->razon_social }}
@@ -55,8 +55,8 @@
                     <x-label for="tags_id" :value="__('Filtrar por tags')" />
                     <x-select multiple="multiple" name='tags_id[]' class="filtro tags form-control" >
                         @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" {{ in_array($tag->id, $tags_id) ? 'selected' : '' }}>{{ $tag->nombre }}</option>
-                    @endforeach
+                            <option value="{{ $tag->id }}" {{ in_array($tag->id, $tags_id) ? 'selected' : '' }}>{{ $tag->nombre }}</option>
+                        @endforeach
                     </x-select>
                 </div>
             </form>
