@@ -76,7 +76,7 @@ class RespuestaController extends Controller
                 sendNotification($ticket->cliente->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
                 sendSMS($ticket->cliente->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 if (!$funcionario) {
-                    sendNotification($ticket->fucnionario->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
+                    sendNotification($ticket->funcionario->user, "Su ticket número " . $ticket->id . " ha sido respondido", "/tickets/{$ticket->id}", $ticket->id);
                     sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido respondido:\n \"" . $respuesta->cuerpo . "\"");
                 }
             } else {
