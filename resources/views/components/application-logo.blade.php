@@ -1,1 +1,1 @@
-<img src="/img/gotelemedicina.jpeg" width="250px" height="65px">
+<img src="/img/gomedical.png" width="100px" height="65px">
