@@ -16,13 +16,13 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     {{ isset($styles) ? $styles : '' }}
-
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <link href="{{ asset('librerias/fancyboxui.min.css') }}" rel="stylesheet">
-    <script src="{{ asset('librerias/fancyboxui.umd.js') }}"></script>    
+    <script src="{{ asset('librerias/fancyboxui.umd.js') }}"></script>
 </head>
 
 <body class="font-sans antialiased">

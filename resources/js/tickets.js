@@ -7,6 +7,11 @@ import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
 Dropzone.autoDiscover = false;
+Pusher.logToConsole = false;
+
+var pusher = new Pusher('79ea7ddcbadeea4b79b5', {
+    cluster: 'us2'
+});
 
 $(function () {
     $('input[name="fecha"]').daterangepicker({
@@ -241,13 +246,12 @@ $(document).ready(function () {
             });
         }
     }
-
-
     getRespuestas();
 
-    setInterval(() => {
+    var channel = pusher.subscribe('message-channel');
+    channel.bind('message-update', function (data) {
         getRespuestas();
-    }, 5000);
+    })
 
     $('#tagsTickets #chip').click(function (e) {
         e.preventDefault();

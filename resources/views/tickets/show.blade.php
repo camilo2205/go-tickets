@@ -194,7 +194,7 @@
                             @endif
                         </div>
                     </form>
-                    <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form" >
+                    <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form">
                         @csrf
                         <input type="hidden" name="cerrar" id="cerrar" value="0">
                         <input type="hidden" name="cuerpo" id="cuerpo_text" value="">
@@ -206,6 +206,7 @@
         @endif
     </table>
     <script src="{{ asset('js/cruds/tickets.js?id=03') }}" defer></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
         let ticket = "@json($ticket->id)"
     </script>

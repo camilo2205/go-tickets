@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageUpdate;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
@@ -93,6 +94,9 @@ class RespuestaController extends Controller
         if ($request->cerrar) {
             return redirect()->back();
         }
+          // event(new InformeUpdated('ss'));
+          broadcast(new MessageUpdate($respuesta))->toOthers();
+
         return response()->json(['status' => "success", 'respuesta' => $respuesta, 'ticket' => $ticket]);
     }
 
