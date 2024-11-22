@@ -7,7 +7,7 @@ import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
 Dropzone.autoDiscover = false;
-Pusher.logToConsole = false;
+Pusher.logToConsole = true;
 
 var pusher = new Pusher('79ea7ddcbadeea4b79b5', {
     cluster: 'us2'
@@ -250,6 +250,8 @@ $(document).ready(function () {
 
     var channel = pusher.subscribe('message-channel');
     channel.bind('message-update', function (data) {
+        console.log(data);
+        
         getRespuestas();
     })
 
