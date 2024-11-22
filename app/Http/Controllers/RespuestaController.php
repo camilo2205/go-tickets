@@ -10,6 +10,7 @@ use App\Notifications\TicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use MessageUpdated;
 
 class RespuestaController extends Controller
 {
@@ -95,7 +96,7 @@ class RespuestaController extends Controller
             return redirect()->back();
         }
           // event(new InformeUpdated('ss'));
-          broadcast(new MessageUpdate($respuesta))->toOthers();
+          broadcast(new MessageUpdated($respuesta))->toOthers();
 
         return response()->json(['status' => "success", 'respuesta' => $respuesta, 'ticket' => $ticket]);
     }
