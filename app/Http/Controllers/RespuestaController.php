@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageUpdate;
+use App\Events\MessageUpdated;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
@@ -10,7 +10,6 @@ use App\Notifications\TicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use MessageUpdated;
 
 class RespuestaController extends Controller
 {
