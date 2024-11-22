@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Events;
-
 use App\Models\Respuesta;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
