@@ -57,6 +57,18 @@
             </div>
         </main>
     </div>
+   <!-- Configura las variables globales ANTES de app.js -->
+   <script>
+    window.laravelEchoConfig = {
+        key: '{{ config("broadcasting.connections.pusher.key") }}',
+        cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
+        wsHost: window.location.hostname,
+        wsPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
+        wssPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
+        forceTLS: false,
+        enabledTransports: ['ws', 'wss']
+    };
+</script>
     @auth
         <script src="{{ asset('js/enable-push.js') }}" defer></script>
     @endauth

@@ -28,6 +28,13 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'pusher_app_id' => env('PUSHER_APP_ID', 'local'),  // Utiliza la variable en .env
+    'pusher_app_key' => env('PUSHER_APP_KEY', 'your-websockets-key'),
+    'pusher_app_secret' => env('PUSHER_APP_SECRET', 'your-websockets-secret'),
+    'pusher_app_cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
+
+    'ws_host' => env('WS_HOST', 'localhost'),  // Dirección de tu servidor WebSocket
+    'ws_port' => env('WS_PORT', 6001), 
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
