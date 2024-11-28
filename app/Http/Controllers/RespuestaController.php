@@ -90,12 +90,13 @@ class RespuestaController extends Controller
             sendSMS($ticket->funcionario->user->telefono, "Su ticket número " . $ticket->id . " ha sido cerrado:\n \"" . $respuesta->cuerpo . "\"");
         }
         $ticket->save();
-        
+
+        // event(new InformeUpdated('ss'));
+        broadcast(new MessageUpdated($respuesta))->toOthers();
+
         if ($request->cerrar) {
             return redirect()->back();
         }
-          // event(new InformeUpdated('ss'));
-          broadcast(new MessageUpdated($respuesta))->toOthers();
 
         return response()->json(['status' => "success", 'respuesta' => $respuesta, 'ticket' => $ticket]);
     }
