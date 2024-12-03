@@ -62,10 +62,10 @@ return [
                 'host' => env('WS_HOST', 'localhost'), // Usa el dominio de producción
                 'port' => env('WS_PORT', 6001),        // Puerto 6001
                 'scheme' => env('PUSHER_SCHEME', 'http'),    // Asegúrate de usar 'https' en producción
-                'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                ],
+                // 'curl_options' => [
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                // ],
             ],
             'log' => true
         ],
