@@ -62,12 +62,16 @@ return [
                 'host' => env('WS_HOST', 'localhost'), // Usa el dominio de producción
                 'port' => env('WS_PORT', 6001),        // Puerto 6001
                 'scheme' => env('PUSHER_SCHEME', 'http'),    // Asegúrate de usar 'https' en producción
-                // 'curl_options' => [
-                //     CURLOPT_SSL_VERIFYHOST => 0,
-                //     CURLOPT_SSL_VERIFYPEER => 0,
-                // ],
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                ],
             ],
-            'log' => true
+            'log' => true,
+            'client_options' => [
+                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+                'verify' => false,
+            ],
         ],
 
         'ably' => [
