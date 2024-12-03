@@ -49,7 +49,7 @@ return [
         // ],
 
 
-         //Socket local
+        //Socket local
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
@@ -61,8 +61,13 @@ return [
                 'encrypted' => true,
                 'host' => env('WS_HOST', 'localhost'), // Usa el dominio de producción
                 'port' => env('WS_PORT', 6001),        // Puerto 6001
-                'scheme' => env('PUSHER_SCHEME', 'http'),                  // Asegúrate de usar 'https' en producción
+                'scheme' => env('PUSHER_SCHEME', 'http'),    // Asegúrate de usar 'https' en producción
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                ],
             ],
+            'log' => true
         ],
 
         'ably' => [

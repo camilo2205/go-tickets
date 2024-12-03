@@ -31,7 +31,7 @@ return [
             'capacity' => null,
             'host' => env('WS_HOST', 'gotickets.gotelemedicina.co'),
             'port' => env('WS_PORT', 6001),
-            'scheme' => env('PUSHER_SCHEME', 'http'), 
+            'scheme' => env('PUSHER_SCHEME', 'http'),
             'enable_client_messages' => true,
             'enable_statistics' => true,
         ],
@@ -121,13 +121,15 @@ return [
          * in a separate file specified by local_pk.
          */
         'local_cert' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', null),
-
+        'capath' => env('LARAVEL_WEBSOCKETS_SSL_CA', null),
         /*
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
         'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', null),
 
+        'verify_peer' => FALSE,
+        'allow_self_signed' => FALSE,
         /*
          * Passphrase for your local_cert file.
          */
