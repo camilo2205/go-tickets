@@ -30,6 +30,8 @@ window.Echo = new Echo({
     wsPort: window.location.hostname,  // Usar el puerto donde el WebSocket está corriendo
     forceTLS: false,  // Cambia a true si estás usando HTTPS
     disableStats: true,
+    wssPort: 443,
+    enabledTransports: ['ws', 'wss']
 });
 
 
