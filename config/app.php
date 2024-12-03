@@ -35,6 +35,7 @@ return [
 
     'ws_host' => env('WS_HOST', 'localhost'),  // Dirección de tu servidor WebSocket
     'ws_port' => env('WS_PORT', 6001), 
+    'wss_port' => env('WSS_PORT', 443),
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
