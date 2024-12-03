@@ -27,8 +27,8 @@ window.Echo = new Echo({
     key: window._env.PUSHER_APP_KEY,  // Usar el valor de .env
     cluster: window._env.PUSHER_APP_CLUSTER,  // Usar el valor de .env
     wsHost: window._env.WS_HOST,  // Usar el host de WebSocket
-    wsPort: window._env.WS_PORT,  // Usar el puerto donde el WebSocket está corriendo
-    forceTLS: window.location.protocol === 'https:',  // Cambia a true si estás usando HTTPS
+    wsPort: window.location.hostname,  // Usar el puerto donde el WebSocket está corriendo
+    forceTLS: false,  // Cambia a true si estás usando HTTPS
     disableStats: true,
 });
 
