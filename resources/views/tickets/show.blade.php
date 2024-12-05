@@ -170,7 +170,7 @@
                         </div>
 
                         <!-- Contenedor de mensajes predeterminados -->
-                        @if (auth()->user()->roles[0]->name === 'superadmin'  || auth()->user()->roles[0]->name === 'funcionario')
+                        @if ((auth()->user()->roles[0]->name === 'superadmin'  || auth()->user()->roles[0]->name === 'funcionario') && !auth()->user()->func_gotele)
                             <div id="predetermined-messages" class="mt-2 mb-2 w-5/6">
                                 <button
                                     class="message-btn px-4 py-2 bg-blue-600  text-sm text-white rounded-md hover:bg-blue-600"
