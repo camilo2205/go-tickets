@@ -149,5 +149,6 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            <x:notify-messages />
         </nav>
 </header>

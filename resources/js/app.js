@@ -4,6 +4,8 @@ import Alpine from 'alpinejs';
 import $ from 'jquery';
 import Push from 'push.js';
 import Dropzone from 'dropzone';
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
 // import "@fancyapps/fancybox/dist/jquery.fancybox.min.css";
 // import "@fancyapps/fancybox";
@@ -15,7 +17,42 @@ Push.config({
     serviceWorker: '/sw.js'
 })
 
+
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: window._env.PUSHER_APP_KEY,  // Usar el valor de .env
+    cluster: window._env.PUSHER_APP_CLUSTER,  // Usar el valor de .env
+    wsHost: window._env.WS_HOST,  // Usar el host de WebSocket
+    wsPort: window._env.WS_PORT,  // Usar el puerto donde el WebSocket está corriendo
+    wssPort: window._env.WS_PORT,
+    forceTLS: window.location.protocol === 'https:',
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+    encrypted: true,
+});
+
 $(document).ready(function () {
+    // Escucha el evento broadcast desde el servidor
+    window.Echo.private('ticket-channel') // nombre del canal (puede ser dinámico según el caso)
+        .listen('.ticket-notification', (e) => {
+            // Muestra la notificación con Toastify
+            Toastify({
+                text: `Nuevo ticket creado por: ${e.ticket?.cliente?.razon_social}`,
+                duration: 5000,
+                close: true,
+                gravity: "bottom", // Posición de la notificación (arriba o abajo)
+                position: "right", // Posición lateral (derecha o izquierda)
+                backgroundColor: "linear-gradient(to right, #007BFF, #00C6FF)",
+                onClick: function () {  // Redirigir cuando el usuario haga clic en la notificación
+                    window.location.href = `/tickets/${e.ticket.id}/edit`;  // Reemplaza con la ruta deseada
+                }
+            }).showToast();
+        });
+
     $('.eliminar').click(function (e) {
         e.preventDefault();
         notie.confirm({
@@ -85,5 +122,5 @@ $(document).ready(function () {
         }
     });
 
-    $('.small-message').fadeOut(5000); 
+    $('.small-message').fadeOut(5000);
 });

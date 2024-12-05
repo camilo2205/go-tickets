@@ -26,6 +26,7 @@
         "@fancyapps/ui": "^5.0.36",
         "@fortawesome/fontawesome-free": "^6.1.1",
         "chart.js": "^3.9.1",
+        "datatables.net-dt": "^2.1.8",
         "daterangepicker": "^3.1.0",
         "dropzone": "^6.0.0-beta.2",
         "jquery": "^3.6.0",
@@ -39,6 +40,7 @@
         "pusher-js": "^8.4.0-rc2",
         "select2": "^4.1.0-rc.0",
         "sweetalert": "^2.1.2",
-        "t": "^0.5.1"
+        "t": "^0.5.1",
+        "toastify-js": "^1.12.0"
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\NotificationTicket;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,6 +29,7 @@ class Ticket extends Model
         /*        'tags' => 'required' */
     ];
 
+    protected $with = ['funcionario', 'cliente'];
     /**
      * Get the funcionario that owns the Ticket
      *
@@ -76,5 +78,29 @@ class Ticket extends Model
     public function user_created()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Registrar eventos para created, updated, deleted
+        static::created(function ($model) {
+            $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
+
+            broadcast(new NotificationTicket($model))->toOthers();
+        });
+
+        static::updated(function ($model) {
+            $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
+
+            broadcast(new NotificationTicket($model))->toOthers();
+        });
+
+        static::deleted(function ($model) {
+            $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
+
+            broadcast(new NotificationTicket($model))->toOthers();
+        });
     }
 }

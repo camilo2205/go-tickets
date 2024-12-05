@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -53,6 +54,17 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $unreadNotifications = auth()->user()->unReadNotifications()->count();
+
+        notify()->info("Tienes  $unreadNotifications notificaciones no leídas!");
+
+        // Solo establecer la sesión 'show_notification' si es la primera vez que se loguea
+        if (!session()->has('show_notificationn')) {
+            session(['show_notificationn' => true]);
+        }
+
+        Log::debug("holaa");
+        
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -88,6 +100,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey()
     {
-        return Str::lower($this->input('email')).'|'.$this->ip();
+        return Str::lower($this->input('email')) . '|' . $this->ip();
     }
 }
