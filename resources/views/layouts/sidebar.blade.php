@@ -50,6 +50,13 @@
                         </x-nav-link>
                     </li>
                 @endcan
+                @can('proyectos.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('proyectos.index')" :active="request()->routeIs('proyectos.*')">
+                            {{ __('Proyectos') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
             </ul>
         </div>
     </div>

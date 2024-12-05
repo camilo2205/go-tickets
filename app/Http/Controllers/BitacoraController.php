@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bitacora;
 use App\Models\Cliente;
 use App\Models\Funcionario;
+use App\Models\Proyecto;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class BitacoraController extends Controller
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
         $funcionario_id = $request->funcionario_id;
-        $proyectos = DB::table('bitacora')->select('proyecto')->distinct()->get();
+        $proyectos = Proyecto::all();
         $proyecto_filter = $request->proyecto_filter ? $request->proyecto_filter : [];
         $estado = $request->estado;
         $consulta = Bitacora::query();
@@ -61,7 +62,7 @@ class BitacoraController extends Controller
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $clientes = Cliente::all();
-        $proyectos = DB::table('bitacora')->select('proyecto')->distinct()->get();
+        $proyectos = Proyecto::all();
         if ($funcionario && !auth()->user()->hasRole('superadmin')) {
             $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
         } else {
@@ -86,11 +87,13 @@ class BitacoraController extends Controller
         $bitacora_entry->proyecto = $request->proyecto;
         $bitacora_entry->cliente_id = $request->cliente_id;
         $bitacora_entry->funcionario_id = $request->funcionario_id;
+        $bitacora_entry->user_id = auth()->user()->id;
         $bitacora_entry->inicio = $inicio_fin[0];
         $bitacora_entry->fin = $inicio_fin[1];
         $bitacora_entry->esfuerzo = $request->esfuerzo;
         $bitacora_entry->descripcion = $request->descripcion;
-        
+        $bitacora_entry->save();
+
         return redirect()->route('bitacora.index')->with('success', 'Entrada creada correctamente.');
     }
 

@@ -115,24 +115,26 @@ $(function () {
     });
 });
 
-tinymce.init({
-    selector: "#descripcion",
-    menu: {
-        ver: { title: 'Ver', items: 'code' }
-    },
-    menubar: 'ver',
-    language: 'es-MX',
-    license_key: 'gpl',
-    plugins: [
-        'code', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-        'insertdatetime', 'media', 'table', 'help', 'wordcount'
-    ],
-    toolbar: 'undo redo | blocks | ' +
-        'bold italic backcolor | alignleft aligncenter ' +
-        'alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-})
+if ($('#descripcion').length > 0) {
+    tinymce.init({
+        selector: "#descripcion",
+        menu: {
+            ver: { title: 'Ver', items: 'code' }
+        },
+        menubar: 'ver',
+        language: 'es-MX',
+        license_key: 'gpl',
+        plugins: [
+            'code', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+    })
+}
 
 $(document).ready(function () {
     $("#proyecto_filter").select2({
@@ -155,22 +157,23 @@ $(document).ready(function () {
         let inicio_fin = $(ev.currentTarget).val().split(' - ');
         let inicio = moment(inicio_fin[0]);
         let fin = moment(inicio_fin[1]);
-        let tiempo_invertido = 0;
+        let esfuerzo = 0;
         let semanas = fin.diff(inicio, "weeks", true);
         if (semanas > 1) {
             console.log("semanas: " + semanas)
-            tiempo_invertido = semanas * 5 * 8;
+            esfuerzo = semanas * 5 * 8;
         } else {
             let dias = fin.diff(inicio, "days", true)
             if (dias > 1) {
                 console.log("dias: " + dias)
-                tiempo_invertido = dias * 8;
+                esfuerzo = dias * 8;
             } else {
-                tiempo_invertido = fin.diff(inicio, "hours", true)
+                esfuerzo = fin.diff(inicio, "hours", true)
+                console.log("horas: " + esfuerzo)
             }
         }
 
-        $('#tiempo_invertido').val(tiempo_invertido.toFixed(0));
+        $('#esfuerzo').val(esfuerzo.toFixed(0));
     })
 
     $('#inicio_fin').trigger('apply.daterangepicker');

@@ -47,10 +47,12 @@
             <x-label for="proyecto" :value="__('Proyecto')" />
             <x-select name="proyecto" id="proyecto" class="form-control">
                 @foreach ($proyectos as $proyecto)
-                    <option value="{{ $proyecto}}" 
-                        @if(old('proyecto')) @if(in_array($proyecto, old('proyecto'))) selected @endif @endif>
-                        {{ $proyecto }}
-                    </option>
+                    @if ($proyecto->proyecto)
+                        <option value="{{ $proyecto->proyecto}}" 
+                            @if(old('proyecto')) @if(in_array($proyecto->proyecto, old('proyecto'))) selected @endif @endif>
+                            {{ $proyecto->proyecto }}
+                        </option>
+                    @endif
                 @endforeach
             </x-select>
             @error('proyecto')

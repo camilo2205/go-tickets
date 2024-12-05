@@ -22,6 +22,7 @@
         </div>
         <div class="grid grid-cols-6 items-center mb-2">
             <div>
+                <x-anchor href="{{ route('proyectos.create') }}">Crear Proyecto</x-anchor><br><br>
                 <x-anchor href="{{ route('bitacora.create') }}">Crear Registro</x-anchor>
             </div>
             <form action="" id="filtrar" class="col-span-4 grid grid-cols-4 px-3 mb-2">
@@ -54,7 +55,9 @@
                     <x-label for="tags_id" :value="__('Filtrar por proyecto')" />
                     <x-select id="proyecto_filter" name='proyecto_filter' class="filtro form-control" >
                         @foreach($proyectos as $proyecto)
-                            <option value="{{ $proyecto }}" {{ $proyecto == $proyecto_filter ? 'selected' : '' }}>{{ $proyecto }}</option>
+                            @if ($proyecto->proyecto)
+                                <option value="{{ $proyecto->proyecto }}" {{ $proyecto->proyecto == $proyecto_filter ? 'selected' : '' }}>{{ $proyecto->proyecto }}</option>    
+                            @endif
                         @endforeach
                     </x-select>
                 </div>
@@ -77,8 +80,8 @@
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>
                 <th class="border border-slate-300 px-5 py-1">Cliente</th>
                 <th class="border border-slate-300 px-5 py-1">Fecha</th>
-                <th class="border border-slate-300 px-5 py-1">Encargado</th>
-                <th class="border border-slate-300 px-5 py-1">Estado</th>
+                <th class="border border-slate-300 px-5 py-1">Realizado por</th>
+                <th class="border border-slate-300 px-5 py-1">Proyecto</th>
                 <th class="border border-slate-300 px-5 py-1">Descripción</th>
             </tr>
         </thead>
@@ -89,25 +92,25 @@
                         <div class="flex flex-row space-x-2">
                             <x-show-button href="{{ route('bitacora.show', $registro->id) }}">
                             </x-show-button>
-                            @if ($registro->estado == 'creado' || (!$cliente && !$funcionario))
-                                <x-edit-button href="{{ route('bitacora.edit', $registro->id) }}">
-                                </x-edit-button>
-                                <x-delete-button class="eliminar" data-form="eliminar-ticket-{{ $registro->id }}"
-                                    data-model="Ticket" href="#">
-                                </x-delete-button>
-                                <x-delete-form id="eliminar-ticket-{{ $registro->id }}"
-                                    action="{{ route('bitacora.destroy', $registro->id) }}">
-                                </x-delete-form>
-                            @endif
+                            <x-edit-button href="{{ route('bitacora.edit', $registro->id) }}">
+                            </x-edit-button>
+                            <x-delete-button class="eliminar" data-form="eliminar-ticket-{{ $registro->id }}"
+                                data-model="Ticket" href="#">
+                            </x-delete-button>
+                            <x-delete-form id="eliminar-ticket-{{ $registro->id }}"
+                                action="{{ route('bitacora.destroy', $registro->id) }}">
+                            </x-delete-form>
                         </div>
                     </td>
                     <td class="border border-slate-300 px-5 py-1">{{ $registro->cliente->razon_social }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ formatDate($registro->created_at) }}</td>
+                    <td class="border border-slate-300 px-5 py-1">{{ formatDate($registro->created_at, "d/m/Y h:i A") }}</td>
                     <td class="border border-slate-300 px-5 py-1">
                         {{ $registro->funcionario ? $registro->funcionario->user->name : '' }}
                     </td>
-                    <td class="border border-slate-300 px-5 py-1 {{ $registro->estado }}">{{ $registro->estado }}</td>
-                    <td class="border border-slate-300 px-5 py-1">{{ ucfirst($registro->descripcion) }}</td>
+                    <td class="border border-slate-300 px-5 py-1 {{ $registro->estado }}">
+                        {{ $registro->proyecto }}
+                    </td>
+                    <td class="border border-slate-300 px-5 py-1 descripcion">{!! Str::length($registro->descripcion) > 500 ? Str::substr($registro->descripcion, 0, 200)."..." : $registro->descripcion !!}</td>
                 </tr>
             @endforeach
         </tbody>

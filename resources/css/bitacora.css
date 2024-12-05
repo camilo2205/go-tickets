@@ -1,1 +1,16 @@
-@import 'daterangepicker/daterangepicker.css';
+@import "daterangepicker/daterangepicker.css";
+
+.descripcion ul {
+    list-style-type: disc !important; /* Puedes usar circle, square, etc. */
+    padding-left: 20px; /* Agrega espacio para que las viñetas no queden alineadas con el texto */
+    margin: 0;
+}
+
+.descripcion ul li {
+    margin-bottom: 5px; /* Espacio entre los elementos de la lista */
+}
+
+.descripcion.ver {
+  max-height: 40vh;
+  overflow-y: scroll;
+}

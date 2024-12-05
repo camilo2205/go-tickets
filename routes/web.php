@@ -6,6 +6,7 @@ use App\Http\Controllers\FuncionarioController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PushController;
 use App\Http\Controllers\InstructivoController;
+use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\RespuestaController;
 use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SoporteController;
@@ -49,7 +50,7 @@ Route::get('/servers', [ServersController::class, 'index'])->middleware('auth');
 Route::get('/clientes/{cliente}/server', [ClienteController::class, 'showServer'])->middleware(['auth'])
     ->name('clientes.servidor');
 Route::put('/clientes/{cliente}/server', [ClienteController::class, 'updateDisk'])->middleware(['auth']);
-Route::get('/bitacora/reporte', [TicketController::class, 'reporte'])->middleware(['auth'])
+Route::get('/bitacora/reporte', [BitacoraController::class, 'reporte'])->middleware(['auth'])
     ->middleware('can:bitacora.index')
     ->name('bitacora:reporte');
 
@@ -62,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('respuestas', RespuestaController::class);
     Route::resource('posts', InstructivoController::class);
     Route::resource('bitacora', BitacoraController::class);
+    Route::resource('proyectos', ProyectoController::class);
 });
 
 require __DIR__ . '/auth.php';

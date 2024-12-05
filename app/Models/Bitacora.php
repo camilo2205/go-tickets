@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bitacora extends Model
 {
+    use HasFactory;
+
     public $table = 'bitacora';
 
     public $fillable = [
@@ -25,5 +27,23 @@ class Bitacora extends Model
         'descripcion' => 'required',
     ];
 
-    use HasFactory;
+    /**
+     * Get the cliente that owns the Bitacora
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
+
+    /**
+     * Get the funcionario that owns the Bitacora
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function funcionario()
+    {
+        return $this->belongsTo(Funcionario::class);
+    }
 }

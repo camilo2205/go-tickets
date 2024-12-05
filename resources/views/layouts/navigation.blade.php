@@ -64,7 +64,7 @@
                                         {{ $notification->data['message'] }}
                                     </a>
                                 @endforeach
-                                @foreach (auth()->user()->readNotifications as $notification)
+                                @foreach (auth()->user()->readNotifications->where('created_at', '>', Carbon::now()->subMonth()->format('Y-m-d')) as $notification)
                                     <a href="{{ $notification->data['url'] }}"
                                         class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                         {{ $notification->data['message'] }}
@@ -140,7 +140,7 @@
                                 {{ $notification->data['message'] }}
                             </a>
                         @endforeach
-                        @foreach (auth()->user()->readNotifications as $notification)
+                        @foreach (auth()->user()->readNotifications->where('created_at', '>', Carbon::now()->subMonth()->format('Y-m-d')) as $notification)
                             <a href="{{ $notification->data['url'] }}"
                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                 {{ $notification->data['message'] }}

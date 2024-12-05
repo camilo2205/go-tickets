@@ -50,7 +50,7 @@
                         <x-select name="funcionario_id" id="funcionario_id">
                             @foreach ($funcionarios as $funcionario)
                                 <option value="{{ $funcionario->id }}"
-                                    @if ($funcionario->id == $ticket->funcionario_id) selected @endif>
+                                    @if ($funcionario->id == old('funcionario_id')) selected @elseif ($funcionario->id == $ticket->funcionario_id && !old('funcionario_id')) selected @endif>
                                     {{ $funcionario->user->name }}
                                 </option>
                             @endforeach
@@ -66,11 +66,11 @@
                     <strong>Tipo: </strong><br>
                     @if (!$cliente || $ticket->estado == 'creado')
                         <x-select name="tipo" id="tipo">
-                            <option value="soporte" @if ($ticket->tipo == 'soporte') selected @endif>Soporte</option>
-                            <option value="ajuste" @if ($ticket->tipo == 'ajuste') selected @endif>Ajuste</option>
-                            <option value="desarrollo" @if ($ticket->tipo == 'desarrollo') selected @endif>Desarrollo
+                            <option value="soporte" @if (old('tipo') == 'soporte') selected @elseif ($ticket->tipo == 'soporte' && !old('tipo')) selected @endif>Soporte</option>
+                            <option value="ajuste" @if (old('tipo') == 'ajuste') selected @elseif ($ticket->tipo == 'ajuste' && !old('tipo')) selected @endif>Ajuste</option>
+                            <option value="desarrollo" @if (old('tipo') == 'desarrollo') selected @elseif ($ticket->tipo == 'desarrollo' && !old('tipo')) selected @endif>Desarrollo
                             </option>
-                            <option value="capacitacion" @if ($ticket->tipo == 'capacitacion') selected @endif>Capacitacion
+                            <option value="capacitacion" @if (old('tipo') == 'capacitacion') selected @elseif ($ticket->tipo == 'capacitacion' && !old('tipo')) selected @endif>Capacitacion
                             </option>
                         </x-select>
                     @else
@@ -99,9 +99,12 @@
                 <td class="border border-slate-300 px-5 py-1" colspan="6">
                     <strong>Descripción: </strong><br>
                     @if (!$cliente || $ticket->estado == 'creado')
-                        <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion"
-                            :value="old('descripcion')">
-                            {{ $ticket->descripcion }}
+                        <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion">
+                            @if (old('descripcion'))
+                                {{ old('descripcion') }}
+                            @else
+                                {{ $ticket->descripcion }}
+                            @endif
                         </x-textarea>
                     @else
                         <p style="font-size: 12px">{{ $ticket->descripcion }}</p>

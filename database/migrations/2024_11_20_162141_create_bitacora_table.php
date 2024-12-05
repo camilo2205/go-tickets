@@ -16,10 +16,6 @@ class CreateBitacoraTable extends Migration
     {
         if (Schema::hasTable('bitacora')) {
             Schema::table('bitacora', function (Blueprint $table) {
-                if (!Schema::hasColumn('bitacora', 'cliente_id')) {
-                    $table->unsignedBigInteger('cliente_id')->nullable();   
-                    $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('set null');
-                }
                 if (!Schema::hasColumn('bitacora', 'funcionario_id')) {
                     $table->unsignedBigInteger('funcionario_id')->nullable();   
                     $table->foreign('funcionario_id')->references('id')->on('funcionarios')->onDelete('set null');
@@ -28,11 +24,9 @@ class CreateBitacoraTable extends Migration
                     $table->unsignedBigInteger('user_id');
                     $table->foreign('user_id')->references('id')->on('users');    
                 }
-                if (!Schema::hasColumn('bitacora', 'nombre')) {
-                    $table->string('nombre');   
-                }
                 if (!Schema::hasColumn('bitacora', 'proyecto')) {
-                    $table->string('proyecto', 50)->nullable();   
+                    $table->unsignedBigInteger('proyecto_id');
+                    $table->foreign('proyecto_id')->references('id')->on('proyectos');    
                 }
                 if (!Schema::hasColumn('bitacora', 'descripcion')) {
                     $table->text('descripcion');   
@@ -57,11 +51,9 @@ class CreateBitacoraTable extends Migration
         } else {
             Schema::create('bitacora', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('cliente_id')->nullable();
                 $table->unsignedBigInteger('funcionario_id')->nullable();
                 $table->unsignedBigInteger('user_id');
-                $table->string('nombre');
-                $table->string('proyecto', 50)->nullable();
+                $table->unsignedBigInteger('proyecto_id');
                 $table->text('descripcion');
                 $table->unsignedInteger('esfuerzo');
                 $table->dateTime('inicio');
@@ -69,9 +61,9 @@ class CreateBitacoraTable extends Migration
                 $table->timestamps();
                 $table->softDeletes();
                 
-                $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('set null');
                 $table->foreign('funcionario_id')->references('id')->on('funcionarios')->onDelete('set null');
                 $table->foreign('user_id')->references('id')->on('users');
+                $table->foreign('proyecto_id')->references('id')->on('proyectos');
             });
         }
     }
