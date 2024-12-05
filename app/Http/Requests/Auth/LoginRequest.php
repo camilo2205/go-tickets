@@ -56,7 +56,10 @@ class LoginRequest extends FormRequest
 
         $unreadNotifications = auth()->user()->unReadNotifications()->count();
 
-        notify()->info("Tienes  $unreadNotifications notificaciones no leídas!");
+        if ($unreadNotifications > 0) {
+            notify()->info("Tienes  $unreadNotifications notificaciones no leídas!");
+        }
+
 
         // Solo establecer la sesión 'show_notification' si es la primera vez que se loguea
         if (!session()->has('show_notificationn')) {
