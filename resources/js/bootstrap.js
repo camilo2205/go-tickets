@@ -21,9 +21,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // window.Pusher = require('pusher-js');
 
+// console.log(process.env.MIX_PUSHER_APP_KEY);
+
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
+//     forceTLS: true,
+//     wsPort: process.env.WS_PORT,
+//     wsHost: process.env.WS_PORT,
+//     disableStats: false,
 // });

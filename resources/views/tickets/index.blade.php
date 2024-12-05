@@ -115,5 +115,15 @@
     </table>
     <br>
     {{ $tickets->appends(request()->input())->links() }}
+    <script>
+        window._env = {
+            PUSHER_APP_ID: '{{ config('app.pusher_app_id') }}',
+            PUSHER_APP_KEY: '{{ config('app.pusher_app_key') }}',
+            PUSHER_APP_CLUSTER: '{{ config('app.pusher_app_cluster') }}',
+            WS_HOST: '{{ config('app.ws_host') }}',
+            WS_PORT: '{{ config('app.ws_port') }}',
+        };
+    </script>
+    
     <script src="{{ asset('js/cruds/tickets.js?id=03') }}" defer></script>
 </x-app-layout>

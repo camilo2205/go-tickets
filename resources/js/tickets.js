@@ -6,14 +6,46 @@ import swal from 'sweetalert';
 import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
-Dropzone.autoDiscover = false;
-Pusher.logToConsole = true;
 
-var pusher = new Pusher('79ea7ddcbadeea4b79b5', {
-    cluster: 'us2'
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: 'your-websockets-key',  // Debe coincidir con lo que tienes en tu .env
+//     cluster: 'mt1',  // Debe coincidir con el cluster en tu .env
+//     wsHost: window.location.hostname,  // El host de tu servidor de WebSocket (puede ser localhost)
+//     wsPort: 6001,  // El puerto donde el servidor WebSocket está corriendo
+//     forceTLS: false,  // Cambia a true si estás usando HTTPS
+//     disableStats: true,
+// });
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: window._env.PUSHER_APP_KEY,  // Usar el valor de .env
+    cluster: window._env.PUSHER_APP_CLUSTER,  // Usar el valor de .env
+    wsHost: window._env.WS_HOST,  // Usar el host de WebSocket
+    wsPort: window._env.WS_PORT,  // Usar el puerto donde el WebSocket está corriendo
+    wssPort: window._env.WS_PORT,
+    forceTLS: window.location.protocol === 'https:',
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+    encrypted: true,
 });
 
+
+Dropzone.autoDiscover = false;
+// Pusher.logToConsole = true;
+
+// var pusher = new Pusher('79ea7ddcbadeea4b79b5', {
+//     cluster: 'us2'
+// });
+
 $(function () {
+    console.log(window._env);
+
     $('input[name="fecha"]').daterangepicker({
         autoUpdateInput: false,
         ranges: {
@@ -248,12 +280,20 @@ $(document).ready(function () {
     }
     getRespuestas();
 
-    var channel = pusher.subscribe('message-channel');
-    channel.bind('message-update', function (data) {
-        console.log(data);
-        
-        getRespuestas();
-    })
+    // var channel = pusher.subscribe('message-channel');
+    // channel.bind('message-update', function (data) {
+    //     console.log(data);
+
+    //     getRespuestas();
+    // })
+
+    window.Echo.channel('message-channel')
+        .listen('.message-update', (e) => {
+           // Actualiza la tabla
+            getRespuestas();
+        });
+
+
 
     $('#tagsTickets #chip').click(function (e) {
         e.preventDefault();
