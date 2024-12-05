@@ -92,15 +92,15 @@ class Ticket extends Model
         });
 
         static::updated(function ($model) {
-            $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
+            // $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
 
-            broadcast(new NotificationTicket($model))->toOthers();
+            // broadcast(new NotificationTicket($model))->toOthers();
         });
 
         static::deleted(function ($model) {
-            $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
+            // $model->load('funcionario', 'cliente'); // Carga explícitamente la relación 'funcionario'
 
-            broadcast(new NotificationTicket($model))->toOthers();
+            // broadcast(new NotificationTicket($model))->toOthers();
         });
     }
 }
