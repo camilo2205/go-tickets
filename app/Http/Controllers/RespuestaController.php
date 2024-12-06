@@ -9,6 +9,7 @@ use App\Models\Respuesta;
 use App\Notifications\TicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class RespuestaController extends Controller
@@ -122,7 +123,6 @@ class RespuestaController extends Controller
     {
         //
     }
-
 
     /**
      * Update the specified resource in storage.

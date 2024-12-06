@@ -170,22 +170,34 @@
                         </div>
 
                         <!-- Contenedor de mensajes predeterminados -->
-                        @if ((auth()->user()->roles[0]->name === 'superadmin'  || auth()->user()->roles[0]->name === 'funcionario') && !auth()->user()->func_gotele)
+                        @if (
+                            (auth()->user()->roles[0]->name === 'superadmin' || auth()->user()->roles[0]->name === 'funcionario') &&
+                                !auth()->user()->func_gotele)
                             <div id="predetermined-messages" class="mt-2 mb-2 w-5/6">
-                                <button
-                                    class="message-btn px-4 py-2 bg-blue-600  text-sm text-white rounded-md hover:bg-blue-600"
-                                    data-message="Buenos días, corrección realizada.">Buenos días, corrección
-                                    realizada.</button>
-                                <button
-                                    class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
-                                    data-message="Hola, tu solicitud ha sido procesada.">Hola, tu solicitud ha sido
-                                    procesada.</button>
-                                <button
-                                    class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
-                                    data-message="Gracias por tu paciencia. Tu consulta está siendo revisada.">Buenass tardes, corrección
-                                    realizada.</button>
+                                @if ($mensajesFrecuentes->isNotEmpty())
+                                    @foreach ($mensajesFrecuentes as $mensaje)
+                                        <button
+                                            class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                            data-message="{{ $mensaje->cuerpo }}">
+                                            {{ $mensaje->cuerpo }} (usado {{ $mensaje->veces_usado }} veces)
+                                        </button>
+                                    @endforeach
+                                @else
+                                    <!-- Si no hay mensajes frecuentes, puedes mostrar algunos predeterminados por defecto -->
+                                    <button
+                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Buenos días, corrección realizada.">Buenos días, corrección
+                                        realizada.</button>
+                                    <button
+                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Hola, tu solicitud ha sido procesada.">Buenas tardes, corrección realizada</button>
+                                    <button
+                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Gracias por tu paciencia. Tu consulta está siendo revisada.">Estudio eliminado</button>
+                                @endif
                             </div>
                         @endif
+
                         <!-- Guardar -->
                         <div class="basis-full px-2 pb-2 mt-2">
                             {{-- <input type="hidden" name="cerrar" id="cerrar" value="0"> --}}
