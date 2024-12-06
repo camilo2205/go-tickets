@@ -151,7 +151,7 @@ class TicketController extends Controller
             ->where('user_id', $userId)
             ->groupBy('cuerpo')
             ->orderBy('veces_usado', 'desc')
-            ->limit(3)
+            ->limit(4)
             ->get();
 
         return $mensajesFrecuentes;
