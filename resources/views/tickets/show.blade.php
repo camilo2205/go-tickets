@@ -179,7 +179,7 @@
                                         <button
                                             class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
                                             data-message="{{ $mensaje->cuerpo }}">
-                                            {{ $mensaje->cuerpo }} (usado {{ $mensaje->veces_usado }} veces)
+                                            {{ $mensaje->cuerpo }}
                                         </button>
                                     @endforeach
                                 @else
