@@ -185,14 +185,14 @@
                                 @else
                                     <!-- Si no hay mensajes frecuentes, puedes mostrar algunos predeterminados por defecto -->
                                     <button
-                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        class="message-btn px-4 py-2  mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
                                         data-message="Buenos días, corrección realizada.">Buenos días, corrección
                                         realizada.</button>
                                     <button
-                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        class="message-btn px-4 py-2 mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
                                         data-message="Hola, tu solicitud ha sido procesada.">Buenas tardes, corrección realizada</button>
                                     <button
-                                        class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        class="message-btn px-4 py-2  mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
                                         data-message="Gracias por tu paciencia. Tu consulta está siendo revisada.">Estudio eliminado</button>
                                 @endif
                             </div>
