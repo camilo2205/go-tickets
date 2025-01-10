@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Notification as Notification;
+use App\Notifications\PushDemo;
+use Carbon\Carbon;
 
 class Cliente extends Model
 {
@@ -16,7 +19,9 @@ class Cliente extends Model
         'telefono',
         'user_id',
         'identificacion_encargado',
-        'nombre_encargado'
+        'nombre_encargado',
+        'fecha_vencimiento_meddream',
+        'notifated_meddream',
     ];
 
     public static $rules = [

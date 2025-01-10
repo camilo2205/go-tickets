@@ -13,19 +13,22 @@
             </div>
             @if (session('error'))
                 <div class="basis-1/3">
-                    <x-small-message class="bg-red-200 text-red-600 w-fit p-1 rounded font-bold">{{ session('error') }}</x-small-message>
+                    <x-small-message
+                        class="bg-red-200 text-red-600 w-fit p-1 rounded font-bold">{{ session('error') }}</x-small-message>
                 </div>
             @endif
         </div>
     </x-slot>
 
-    <form action="{{ route('clientes.update', $cliente->id) }}" method="post" class="flex flex-row flex-wrap space-x-4 space-y-4">
+    <form action="{{ route('clientes.update', $cliente->id) }}" method="post"
+        class="flex flex-row flex-wrap space-x-4 space-y-4">
         @csrf
         @method('PUT')
         <!-- NIT -->
         <div class="md:basis-1/6 basis-1/3 px-2">
             <x-label for="nit" :value="__('NIT')" />
-            <x-input id="nit" class="block mt-1 w-full" type="text" name="nit" :value="old('nit') ? old('nit') : $cliente->nit" autofocus />
+            <x-input id="nit" class="block mt-1 w-full" type="text" name="nit" :value="old('nit') ? old('nit') : $cliente->nit"
+                autofocus />
             @error('nit')
                 <x-small class="text-red-600">{{ $message }}</x-small>
             @enderror
@@ -74,7 +77,9 @@
         <div class="md:basis-2/12 basis-1/2 px-2">
             <x-label for="identificacion_encargado" :value="__('Identificación Encargado')" />
             <x-input id="identificacion_encargado" class="block mt-1 w-full" type="text"
-                name="identificacion_encargado" :value="old('identificacion_encargado') ? old('identificacion_encargado') : $cliente->identificacion_encargado" />
+                name="identificacion_encargado" :value="old('identificacion_encargado')
+                    ? old('identificacion_encargado')
+                    : $cliente->identificacion_encargado" />
             @error('identificacion_encargado')
                 <x-small>{{ $message }}</x-small>
             @enderror
@@ -85,6 +90,30 @@
             <x-input id="nombre_encargado" class="block mt-1 w-full" type="text" name="nombre_encargado"
                 :value="old('nombre_encargado') ? old('nombre_encargado') : $cliente->nombre_encargado" />
             @error('nombre_encargado')
+                <x-small>{{ $message }}</x-small>
+            @enderror
+        </div>
+        <!-- notifated_meddream -->
+        <div class="md:basis-1/12 px-2">
+            <x-label for="notifated_meddream" :value="__('Notificacion meddream')" />
+            <!-- Input del checkbox -->
+            <input id="default-checkbox" type="checkbox" name="notifated_meddream"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                data-id="{{ $cliente->id }}" {{ $cliente->notifated_meddream ? 'checked' : ' ' }}>
+            <!-- Mostrar errores si los hay -->
+            @error('notifated_meddream')
+                <x-small>{{ $message }}</x-small>
+            @enderror
+        </div>
+
+        <!-- Fecha vencimiento meddream -->
+        <div class="md:basis-4/12 basis-1/2 px-2">
+            <x-label for="fecha_vencimiento_meddream" :value="__('Fecha vencimiento meddream ')" />
+            <x-input id="fecha_vencimiento_meddream" class="block mt-1 w-full" type="datetime-local"
+                name="fecha_vencimiento_meddream" :value="old('fecha_vencimiento_meddream')
+                    ? old('fecha_vencimiento_meddream')
+                    : $cliente->fecha_vencimiento_meddream" />
+            @error('fecha_vencimiento_meddream')
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
