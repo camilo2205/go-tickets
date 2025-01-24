@@ -70,6 +70,7 @@ class ClienteController extends Controller
             $user->assignRole('cliente');
 
             Cliente::create([
+                'nit' => $request->nit,
                 'notifated_meddream' =>  $request->has('notifated_meddream') ? 1 : 0,
                 'fecha_vencimiento_meddream' => $request->fecha_vencimiento_meddream,
                 'razon_social' => $request->nombre,
