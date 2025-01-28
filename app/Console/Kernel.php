@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send:webpush')->everyMinute();
         $schedule->command('send:webpushcliente')->everyMinute();
         $schedule->command('send:webpushserver')->everyThirtyMinutes();
+        $schedule->command('notify:license-expiration')->everyThirtyMinutes();
     }
 
     /**

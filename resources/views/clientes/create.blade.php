@@ -94,5 +94,24 @@
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
+
+          <!-- notifated_meddream -->
+          <div class="md:basis-4/12 basis-1/2 px-2">
+            <x-label for="notifated_meddream" :value="__('Notificacion meddream')" />
+            <x-input id="notifated_meddream" class="block mt-1 w-full" type="checkbox" name="notifated_meddream"
+                :value=" old('notifated_meddream')" />
+            @error('notifated_meddream')
+                <x-small>{{ $message }}</x-small>
+            @enderror
+        </div>
+         <!-- Fecha vencimiento meddream -->
+         <div class="md:basis-4/12 basis-1/2 px-2">
+            <x-label for="fecha_vencimiento_meddream" :value="__('Fecha vencimiento meddream ')" />
+            <x-input id="fecha_vencimiento_meddream" class="block mt-1 w-full" type="datetime-local" name="fecha_vencimiento_meddream"
+                :value="old('fecha_vencimiento_meddream')" />
+            @error('fecha_vencimiento_meddream')
+                <x-small>{{ $message }}</x-small>
+            @enderror
+        </div>
     </form>
 </x-app-layout>

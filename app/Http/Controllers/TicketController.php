@@ -142,6 +142,21 @@ class TicketController extends Controller
         }
     }
 
+    public function obtenerMensajesFrecuentes()
+    {
+        $userId = auth()->user()->id;
+
+        // Consulta para obtener los 5 mensajes más utilizados por el usuario
+        $mensajesFrecuentes = Respuesta::select('cuerpo', DB::raw('count(*) as veces_usado'))
+            ->where('user_id', $userId)
+            ->groupBy('cuerpo')
+            ->orderBy('veces_usado', 'desc')
+            ->limit(4)
+            ->get();
+
+        return $mensajesFrecuentes;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -155,8 +170,11 @@ class TicketController extends Controller
                 $notification->markAsRead();
             }
         }
+
+        $mensajesFrecuentes = $this->obtenerMensajesFrecuentes();
+
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
-        return view('tickets.show', compact('ticket', 'funcionario'));
+        return view('tickets.show', compact('ticket', 'funcionario', 'mensajesFrecuentes'));
     }
 
     /**

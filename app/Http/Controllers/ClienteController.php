@@ -71,6 +71,8 @@ class ClienteController extends Controller
 
             Cliente::create([
                 'nit' => $request->nit,
+                'notifated_meddream' =>  $request->has('notifated_meddream') ? 1 : 0,
+                'fecha_vencimiento_meddream' => $request->fecha_vencimiento_meddream,
                 'razon_social' => $request->nombre,
                 'identificacion_encargado' => $request->identificacion_encargado,
                 'nombre_encargado' => $request->nombre_encargado,
@@ -94,7 +96,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-      dd('aqui?');
+        dd('aqui?');
     }
 
     public function showServer(Cliente $cliente)
@@ -163,6 +165,8 @@ class ClienteController extends Controller
 
             $cliente->update([
                 'nit' => $request->nit,
+                'notifated_meddream' => $request->has('notifated_meddream') ? 1 : 0,
+                'fecha_vencimiento_meddream' => $request->fecha_vencimiento_meddream,
                 'razon_social' => $request->nombre,
                 'user_id' => $user->id
             ]);

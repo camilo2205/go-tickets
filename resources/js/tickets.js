@@ -7,34 +7,10 @@ import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
 
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+// import Echo from 'laravel-echo';
+// import Pusher from 'pusher-js';
 
-window.Pusher = Pusher;
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-websockets-key',  // Debe coincidir con lo que tienes en tu .env
-//     cluster: 'mt1',  // Debe coincidir con el cluster en tu .env
-//     wsHost: window.location.hostname,  // El host de tu servidor de WebSocket (puede ser localhost)
-//     wsPort: 6001,  // El puerto donde el servidor WebSocket está corriendo
-//     forceTLS: false,  // Cambia a true si estás usando HTTPS
-//     disableStats: true,
-// });
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: window._env.PUSHER_APP_KEY,  // Usar el valor de .env
-    cluster: window._env.PUSHER_APP_CLUSTER,  // Usar el valor de .env
-    wsHost: window._env.WS_HOST,  // Usar el host de WebSocket
-    wsPort: window._env.WS_PORT,  // Usar el puerto donde el WebSocket está corriendo
-    wssPort: window._env.WS_PORT,
-    forceTLS: window.location.protocol === 'https:',
-    disableStats: true,
-    enabledTransports: ['ws', 'wss'],
-    encrypted: true,
-});
-
+// window.Pusher = Pusher;
 
 Dropzone.autoDiscover = false;
 // Pusher.logToConsole = true;
@@ -42,10 +18,9 @@ Dropzone.autoDiscover = false;
 // var pusher = new Pusher('79ea7ddcbadeea4b79b5', {
 //     cluster: 'us2'
 // });
+// import 'datatables.net';
 
 $(function () {
-    console.log(window._env);
-
     $('input[name="fecha"]').daterangepicker({
         autoUpdateInput: false,
         ranges: {
@@ -106,6 +81,13 @@ $(function () {
 
 
 $(document).ready(function () {
+
+    // Cuando un mensaje predeterminado sea seleccionado
+    $('.message-btn').click(function () {
+        var message = $(this).data('message');  // Obtiene el mensaje desde el atributo data-message
+        $('#cuerpo').val(message);  // Establece el mensaje en el textarea
+    });
+
     $('#funcionario_id').change(function (e) {
         if ($('#funcionario_id').val() == '') {
             $('#estado').val('creado');
@@ -289,7 +271,7 @@ $(document).ready(function () {
 
     window.Echo.channel('message-channel')
         .listen('.message-update', (e) => {
-           // Actualiza la tabla
+            // Actualiza la tabla
             getRespuestas();
         });
 

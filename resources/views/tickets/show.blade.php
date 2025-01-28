@@ -133,7 +133,7 @@
                         <!-- Contenedor flex para los campos -->
                         <div class="flex w-full space-x-4">
                             <!-- Textarea -->
-                            <div class="w-3/4 px-2">
+                            <div class="w-5/6 px-2">
                                 <x-label for="cuerpo" :value="__('Responder')" />
                                 <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
                                     :value="old('cuerpo')" autofocus required />
@@ -143,9 +143,9 @@
                             </div>
 
                             <!-- Dropzone Area -->
-                            <div class="w-2/6 px-1">
+                            <div class="w-1/6 h-2 px-1">
                                 <div id="dropzoneDragArea"
-                                    class="!p-1 dropzone flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                    class="!p-1 dropzone flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                     <div class="dz-message flex flex-col items-center justify-center h-full">
                                         <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -169,8 +169,37 @@
                             {{-- <div class="dropzone-previews"></div> --}}
                         </div>
 
+                        <!-- Contenedor de mensajes predeterminados -->
+                        @if (
+                            (auth()->user()->roles[0]->name === 'superadmin' || auth()->user()->roles[0]->name === 'funcionario') &&
+                                !auth()->user()->func_gotele)
+                            <div id="predetermined-messages" class="mt-2 mb-2 w-5/6">
+                                @if ($mensajesFrecuentes->isNotEmpty())
+                                    @foreach ($mensajesFrecuentes as $mensaje)
+                                        <button
+                                            class="message-btn px-4 py-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                            data-message="{{ $mensaje->cuerpo }}">
+                                            {{ $mensaje->cuerpo }}
+                                        </button>
+                                    @endforeach
+                                @else
+                                    <!-- Si no hay mensajes frecuentes, puedes mostrar algunos predeterminados por defecto -->
+                                    <button
+                                        class="message-btn px-4 py-2  mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Buenos días, corrección realizada.">Buenos días, corrección
+                                        realizada.</button>
+                                    <button
+                                        class="message-btn px-4 py-2 mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Hola, tu solicitud ha sido procesada.">Buenas tardes, corrección realizada</button>
+                                    <button
+                                        class="message-btn px-4 py-2  mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
+                                        data-message="Gracias por tu paciencia. Tu consulta está siendo revisada.">Estudio eliminado</button>
+                                @endif
+                            </div>
+                        @endif
+
                         <!-- Guardar -->
-                        <div class="basis-full px-2 pb-2">
+                        <div class="basis-full px-2 pb-2 mt-2">
                             {{-- <input type="hidden" name="cerrar" id="cerrar" value="0"> --}}
                             <input type="hidden" name="notificado" id="notificado" value="0">
                             <x-button type='submit' id="enviar">
@@ -205,7 +234,8 @@
             </tr>
         @endif
     </table>
-    <script>
+
+    {{-- <script>
         window._env = {
             PUSHER_APP_ID: '{{ config('app.pusher_app_id') }}',
             PUSHER_APP_KEY: '{{ config('app.pusher_app_key') }}',
@@ -213,7 +243,7 @@
             WS_HOST: '{{ config('app.ws_host') }}',
             WS_PORT: '{{ config('app.ws_port') }}',
         };
-    </script>
+    </script> --}}
     <script src="{{ asset('js/cruds/tickets.js?id=03') }}" defer></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>

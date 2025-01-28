@@ -19,6 +19,16 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- Scripts -->
+    <script>
+        window._env = {
+            PUSHER_APP_ID: '{{ config('app.pusher_app_id') }}',
+            PUSHER_APP_KEY: '{{ config('app.pusher_app_key') }}',
+            PUSHER_APP_CLUSTER: '{{ config('app.pusher_app_cluster') }}',
+            WS_HOST: '{{ config('app.ws_host') }}',
+            WS_PORT: '{{ config('app.ws_port') }}',
+        };
+    </script>
+
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <link href="{{ asset('librerias/fancyboxui.min.css') }}" rel="stylesheet">
@@ -57,18 +67,18 @@
             </div>
         </main>
     </div>
-   <!-- Configura las variables globales ANTES de app.js -->
-   <script>
-    window.laravelEchoConfig = {
-        key: '{{ config("broadcasting.connections.pusher.key") }}',
-        cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
-        wsHost: window.location.hostname,
-        wsPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
-        wssPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
-        forceTLS: false,
-        enabledTransports: ['ws', 'wss']
-    };
-</script>
+    <!-- Configura las variables globales ANTES de app.js -->
+    <script>
+        window.laravelEchoConfig = {
+            key: '{{ config('broadcasting.connections.pusher.key') }}',
+            cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
+            wsHost: window.location.hostname,
+            wsPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
+            wssPort: {{ config('broadcasting.connections.pusher.options.port', 6001) }},
+            forceTLS: false,
+            enabledTransports: ['ws', 'wss']
+        };
+    </script>
     @auth
         <script src="{{ asset('js/enable-push.js') }}" defer></script>
     @endauth
