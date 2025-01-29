@@ -18,5 +18,11 @@
         </div>
     </div>
 
+    <div class="flex flex-row flex-wrap">
+        <div class="md:basis-11/12 basis-full px-5">
+            <canvas id="ticketsxcliente" height="300vh"></canvas>
+        </div>
+    </div>
+
     <script src="/js/dashboard.js"></script>
 </x-app-layout>

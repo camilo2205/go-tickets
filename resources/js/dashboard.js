@@ -3,7 +3,7 @@ import {
     registerables
 } from "chart.js";
 import $ from 'jquery';
-import { capitalize } from "lodash";
+import { capitalize, fill } from "lodash";
 var moment = require('moment')
 
 Chart.register(...registerables);
@@ -120,6 +120,60 @@ $.ajax({
             document.getElementById('grafico2'),
             config2
         );
+        let clientes = [];
+        response.clientesConTickets.forEach(cliente => {
+            clientes.push(cliente.razon_social);
+        });
+        let ticketsCount = [];
+        response.clientesConTickets.forEach(cliente => {
+            ticketsCount.push(cliente.tickets_count);
+        });
+        let backgroundColor = [];
+        response.clientesConTickets.forEach(cliente => {
+            backgroundColor.push('rgb(99, 132, 255)');
+        });
+
+        const data3 = {
+            labels: clientes,
+            datasets: [{
+                axis: 'y',
+                label: 'Tickets Creados por cliente',
+                data: ticketsCount,
+                fill: false,
+                backgroundColor: backgroundColor,
+                borderColor: backgroundColor,
+                borderWidth: 1
+            }]
+        }
+
+        const config3 = {
+            type: 'bar',
+            data: data3,
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tickets Creados por Cliente'
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: max,
+                        ticks: {
+                            precision: 0
+                        },
+                    }
+                }
+            }
+        }
+        const ctx3 = document.getElementById('ticketsxcliente');
+        const myChart3 = new Chart(
+            ctx3,
+            config3
+        );
+
         setInterval(() => {
             $.ajax({
                 type: "get",

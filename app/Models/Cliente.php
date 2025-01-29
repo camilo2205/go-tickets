@@ -43,9 +43,12 @@ class Cliente extends Model
         return $this->belongsTo(User::class);
     }
 
-
     public function server()
     {
         return $this->hasOne(Server::class);
+    }
+
+    function tickets() {
+        return $this->hasMany(Ticket::class);
     }
 }

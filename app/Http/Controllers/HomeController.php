@@ -133,6 +133,11 @@ class HomeController extends Controller
                 ->count();
             $dataPie = [$cantidadTicketsSinAsignar, $cantidadTicketsAsignados, $cantidadTicketsAtendidos, $cantidadTicketsResueltos];
         }
-        return response()->json(compact('ticketsArray', 'ticketsResueltosArray', 'dataPie', 'meses'));
+
+        $clientesConTickets = Cliente::withCount('tickets')
+        ->orderBy('tickets_count', 'desc')
+        ->get();
+
+        return response()->json(compact('ticketsArray', 'ticketsResueltosArray', 'dataPie', 'meses', 'clientesConTickets'));
     }
 }
