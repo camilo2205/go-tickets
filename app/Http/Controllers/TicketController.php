@@ -166,7 +166,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        if ($ticket->funcionario_id !== Auth::user()->funcionario->id) {
+        if ($ticket->funcionario_id && ($ticket->funcionario_id !== Auth::user()->funcionario->id)) {
             return view('errors.accesoticket', []);
         }
 
