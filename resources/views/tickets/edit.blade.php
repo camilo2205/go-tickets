@@ -95,9 +95,10 @@
                     @enderror
                 </td>
             </tr>
+
             <tr>
                 <td class="border border-slate-300 px-5 py-1" colspan="6">
-                    <strong>Descripción: </strong><br>
+                    <strong>Nombre: </strong><br>
                     @if (!$cliente || $ticket->estado == 'creado')
                         <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion"
                             :value="old('descripcion')">
@@ -107,6 +108,19 @@
                         <p style="font-size: 12px">{{ $ticket->descripcion }}</p>
                     @endif
                     @error('descripcion')
+                        <x-small>{{ $message }}</x-small>
+                    @enderror
+                </td>
+            </tr>
+            <tr>
+                <td class="border border-slate-300 px-5 py-1" colspan="6">
+                    <strong>Nombre del Solicitante: </strong><br>
+                    @if (!$cliente || $ticket->estado == 'creado')
+                        <x-input id="nombre_solicitante" class="block mt-1 w-full" type="text" name="nombre_solicitante" :value="old('nombre_solicitante', $ticket->nombre_solicitante)" />
+                    @else
+                        <p style="font-size: 12px">{{ $ticket->nombre_solicitante }}</p>
+                    @endif
+                    @error('nombre_solicitante')
                         <x-small>{{ $message }}</x-small>
                     @enderror
                 </td>

@@ -104,6 +104,7 @@ class TicketController extends Controller
                 'funcionario_id' => $request->funcionario_id,
                 'prioridad' => $request->prioridad,
                 'descripcion' => $request->descripcion,
+                'nombre_solicitante'=>$request->nombre_solicitante,
                 'tipo' => $request->tipo,
                 'created_by' => auth()->user()->id
             ]);
@@ -165,6 +166,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        if ($ticket->funcionario_id !== Auth::user()->funcionario->id) {
+            return view('errors.accesoticket', []);
+        }
+
+
         foreach (auth()->user()->unreadNotifications as $notification) {
             if ($notification->data['ticket_id'] == $ticket->id) {
                 $notification->markAsRead();
@@ -209,6 +215,7 @@ class TicketController extends Controller
     {
         $request->validate([
             'descripcion' => 'required',
+            'nombre_solicitante'=> 'required|min:10',
             'prioridad' => 'required',
             'tipo' => 'required'
         ]);
@@ -313,7 +320,7 @@ class TicketController extends Controller
         foreach ($respuestas as $respuesta) {
             $respuesta->update(['notificado' => 1]);
         }
-        /*  
+        /*
         $respuestas = $tickets->respuestas()->where('notificado', 0)->update(['notificado' => 1]); */
         return response()->json(['respuestas_tickets' => $respuestas]);
     }

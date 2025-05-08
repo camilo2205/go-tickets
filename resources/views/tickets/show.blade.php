@@ -22,10 +22,15 @@
     </x-slot>
 
     <table class="border-collapse border border-slate-400 w-full">
+        <!-- Información principal del ticket -->
         <tr>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Cliente: </strong><br>
                 {{ $ticket->cliente->razon_social }}
+            </td>
+            <td class="border border-slate-300 px-5 py-1">
+                <strong>Nombre Solicitante: </strong><br>
+                {{ ucfirst($ticket->nombre_solicitante) }}
             </td>
             <td class="border border-slate-300 px-5 py-1">
                 <strong>Encargado: </strong><br>
@@ -40,14 +45,18 @@
                 {{ ucfirst($ticket->prioridad) }}
             </td>
         </tr>
+
+        <!-- Descripción -->
         <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
+            <td class="border border-slate-300 px-5 py-1" colspan="5">
                 <strong>Descripción: </strong><br>
                 <p>{!! nl2br(e($ticket->descripcion)) !!}</p>
             </td>
         </tr>
+
+        <!-- Tags -->
         <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
+            <td class="border border-slate-300 px-5 py-1" colspan="5">
                 <strong>Tags:</strong><br>
                 <div class="flex flex-wrap space-x-2 items-end" id="tagsTickets">
                     @foreach ($ticket->tags as $tag)
@@ -62,8 +71,10 @@
                 </div>
             </td>
         </tr>
+
+        <!-- Soportes adjuntos -->
         <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4">
+            <td class="border border-slate-300 px-5 py-1" colspan="5">
                 <strong>Soportes: </strong><br>
                 @foreach ($ticket->soportes as $soporte)
                     <table class="w-full border-collapse border border-slate-400">
@@ -80,12 +91,13 @@
                 @endforeach
             </td>
         </tr>
+
+        <!-- Historial de respuestas -->
         <tr>
-            <td class="border border-slate-300 px-5 py-1" colspan="4" id="td-respuestas">
+            <td class="border border-slate-300 px-5 py-1" colspan="5" id="td-respuestas">
                 @foreach ($ticket->respuestas as $respuesta)
                     <div class="flex {{ $respuesta->user->cliente ? 'flex-row' : 'flex-row-reverse' }} space-x-2">
-                        <div
-                            class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
+                        <div class="rounded-xl m-1 p-3 basis-7/12 {{ $respuesta->user->cliente ? 'bg-cyan-300' : 'bg-green-200' }}">
                             <strong>{{ $respuesta->user->name }}
                                 ({{ $respuesta->user->cliente ? 'Cliente' : ($respuesta->user->funcionario ? 'Funcionario' : 'Admin') }})
                                 - {{ formatDate($respuesta->created_at, 'd/m/Y h:i A') }}
@@ -119,20 +131,20 @@
                 @endforeach
             </td>
         </tr>
+
+        <!-- Formulario de respuesta (solo si el ticket está activo) -->
         @if ($ticket->estado != 'creado' && $ticket->estado != 'resuelto')
             <tr>
-                <td class="border border-slate-300 px-5 py-1" colspan="4">
-                    <!-- Formulario -->
+                <td class="border border-slate-300 px-5 py-1" colspan="5">
+                    <!-- Formulario principal -->
                     <form action="{{ route('respuestas.store') }}" name="dropzone-form" method="post" class="drozone"
                         id="dropzone-form" enctype="multipart/form-data" class="flex flex-row flex-wrap space-y-4">
                         @csrf
-                        <!-- Campos adicionales del formulario -->
                         <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                         <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
 
-                        <!-- Contenedor flex para los campos -->
                         <div class="flex w-full space-x-4">
-                            <!-- Textarea -->
+                            <!-- Área de texto -->
                             <div class="w-5/6 px-2">
                                 <x-label for="cuerpo" :value="__('Responder')" />
                                 <x-textarea id="cuerpo" class="block mt-1 w-full" type="text" name="cuerpo"
@@ -142,7 +154,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Dropzone Area -->
+                            <!-- Área de arrastrar y soltar -->
                             <div class="w-1/6 h-2 px-1">
                                 <div id="dropzoneDragArea"
                                     class="!p-1 dropzone flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -162,14 +174,12 @@
                                     </div>
                                 </div>
                                 @error('file_message')
-                                    <x-small>{{ $message }}</x-small>
+                                    <x-small>{{ $message ?? 'error desconocido' }}</x-small>
                                 @enderror
                             </div>
-
-                            {{-- <div class="dropzone-previews"></div> --}}
                         </div>
 
-                        <!-- Contenedor de mensajes predeterminados -->
+                        <!-- Mensajes predeterminados -->
                         @if (
                             (auth()->user()->roles[0]->name === 'superadmin' || auth()->user()->roles[0]->name === 'funcionario') &&
                                 !auth()->user()->func_gotele)
@@ -183,7 +193,6 @@
                                         </button>
                                     @endforeach
                                 @else
-                                    <!-- Si no hay mensajes frecuentes, puedes mostrar algunos predeterminados por defecto -->
                                     <button
                                         class="message-btn px-4 py-2  mt-2 bg-blue-600 text-sm text-white rounded-md hover:bg-blue-600"
                                         data-message="Buenos días, corrección realizada.">Buenos días, corrección
@@ -198,9 +207,8 @@
                             </div>
                         @endif
 
-                        <!-- Guardar -->
+                        <!-- Botones de acción -->
                         <div class="basis-full px-2 pb-2 mt-2">
-                            {{-- <input type="hidden" name="cerrar" id="cerrar" value="0"> --}}
                             <input type="hidden" name="notificado" id="notificado" value="0">
                             <x-button type='submit' id="enviar">
                                 Enviar &nbsp;&nbsp;
@@ -223,6 +231,8 @@
                             @endif
                         </div>
                     </form>
+
+                    <!-- Formulario oculto para cerrar ticket -->
                     <form action="{{ route('respuestas.store') }}" method="post" id="respuesta-form">
                         @csrf
                         <input type="hidden" name="cerrar" id="cerrar" value="0">
