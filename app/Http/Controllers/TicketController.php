@@ -101,6 +101,7 @@ class TicketController extends Controller
             'nombre_solicitante' => [
                 'required',
                 'min:10',
+                'max:35',
                 'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
                 function ($attribute, $value, $fail) {
                     if (str_word_count($value) < 2) {
@@ -234,6 +235,7 @@ class TicketController extends Controller
             'nombre_solicitante' => [
                 'required',
                 'min:10',
+                'max:35',
                 'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
                 function ($attribute, $value, $fail) {
                     if (str_word_count($value) < 2) {
