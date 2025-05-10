@@ -95,7 +95,23 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Ticket::$rules);
+        $request->validate([
+            'cliente_id' => 'required',
+            'descripcion' => 'required|min:15',
+            'nombre_solicitante' => [
+                'required',
+                'min:10',
+                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
+                function ($attribute, $value, $fail) {
+                    if (str_word_count($value) < 2) {
+                        $fail('Debe escribir al menos nombre y apellido.');
+                    }
+                }
+            ],
+            'prioridad' => 'required',
+            'tipo' => 'required'
+        ]);
+
         try {
             DB::beginTransaction();
             $ticket = Ticket::create([
@@ -214,8 +230,17 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'descripcion' => 'required',
-            'nombre_solicitante'=> 'required|min:10',
+            'descripcion' => 'required|min:15',
+            'nombre_solicitante' => [
+                'required',
+                'min:10',
+                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
+                function ($attribute, $value, $fail) {
+                    if (str_word_count($value) < 2) {
+                        $fail('Debe escribir al menos nombre y apellido.');
+                    }
+                }
+            ],
             'prioridad' => 'required',
             'tipo' => 'required'
         ]);

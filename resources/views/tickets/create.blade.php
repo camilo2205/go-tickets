@@ -110,7 +110,7 @@
         <!-- Nombre del Solicitante -->
         <div class="md:basis-1/2 px-2">
             <x-label for="nombre_solicitante" :value="__('Nombre del Solicitante')" />
-            <x-input id="nombre_solicitante" class="block mt-1 w-full" type="text" name="nombre_solicitante"
+            <x-input id="nombre_solicitante" class="block mt-1 w-full" type="text" name="nombre_solicitante" placeholder="Ej: Sebastian Suarez"
                 :value="old('nombre_solicitante')"/>
             @error('nombre_solicitante')
                 <x-small class="text-red-500">{{ $message }}</x-small>
@@ -120,7 +120,7 @@
         <!-- Descripción -->
         <div class="md:basis-1/2 px-2">
             <x-label for="descripcion" :value="__('Descripción')" />
-            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion">
+            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion" placeholder="Descripción solicitud">
                 {{ old('descripcion') }}
             </x-textarea>
             @error('descripcion')
