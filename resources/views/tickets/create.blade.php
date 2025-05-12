@@ -131,8 +131,8 @@
         <!-- Soportes -->
         <div class="md:basis-1/2 px-2">
             <x-label for="soportes" :value="__('Soportes')" />
-            <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" accept="image/*"
-                multiple />
+            <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" 
+                accept="image/*,.pdf,.doc,.docx" multiple />
             @error('soportes')
                 <x-small>{{ $message }}</x-small>
             @enderror

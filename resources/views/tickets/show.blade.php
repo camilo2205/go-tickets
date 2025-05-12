@@ -82,9 +82,31 @@
                             <td class="border border-slate-300">
                                 <button @click="expanded = ! expanded" class="w-full ml-2">Soporte
                                     {{ $loop->iteration }}</button>
-                                <p x-show="expanded" x-collapse>
-                                    <img src="/{{ $soporte->ruta }}" alt="Soporte_{{ $soporte->id }}" class="mt-2">
-                                </p>
+                                <div x-show="expanded" x-collapse>
+                                    @php
+                                        $extension = pathinfo($soporte->ruta, PATHINFO_EXTENSION);
+                                    @endphp
+                                    @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                        <a href="/{{ $soporte->ruta }}" data-fancybox="gallery">
+                                            <img src="/{{ $soporte->ruta }}" alt="Soporte_{{ $soporte->id }}" class="mt-2">
+                                        </a>
+                                    @elseif (in_array($extension, ['pdf', 'doc', 'docx']))
+                                        <div class="mt-2">
+                                            <a href="/{{ $soporte->ruta }}" target="_blank" class="text-blue-500 hover:text-blue-700 underline">
+                                                <i class="fas fa-file-{{ $extension == 'pdf' ? 'pdf' : 'word' }} mr-2"></i>
+                                                Descargar {{ strtoupper($extension) }}
+                                            </a>
+                                            @if ($extension == 'pdf')
+                                                <iframe src="/{{ $soporte->ruta }}" class="w-full h-96 mt-2"></iframe>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <a href="/{{ $soporte->ruta }}" download class="text-blue-500 hover:text-blue-700 underline mt-2 block">
+                                            <i class="fas fa-download mr-2"></i>
+                                            Descargar archivo
+                                        </a>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     </table>
