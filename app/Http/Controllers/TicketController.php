@@ -95,7 +95,24 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Ticket::$rules);
+        $request->validate([
+            'cliente_id' => 'required',
+            'descripcion' => 'required|min:15',
+            'nombre_solicitante' => [
+                'required',
+                'min:10',
+                'max:35',
+                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
+                function ($attribute, $value, $fail) {
+                    if (str_word_count($value) < 2) {
+                        $fail('Debe escribir al menos nombre y apellido.');
+                    }
+                }
+            ],
+            'prioridad' => 'required',
+            'tipo' => 'required'
+        ]);
+
         try {
             DB::beginTransaction();
             $ticket = Ticket::create([
@@ -104,6 +121,7 @@ class TicketController extends Controller
                 'funcionario_id' => $request->funcionario_id,
                 'prioridad' => $request->prioridad,
                 'descripcion' => $request->descripcion,
+                'nombre_solicitante'=>$request->nombre_solicitante,
                 'tipo' => $request->tipo,
                 'created_by' => auth()->user()->id
             ]);
@@ -165,6 +183,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        if (isset($ticket->funcionario_id) && isset(Auth::user()->funcionario) && ($ticket->funcionario_id !== Auth::user()->funcionario->id)) {
+            return view('errors.accesoticket', []);
+        }
+
+
         foreach (auth()->user()->unreadNotifications as $notification) {
             if ($notification->data['ticket_id'] == $ticket->id) {
                 $notification->markAsRead();
@@ -208,7 +231,18 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'descripcion' => 'required',
+            'descripcion' => 'required|min:15',
+            'nombre_solicitante' => [
+                'required',
+                'min:10',
+                'max:35',
+                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
+                function ($attribute, $value, $fail) {
+                    if (str_word_count($value) < 2) {
+                        $fail('Debe escribir al menos nombre y apellido.');
+                    }
+                }
+            ],
             'prioridad' => 'required',
             'tipo' => 'required'
         ]);
@@ -313,7 +347,7 @@ class TicketController extends Controller
         foreach ($respuestas as $respuesta) {
             $respuesta->update(['notificado' => 1]);
         }
-        /*  
+        /*
         $respuestas = $tickets->respuestas()->where('notificado', 0)->update(['notificado' => 1]); */
         return response()->json(['respuestas_tickets' => $respuestas]);
     }

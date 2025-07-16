@@ -62,7 +62,7 @@
                     @endforeach
                 </x-select>
                 @error('funcionario_id')
-                    <x-small>{{ $message }}</x-small>
+                <x-small>{{ $message ?? 'Error desconocido' }}</x-small>
                 @enderror
             </div>
         @endif
@@ -71,7 +71,7 @@
             <x-label for="Tags" :value="__('Tags')" />
             <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control">
                 @foreach ($tags as $tag)
-                    <option value="{{ $tag->id}}"> {{ $tag->nombre }}</option>
+                    <option value="{{ $tag->id }}"> {{ $tag->nombre }}</option>
                 @endforeach
             </x-select>
             @error('tags')
@@ -83,7 +83,9 @@
             <x-label for="prioridad" :value="__('Prioridad')" />
             <x-select name="prioridad" id="prioridad">
                 <option value="urgente" @if ('urgente' == old('prioridad')) selected @endif>Urgente</option>
-                <option value="normal" @if ('normal' == old('prioridad')) selected @elseif(!old('prioridad')) selected @endif>Normal</option>
+                <option value="normal"
+                    @if ('normal' == old('prioridad')) selected @elseif(!old('prioridad')) selected @endif>
+                    Normal</option>
             </x-select>
             @error('prioridad')
                 <x-small>{{ $message }}</x-small>
@@ -94,7 +96,9 @@
         <div class="md:basis-1/6 px-2">
             <x-label for="tipo" :value="__('Tipo')" />
             <x-select name="tipo" id="tipo">
-                <option value="soporte" @if ('soporte' == old('tipo')) selected @elseif(!old('tipo')) selected @endif>Soporte</option>
+                <option value="soporte"
+                    @if ('soporte' == old('tipo')) selected @elseif(!old('tipo')) selected @endif>
+                    Soporte</option>
                 <option value="ajuste" @if ('ajuste' == old('tipo')) selected @endif>Ajuste</option>
                 <option value="desarrollo" @if ('desarrollo' == old('tipo')) selected @endif>Desarrollo</option>
                 <option value="capacitacion" @if ('capacitacion' == old('tipo')) selected @endif>Capacitacion</option>
@@ -103,11 +107,20 @@
                 <x-small>{{ $message }}</x-small>
             @enderror
         </div>
+        <!-- Nombre del Solicitante -->
+        <div class="md:basis-1/2 px-2">
+            <x-label for="nombre_solicitante" :value="__('Nombre del Solicitante')" />
+            <x-input id="nombre_solicitante" class="block mt-1 w-full" type="text" name="nombre_solicitante" placeholder="Ej: Sebastian Suarez"
+                :value="old('nombre_solicitante')"/>
+            @error('nombre_solicitante')
+                <x-small class="text-red-500">{{ $message }}</x-small>
+            @enderror
+        </div>
 
         <!-- Descripción -->
         <div class="md:basis-1/2 px-2">
             <x-label for="descripcion" :value="__('Descripción')" />
-            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion">
+            <x-textarea id="descripcion" class="block mt-1 w-full" type="text" name="descripcion" placeholder="Descripción solicitud">
                 {{ old('descripcion') }}
             </x-textarea>
             @error('descripcion')
@@ -118,8 +131,8 @@
         <!-- Soportes -->
         <div class="md:basis-1/2 px-2">
             <x-label for="soportes" :value="__('Soportes')" />
-            <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" accept="image/*"
-                multiple />
+            <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" 
+                accept="image/*,.pdf,.doc,.docx" multiple />
             @error('soportes')
                 <x-small>{{ $message }}</x-small>
             @enderror

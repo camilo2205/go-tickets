@@ -18,12 +18,14 @@ class Ticket extends Model
         'prioridad',
         'tipo',
         'estado',
-        'created_by'
+        'created_by',
+        'nombre_solicitante', // Nuevo campo
     ];
 
     public static $rules = [
         'cliente_id' => 'required',
         'descripcion' => 'required',
+        'nombre_solicitante'=> 'required|min:10',
         'prioridad' => 'required',
         'tipo' => 'required',
         /*        'tags' => 'required' */
