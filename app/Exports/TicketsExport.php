@@ -88,8 +88,9 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                 $tagsName .= $tags->nombre . ', ';
             }
         }
+        $razon_social = $ticket->cliente ? $ticket->cliente->razon_social : '';
         return [
-            $ticket->cliente->razon_social,
+            $razon_social,
             $ticket->descripcion,
             $ticket->estado,
             $ticket->funcionario ? $ticket->funcionario->user->name : '',
