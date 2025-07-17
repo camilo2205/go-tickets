@@ -10,11 +10,17 @@
     </x-slot>
 
     <div class="flex flex-row flex-wrap">
-        <div class="md:basis-5/12 basis-full px-5">
+        <div class="md:basis-4/12 basis-full px-5">
             <canvas id="grafico"></canvas>
         </div>
         <div class="md:basis-1/2 basis-full px-5">
             <canvas id="grafico2"></canvas>
+        </div>
+    </div>
+
+    <div class="flex flex-row flex-wrap">
+        <div class="md:basis-11/12 basis-full px-5">
+            <canvas id="ticketsxcliente" height="100vh"></canvas>
         </div>
     </div>
 

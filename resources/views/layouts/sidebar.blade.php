@@ -38,6 +38,13 @@
                         </x-nav-link>
                     </li>
                 @endcan
+                @can('tareas.index')
+                    <li class="mr-3 flex-1">
+                        <x-nav-link :href="route('tareas.index')" :active="request()->routeIs('tareas.*')">
+                            {{ __('Tareas') }}
+                        </x-nav-link>
+                    </li>
+                @endcan
                 <li class="mr-3 flex-1">
                     <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.*')">
                         {{ __('Instructivos') }}

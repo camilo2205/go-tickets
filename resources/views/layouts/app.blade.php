@@ -36,17 +36,25 @@
 </head>
 
 <body class="font-sans antialiased">
-    @auth
-        @include('layouts.navigation')
-    @endauth
+    @if (!isset($fullscreen) || $fullscreen == '0')
+        @auth
+            @include('layouts.navigation')
+        @endauth
+    @endif
     <div class="min-h-screen bg-white">
         <!-- Page Content -->
         <main>
             <div class="flex flex-col md:flex-row">
-                @auth
-                    @include('layouts.sidebar')
-                @endauth
-                <section class="overflow-auto mt-16 w-full">
+                @if (!isset($fullscreen) || $fullscreen == '0')
+                    @auth
+                        @include('layouts.sidebar')
+                    @endauth
+                @endif
+                @if (isset($fullscreen) && $fullscreen == '1')
+                    <section class="overflow-auto w-full">
+                @else 
+                    <section class="overflow-auto mt-16 w-full">
+                @endif
                     <div id="main" class="main-content flex-1 bg-white mt-12 md:mt-3 pb-24 md:pb-5">
                         <!-- Page Heading -->
                         <header class="bg-white">

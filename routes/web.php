@@ -8,6 +8,7 @@ use App\Http\Controllers\InstructivoController;
 use App\Http\Controllers\RespuestaController;
 use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SoporteController;
+use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -55,8 +56,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('funcionarios', FuncionarioController::class);
     Route::resource('tickets', TicketController::class);
     Route::resource('soportes', SoporteController::class);
+    Route::resource('tareas', TareaController::class);
     Route::resource('respuestas', RespuestaController::class);
     Route::resource('posts', InstructivoController::class);
+
+    // Rutas adicionales para tareas (index.blade.php)
+    Route::patch('tareas/{tarea}/updateEnfoque', [TareaController::class, 'updateEnfoque'])->name('tareas.updateEnfoque');
+    Route::patch('tareas/{tarea}/updateEstado', [TareaController::class, 'updateEstado'])->name('tareas.updateEstado');
+    Route::patch('tareas/{tarea}/updatePrioridad', [TareaController::class, 'updatePrioridad'])->name('tareas.updatePrioridad');
+    Route::patch('tareas/{tarea}/updateEncargado', [TareaController::class, 'updateEncargado'])->name('tareas.updateEncargado');
 });
 
 require __DIR__ . '/auth.php';
