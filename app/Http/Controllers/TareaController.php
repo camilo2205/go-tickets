@@ -21,7 +21,8 @@ class TareaController extends Controller
     {
         $fullscreen = $request->query('fullscreen', false);
         $encargados = Funcionario::all();
-        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC')->get();
+        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')
+        ->get();
         if ($fullscreen) {
             return view('tareas.index', compact('tareas', 'encargados', 'fullscreen'));
         } else {
@@ -31,7 +32,9 @@ class TareaController extends Controller
 
     public function render(Request $request)
     {
-        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC')->get();
+        // dd(Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')->toSql());
+        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')
+        ->get();
         $encargados = Funcionario::all();
         $fullscreen = $request->query('fullscreen', false);
         if ($fullscreen) {

@@ -50,36 +50,51 @@ $(document).ready(function () {
     });
 
     function actualizarTabla() {
-        const estadoFlip = Flip.getState("[flip-id]");
-
         $.ajax({
             url: "/tareas/render",
             type: "GET",
             success: function (nuevoHtml) {
-                const newContenedor = $('<tbody/>', {
-                    html: nuevoHtml
-                })
+                const estadoFlip = Flip.getState("[flip-id]");
+
+                const newContenedor = $("<tbody/>", {
+                    html: nuevoHtml,
+                });
 
                 let childrens = newContenedor.children();
-                let targets = estadoFlip.targets;
+                let continuar = true;
 
-                for (let i = 0; i < targets.length; i++) {
-                    const elemento = estadoFlip.targets[i];
-                    if (elemento.getAttribute('flip-id') === childrens[i].getAttribute('flip-id')) {
-                        $(elemento).attr('class', $(childrens[i]).attr('class'))
-                        $(elemento).html($(childrens[i]).html())
-                    } else {
-                        for (let j = 0; j < childrens.length; j++) {
-                            const element = childrens[j];
-                            if (element.getAttribute('flip-id') === elemento.getAttribute('flip-id')) {
-                                console.log('here you are (' + j + ')', elemento, targets[j])
-                                $(elemento).html($(element).html())
-                                $(elemento).insertBefore(estadoFlip.targets[j])
-                                break;
+                do {
+                    continuar = true;
+                    let targets = $('#tareas-tbody').children();
+                    for (let i = 0; i < targets.length; i++) {
+                        const elemento = targets[i];
+                        if (
+                            elemento.getAttribute("flip-id") ===
+                            childrens[i].getAttribute("flip-id")
+                        ) {
+                            $(elemento).attr(
+                                "class",
+                                $(childrens[i]).attr("class")
+                            );
+                            $(elemento).html($(childrens[i]).html());
+                        } else {
+                            for (let j = 0; j < childrens.length; j++) {
+                                const element = childrens[j];
+                                if (
+                                    element.getAttribute("flip-id") ===
+                                    elemento.getAttribute("flip-id")
+                                ) {
+                                    $(elemento).html($(element).html());
+                                    $(elemento).insertBefore(
+                                        targets[j]
+                                    );
+                                    continuar = false;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
+                } while (!continuar);
 
                 Flip.from(estadoFlip, {
                     duration: 0.5,
