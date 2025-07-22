@@ -136,6 +136,7 @@ class HomeController extends Controller
 
         $clientesConTickets = Cliente::withCount('tickets')
         ->orderBy('tickets_count', 'desc')
+        ->take(10)
         ->get();
 
         return response()->json(compact('ticketsArray', 'ticketsResueltosArray', 'dataPie', 'meses', 'clientesConTickets'));

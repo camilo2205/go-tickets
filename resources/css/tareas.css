@@ -14,6 +14,16 @@
     font-weight: bold;
 }
 
+.option-prioridad-baja {
+    color: #00bcd4 !important; /* Color más oscuro */
+}
+.option-prioridad-media {
+    color: #ff9800 !important; /* Color más oscuro */
+}
+.option-prioridad-alta {
+    color: #d32f2f !important; /* Color más oscuro */
+}
+
 /* Colores para estado (más intensos) */
 .estado-pendiente { color: #e65100 !important; }
 .estado-en_progreso { color: #388e3c !important; }

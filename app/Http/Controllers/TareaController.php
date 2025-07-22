@@ -29,6 +29,17 @@ class TareaController extends Controller
         }
     }
 
+    public function render(Request $request)
+    {
+        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC')->get();
+        $encargados = Funcionario::all();
+        $fullscreen = $request->query('fullscreen', false);
+        if ($fullscreen) {
+            return view('tareas.partials.tbody', compact('tareas', 'encargados', 'fullscreen'));
+        } 
+        return view('tareas.partials.tbody', compact('tareas', 'encargados'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

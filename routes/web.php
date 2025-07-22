@@ -51,6 +51,7 @@ Route::get('/clientes/{cliente}/server', [ClienteController::class, 'showServer'
 Route::put('/clientes/{cliente}/server', [ClienteController::class, 'updateDisk'])->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('tareas/render', [TareaController::class, 'render'])->name('tareas.render');
     Route::resource('clientes', ClienteController::class);
     Route::resource('users', UserController::class);
     Route::resource('funcionarios', FuncionarioController::class);
