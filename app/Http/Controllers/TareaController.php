@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TareaUpdated;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Tarea;
@@ -79,6 +80,7 @@ class TareaController extends Controller
                 'cliente_id' => $request->cliente_id,
             ]);
 
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Tarea creada exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al crear la tarea: ' . $e->getMessage());
@@ -112,6 +114,7 @@ class TareaController extends Controller
         try {
             $tarea->prioridad = $request->prioridad;
             $tarea->save();
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Prioridad actualizada correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al actualizar prioridad: ' . $e->getMessage());
@@ -144,6 +147,7 @@ class TareaController extends Controller
         try {
             $tarea->enfoque = $request->enfoque;
             $tarea->save();
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Enfoque actualizado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al actualizar enfoque: ' . $e->getMessage());
@@ -172,6 +176,7 @@ class TareaController extends Controller
         try {
             $tarea->encargado_id = $request->encargado_id;
             $tarea->save();
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Encargado actualizado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al actualizar encargado: ' . $e->getMessage());
@@ -196,6 +201,7 @@ class TareaController extends Controller
                 $tarea->encargado_id = null; // Reset encargado_id when estado is updated
             }
             $tarea->save();
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Estado actualizado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al actualizar estado: ' . $e->getMessage());

@@ -43,12 +43,6 @@ $(document).ready(function () {
         document.querySelector(".select2-search__field").focus();
     });
 
-    $(".form-update-encargado").on("submit", function (e) {
-        alert("await");
-        e.preventDefault();
-        alert("Formulario de actualización enviado");
-    });
-
     function actualizarTabla() {
         $.ajax({
             url: "/tareas/render",
@@ -62,6 +56,15 @@ $(document).ready(function () {
 
                 let childrens = newContenedor.children();
                 let continuar = true;
+
+                let ids = estadoFlip.targets.map( t => $(t).attr('flip-id'));
+                
+                for (let i = 0; i < childrens.length; i++) {
+                    const childtr = childrens[i];
+                    if (!ids.includes($(childtr).attr('flip-id'))) {
+                        $('#tareas-tbody').append(childtr);
+                    }
+                }
 
                 do {
                     continuar = true;
@@ -109,7 +112,10 @@ $(document).ready(function () {
         });
     }
 
-    setInterval(() => {
-        actualizarTabla();
-    }, 10000);
+    window.Echo.channel('tarea-channel')
+        .listen('.tarea-update', (e) => {
+            // Actualiza la tabla
+            actualizarTabla();
+        });
+
 });
