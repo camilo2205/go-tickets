@@ -151,6 +151,36 @@ class TareaController extends Controller
         return view('tareas.show', compact('tarea'));
     }
 
+    public function edit(Tarea $tarea)
+    {
+        $clientes = Cliente::all();
+        $encargados = Funcionario::all();
+        return view('tareas.edit', compact('tarea', 'clientes', 'encargados'));
+    }
+
+    public function update(Request $request, Tarea $tarea)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'prioridad' => 'required|in:baja,media,alta',
+            'cliente_id' => 'required|exists:clientes,id',
+        ]);
+        try {
+            $tarea->nombre = $request->nombre;
+            $tarea->descripcion = $request->descripcion;
+            $tarea->prioridad = $request->prioridad;
+            $tarea->cliente_id = $request->cliente_id;
+            $tarea->encargado_id = $request->encargado_id;
+            $tarea->save();
+            broadcast(new TareaUpdated())->toOthers();
+            return redirect()->route('tareas.index')->with('success', 'Tarea actualizada exitosamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar la tarea: ' . $e->getMessage());
+            return redirect()->route('tareas.index')->with('error', 'Error al actualizar la tarea: ' . $e->getMessage());
+        }
+    }
+
     public function destroy(Tarea $tarea)
     {
         try {

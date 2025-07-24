@@ -10,7 +10,8 @@ $canView = auth()->user()->can('tareas.show');
         <div class="flex flex-row space-x-2">
             <x-show-button href="{{ route('tareas.show', $tarea->id) }}"></x-show-button>
             @if($tarea->estado == 'pendiente')
-            {{-- Edit button removed as requested --}}
+            <x-edit-button href="{{ route('tareas.edit', $tarea->id) }}">
+            </x-edit-button>
             @can('tareas.destroy')
             <x-delete-button class="eliminar" data-form="eliminar-tarea-{{ $tarea->id }}" data-model="Tarea" href="#">
             </x-delete-button>
