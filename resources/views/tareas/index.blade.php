@@ -43,8 +43,8 @@
                 @endif
             </div>
         </div>
-        <div class="grid grid-cols-6 items-center mb-2">
-            <form action="" id="filtrar" class="col-span-6 grid grid-cols-4">
+        <form action="" id="filtrar">
+            <div class="grid grid-cols-6 items-center mb-2">
                 <div class="px-2">
                     <x-label for="cliente_id" :value="__('Filtrar por cliente')" />
                     <x-select name='cliente_id' id="cliente_id" class="filtro select2">
@@ -80,18 +80,18 @@
                 <div class="px-2">
                     <x-label for="estado" :value="__('Filtrar por estado')" />
                     <x-select name='estado' id='estado' class="filtro select2">
-                        <option value="pendiente" {{ $estado == 'pendiente' ? 'selected' : '' }}
-                            class="option-pendiente">Pendiente</option>
-                        <option value="en_progreso" {{ $estado == 'en_progreso' ? 'selected' : '' }}
+                        <option value="pendiente" {{ $estado=='pendiente' ? 'selected' : '' }} class="option-pendiente">
+                            Pendiente</option>
+                        <option value="en_progreso" {{ $estado=='en_progreso' ? 'selected' : '' }}
                             class="option-en_progreso">En Progreso</option>
-                        <option value="completada" {{ $estado == 'completada' ? 'selected' : '' }}
+                        <option value="completada" {{ $estado=='completada' ? 'selected' : '' }}
                             class="option-completada">Completada</option>
-                        <option value="cancelada" {{ $estado == 'cancelada' ? 'selected' : '' }}
-                            class="option-cancelada">Cancelada</option>
+                        <option value="cancelada" {{ $estado=='cancelada' ? 'selected' : '' }} class="option-cancelada">
+                            Cancelada</option>
                     </x-select>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </x-slot>
 
     <table class="border-collapse border border-slate-400 w-full @if(!isset($fullscreen)) text-xs @endif">
