@@ -44,7 +44,7 @@
             </div>
         </div>
         <form action="" id="filtrar">
-            <div class="grid grid-cols-6 items-center mb-2">
+            <div class="grid grid-cols-4 items-center mb-2">
                 <div class="px-2">
                     <x-label for="cliente_id" :value="__('Filtrar por cliente')" />
                     <x-select name='cliente_id' id="cliente_id" class="filtro select2">
