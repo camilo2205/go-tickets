@@ -46,7 +46,7 @@
 
         <!-- Encargado -->
         <div class="md:basis-1/3 px-2">
-            <x-label for="encargado_id" :value="__('Encargado') . ' (*)'" />
+            <x-label for="encargado_id" :value="__('Encargado')" />
             <x-select name="encargado_id" id="encargado_id" class="select2" autocomplete="name">
                 @foreach($encargados as $encargado)
                     <option value="{{ $encargado->id }}" {{ old('encargado_id') == $encargado->id ? 'selected' : '' }}>{{ $encargado->user->name }}</option>

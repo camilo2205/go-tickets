@@ -22,8 +22,13 @@ class TareaController extends Controller
     {
         $fullscreen = $request->query('fullscreen', false);
         $encargados = Funcionario::all();
-        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')
-        ->get();
+        $tareas_q = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado');
+        if ($request->estado) {
+            $tareas_q->where('estado', $request->estado);
+        } else {
+            $tareas_q->whereNotIn('estado', ['completada', 'cancelada']);
+        }
+        $tareas = $tareas_q->get();
         if ($fullscreen) {
             return view('tareas.index', compact('tareas', 'encargados', 'fullscreen'));
         } else {
@@ -34,8 +39,13 @@ class TareaController extends Controller
     public function render(Request $request)
     {
         // dd(Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')->toSql());
-        $tareas = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')
-        ->get();
+        $tareas_q = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado');
+        if ($request->estado) {
+            $tareas_q->where('estado', $request->estado);
+        } else {
+            $tareas_q->whereNotIn('estado', ['completada', 'cancelada']);
+        }
+        $tareas = $tareas_q->get();
         $encargados = Funcionario::all();
         $fullscreen = $request->query('fullscreen', false);
         if ($fullscreen) {
@@ -68,7 +78,6 @@ class TareaController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'prioridad' => 'required|in:baja,media,alta',
-            'encargado_id' => 'required|exists:users,id',
             'cliente_id' => 'required|exists:clientes,id',
         ]);
         try {
@@ -76,7 +85,7 @@ class TareaController extends Controller
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
                 'prioridad' => $request->prioridad,
-                'encargado_id' => $request->encargado_id,
+                'encargado_id' => $request->encargado_id ?? null,
                 'cliente_id' => $request->cliente_id,
             ]);
 

@@ -15,22 +15,6 @@ $(document).ready(function () {
         allowClear: true,
     });
 
-    // Confirmación al enviar el formulario de creación de tarea
-    $('form[action$="tareas/store"]').on("submit", function (e) {
-        e.preventDefault();
-        swal({
-            title: "¿Guardar tarea?",
-            text: "¿Estás seguro de crear esta tarea?",
-            icon: "info",
-            buttons: true,
-            dangerMode: false,
-        }).then((willSave) => {
-            if (willSave) {
-                this.submit();
-            }
-        });
-    });
-
     $(".select2").select2({
         width: "100%",
         placeholder: "Selecciona una opción",
@@ -42,6 +26,39 @@ $(document).ready(function () {
     $(document).on("select2:open", () => {
         document.querySelector(".select2-search__field").focus();
     });
+
+    function establecerEventos() {      
+        $('.select-estado').on('change', (e) => {
+            if ($(e.currentTarget).val() == 'completada') {
+                swal({
+                    title: 'COMPLETAR TAREA',
+                    text: '¿Vas a marcar esta tarea como completada?',
+                    icon: 'success',
+                    buttons: ['NO', 'Sí']
+                }).then((result) => {
+                    if (result) {
+                        $(e.currentTarget.form.submit())
+                    }
+                })
+            } else if ($(e.currentTarget).val() == 'cancelada') {
+                swal({
+                    title: 'CANCELAR TAREA',
+                    text: '¿Está seguro que desea cancelar esta tarea?',
+                    icon: 'error',
+                    buttons: ['NO', 'Sí'],
+                    dangerMode: true
+                }).then((result) => {
+                    if (result) {
+                        $(e.currentTarget.form.submit())
+                    }
+                })
+            } else {
+                e.currentTarget.form.submit();
+            }
+        })
+    }
+
+    establecerEventos();
 
     function actualizarTabla() {
         $.ajax({
@@ -57,42 +74,51 @@ $(document).ready(function () {
                 let childrens = newContenedor.children();
                 let continuar = true;
 
-                let ids = estadoFlip.targets.map( t => $(t).attr('flip-id'));
-                
+                let ids = estadoFlip.targets.map((t) => $(t).attr("flip-id"));
+                let new_ids = [];
                 for (let i = 0; i < childrens.length; i++) {
                     const childtr = childrens[i];
-                    if (!ids.includes($(childtr).attr('flip-id'))) {
-                        $('#tareas-tbody').append(childtr);
+                    new_ids.push($(childtr).attr("flip-id"));
+                    if (!ids.includes($(childtr).attr("flip-id"))) {
+                        $("#tareas-tbody").append(childtr);
+                    }
+                }
+                
+                let current_trs = estadoFlip.targets;
+                for (let i = 0; i < current_trs.length; i++) {
+                    const current_tr = current_trs[i];
+                    if (!new_ids.includes($(current_tr).attr("flip-id"))) {
+                        $("#tareas-tbody").remove(current_tr);
                     }
                 }
 
                 do {
                     continuar = true;
-                    let targets = $('#tareas-tbody').children();
+                    let targets = $("#tareas-tbody").children();
                     for (let i = 0; i < targets.length; i++) {
                         const elemento = targets[i];
-                        if (
-                            elemento.getAttribute("flip-id") ===
-                            childrens[i].getAttribute("flip-id")
-                        ) {
-                            $(elemento).attr(
-                                "class",
-                                $(childrens[i]).attr("class")
-                            );
-                            $(elemento).html($(childrens[i]).html());
-                        } else {
-                            for (let j = 0; j < childrens.length; j++) {
-                                const element = childrens[j];
-                                if (
-                                    element.getAttribute("flip-id") ===
-                                    elemento.getAttribute("flip-id")
-                                ) {
-                                    $(elemento).html($(element).html());
-                                    $(elemento).insertBefore(
-                                        targets[j]
-                                    );
-                                    continuar = false;
-                                    break;
+                        if (childrens[i]) {
+                            if (
+                                elemento.getAttribute("flip-id") ===
+                                childrens[i].getAttribute("flip-id")
+                            ) {
+                                $(elemento).attr(
+                                    "class",
+                                    $(childrens[i]).attr("class")
+                                );
+                                $(elemento).html($(childrens[i]).html());
+                            } else {
+                                for (let j = 0; j < childrens.length; j++) {
+                                    const element = childrens[j];
+                                    if (
+                                        element.getAttribute("flip-id") ===
+                                        elemento.getAttribute("flip-id")
+                                    ) {
+                                        $(elemento).html($(element).html());
+                                        $(elemento).insertBefore(targets[j]);
+                                        continuar = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -105,6 +131,8 @@ $(document).ready(function () {
                     absolute: false,
                     stagger: 0.02,
                 });
+
+                establecerEventos();
             },
             error: function () {
                 console.error("Error al cargar tareas.");
@@ -112,10 +140,8 @@ $(document).ready(function () {
         });
     }
 
-    window.Echo.channel('tarea-channel')
-        .listen('.tarea-update', (e) => {
-            // Actualiza la tabla
-            actualizarTabla();
-        });
-
+    window.Echo.channel("tarea-channel").listen(".tarea-update", (e) => {
+        // Actualiza la tabla
+        actualizarTabla();
+    });
 });

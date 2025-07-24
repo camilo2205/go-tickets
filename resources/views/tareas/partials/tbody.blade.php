@@ -72,7 +72,7 @@ $canView = auth()->user()->can('tareas.show');
         <form method="POST" action="{{ route('tareas.updateEstado', $tarea->id) }}">
             @csrf
             @method('PATCH')
-            <select name="estado" onchange="this.form.submit()" class="border rounded py-1 select-estado">
+            <select name="estado" class="border rounded py-1 select-estado">
                 <option value="pendiente" {{ $tarea->estado == 'pendiente' ? 'selected' : '' }}
                     class="option-pendiente">Pendiente</option>
                 <option value="en_progreso" {{ $tarea->estado == 'en_progreso' ? 'selected' : '' }}

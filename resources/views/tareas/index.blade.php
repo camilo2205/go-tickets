@@ -3,6 +3,7 @@
         <x-slot name="fullscreen">{{ $fullscreen }}</x-slot>
     @endif
     <link rel="stylesheet" href="{{ asset('css/cruds/tareas.css') }}">
+    <script src="{{ asset('js/cruds/tareas.js') }}" defer></script>
     <x-slot name="header">
         <div class="flex flex-row content-end">
             <div class="basis-1/2">
@@ -67,5 +68,4 @@
             @include('tareas.partials.tbody', ['tareas' => $tareas, 'encargados' => $encargados])
         </tbody>
     </table>
-    <script src="{{ asset('js/cruds/tareas.js') }}" defer></script>
 </x-app-layout>
