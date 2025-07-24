@@ -5,7 +5,7 @@ $canView = auth()->user()->can('tareas.show');
 @endphp
 @foreach ($tareas as $tarea)
 <tr class="tarea prioridad-{{ $tarea->prioridad }}-row estado-{{ $tarea->estado }}-tr" flip-id="{{ $tarea->id }}">
-    @if($canEdit || $canDelete || $canView)
+    @if(($canEdit || $canDelete || $canView) && !isset($fullscreen))
     <td class="border border-slate-300 px-2 py-1 text-xs">
         <div class="flex flex-row space-x-2">
             <x-show-button href="{{ route('tareas.show', $tarea->id) }}"></x-show-button>
@@ -21,7 +21,8 @@ $canView = auth()->user()->can('tareas.show');
         </div>
     </td>
     @endif
-    <td class="border border-slate-300 px-2 py-1 text-xs">
+    <td class="border border-slate-300 px-2 py-1 @if(!isset($fullscreen)) text-xs @endif">
+        @if (!isset($fullscreen))
         <form method="POST" action="{{ route('tareas.updateEncargado', $tarea->id) }}"
             class="flex items-center space-x-1">
             @csrf
@@ -34,9 +35,13 @@ $canView = auth()->user()->can('tareas.show');
                 @endforeach
             </select>
         </form>
+        @else
+            {{ $tarea->encargado ? $tarea->encargado->user->name : '' }}
+        @endif
     </td>
-    <td class="border border-slate-300 px-2 py-1 text-xs">{{ $tarea->cliente->razon_social ?? '' }}</td>
-    <td class="border border-slate-300 px-2 py-1 text-xs">{{ $tarea->nombre }}</td>
+    <td class="border border-slate-300 px-2 py-1 @if(!isset($fullscreen)) text-xs @endif">{{ $tarea->cliente->razon_social ?? '' }}</td>
+    <td class="border border-slate-300 px-2 py-1 @if(!isset($fullscreen)) text-xs @endif">{{ $tarea->nombre }}</td>
+    @if (!isset($fullscreen))
     <td class="border border-slate-300 px-2 py-1 text-xs text-center prioridad-{{ $tarea->prioridad }}">
         <form method="POST" action="{{ route('tareas.updatePrioridad', $tarea->id) }}"
             class="flex items-center space-x-1">
@@ -55,7 +60,9 @@ $canView = auth()->user()->can('tareas.show');
             </select>
         </form>
     </td>
-    <td class="border border-slate-300 px-2 py-1 text-xs text-center">
+    @endif
+    @if (!isset($fullscreen))
+    <td class="border border-slate-300 px-2 py-1 @if(!isset($fullscreen)) text-xs @endif text-center">
         <form method="POST" action="{{ route('tareas.updateEnfoque', $tarea->id) }}"
             class="flex items-center space-x-1">
             @csrf
@@ -68,7 +75,9 @@ $canView = auth()->user()->can('tareas.show');
             </select>
         </form>
     </td>
-    <td class="border border-slate-300 px-2 py-1 text-xs estado-{{ $tarea->estado }}">
+    @endif
+    <td class="border border-slate-300 px-2 py-1 @if(!isset($fullscreen)) text-xs @endif estado-{{ $tarea->estado }}" nowrap>
+        @if (!isset($fullscreen))
         <form method="POST" action="{{ route('tareas.updateEstado', $tarea->id) }}">
             @csrf
             @method('PATCH')
@@ -83,6 +92,22 @@ $canView = auth()->user()->can('tareas.show');
                     class="option-cancelada">Cancelada</option>
             </select>
         </form>
+        @else
+            @switch($tarea->estado)
+                @case('pendiente')
+                    <span class="option-pendiente"><strong>PENDIENTE</strong></span>
+                    @break
+                @case('en_progreso')
+                    <span class="option-en_progreso"><strong>EN PROGRESO</strong></span>
+                    @break
+                @case('completada')
+                    <span class="option-completada"><strong>COMPLETADA</strong></span>
+                    @break
+                @case('cancelada')
+                    <span class="option-cancelada"><strong>CANCELADA</strong></span>
+                    @break
+            @endswitch
+        @endif
     </td>
 </tr>
 @endforeach

@@ -19,7 +19,7 @@ $(document).ready(function () {
         width: "100%",
         placeholder: "Selecciona una opción",
         allowClear: true,
-        dropdownAutoWidth: true,
+        dropdownAutoWidth: false,
     });
 
     // Enfocar el input de búsqueda al abrir select2
@@ -60,9 +60,17 @@ $(document).ready(function () {
 
     establecerEventos();
 
+    $('.filtro').on('change', (e) => {
+        if (window.location.search == ''){
+            e.currentTarget.form.submit();
+        } else {
+            actualizarTabla();
+        }
+    })
+
     function actualizarTabla() {
         $.ajax({
-            url: "/tareas/render",
+            url: "/tareas/render" + window.location.search + `&cliente_id=${$("#cliente_id").val()}&encargado_filter=${$('#encargado_filter').val()}&prioridad=${$('#prioridad').val()}&estado=${$('#estado').val()}`,
             type: "GET",
             success: function (nuevoHtml) {
                 const estadoFlip = Flip.getState("[flip-id]");
@@ -88,7 +96,7 @@ $(document).ready(function () {
                 for (let i = 0; i < current_trs.length; i++) {
                     const current_tr = current_trs[i];
                     if (!new_ids.includes($(current_tr).attr("flip-id"))) {
-                        $("#tareas-tbody").remove(current_tr);
+                        $("[flip-id='"+$(current_tr).attr("flip-id")+"']").remove();
                     }
                 }
 

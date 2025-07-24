@@ -32,7 +32,7 @@
         </div>
 
         <!-- Cliente -->
-        <div class="md:basis-1/3 px-2">
+        <div class="md:basis-1/2 px-2">
             <x-label for="cliente_id" :value="__('Cliente') . ' (*)'" />
             <x-select name="cliente_id" id="cliente_id" class="select2" autocomplete="organization">
                 @foreach($clientes as $cliente)

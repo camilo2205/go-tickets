@@ -22,36 +22,85 @@ class TareaController extends Controller
     {
         $fullscreen = $request->query('fullscreen', false);
         $encargados = Funcionario::all();
+        $clientes = Cliente::all();
         $tareas_q = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado');
+        
+        $context = compact('encargados', 'clientes');
         if ($request->estado) {
             $tareas_q->where('estado', $request->estado);
         } else {
             $tareas_q->whereNotIn('estado', ['completada', 'cancelada']);
         }
-        $tareas = $tareas_q->get();
-        if ($fullscreen) {
-            return view('tareas.index', compact('tareas', 'encargados', 'fullscreen'));
-        } else {
-            return view('tareas.index', compact('tareas', 'encargados'));
+        $estado = $request->estado ?? null;
+        $context['estado'] = $estado;
+
+        if ($request->prioridad) {
+            $tareas_q->where('prioridad', $request->prioridad);
         }
+        $prioridad = $request->prioridad ?? null;
+        $context['prioridad'] = $prioridad;
+
+        if ($request->cliente_id) {
+            $tareas_q->where('cliente_id', $request->cliente_id);
+        }
+        $cliente_id = $request->cliente_id ?? null;
+        $context['cliente_id'] = $cliente_id;
+
+        if ($request->encargado_filter) {
+            $tareas_q->where('encargado_id', $request->encargado_filter);
+        }
+        $encargado_filter = $request->encargado_filter ?? null;
+        $context['encargado_filter'] = $encargado_filter;
+
+        $tareas = $tareas_q->get();
+        $context['tareas'] = $tareas;
+        if ($fullscreen) {
+            $context['fullscreen'] = 'fullscreen';
+        }
+        
+        return view('tareas.index', $context);
     }
 
     public function render(Request $request)
     {
-        // dd(Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado')->toSql());
+        $fullscreen = $request->query('fullscreen', false);
+        $encargados = Funcionario::all();
+        $clientes = Cliente::all();
         $tareas_q = Tarea::orderByRaw('ISNULL(enfoque), enfoque ASC, prioridad desc, estado');
+        
+        $context = compact('encargados', 'clientes');
         if ($request->estado) {
             $tareas_q->where('estado', $request->estado);
         } else {
             $tareas_q->whereNotIn('estado', ['completada', 'cancelada']);
         }
+        $estado = $request->estado ?? null;
+        $context['estado'] = $estado;
+
+        if ($request->prioridad) {
+            $tareas_q->where('prioridad', $request->prioridad);
+        }
+        $prioridad = $request->prioridad ?? null;
+        $context['prioridad'] = $prioridad;
+
+        if ($request->cliente_id) {
+            $tareas_q->where('cliente_id', $request->cliente_id);
+        }
+        $cliente_id = $request->cliente_id ?? null;
+        $context['cliente_id'] = $cliente_id;
+
+        if ($request->encargado_filter) {
+            $tareas_q->where('encargado_id', $request->encargado_filter);
+        }
+        $encargado_filter = $request->encargado_filter ?? null;
+        $context['encargado_filter'] = $encargado_filter;
+
         $tareas = $tareas_q->get();
-        $encargados = Funcionario::all();
-        $fullscreen = $request->query('fullscreen', false);
+        $context['tareas'] = $tareas;
         if ($fullscreen) {
-            return view('tareas.partials.tbody', compact('tareas', 'encargados', 'fullscreen'));
-        } 
-        return view('tareas.partials.tbody', compact('tareas', 'encargados'));
+            $context['fullscreen'] = 'fullscreen';
+        }
+        return view('tareas.partials.tbody', $context);
     }
 
     /**
@@ -106,6 +155,7 @@ class TareaController extends Controller
     {
         try {
             $tarea->delete();
+            broadcast(new TareaUpdated())->toOthers();
             return redirect()->route('tareas.index')->with('success', 'Tarea eliminada exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al eliminar la tarea: ' . $e->getMessage());
