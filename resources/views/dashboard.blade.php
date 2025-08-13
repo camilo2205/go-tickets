@@ -18,11 +18,13 @@
         </div>
     </div>
 
-    <div class="flex flex-row flex-wrap">
-        <div class="md:basis-11/12 basis-full px-5">
-            <canvas id="ticketsxcliente" height="100vh"></canvas>
+    @if (auth()->user()->hasRole('admin'))
+        <div class="flex flex-row flex-wrap">
+            <div class="md:basis-11/12 basis-full px-5">
+                <canvas id="ticketsxcliente" height="100vh"></canvas>
+            </div>
         </div>
-    </div>
+    @endif
 
     <script src="/js/dashboard.js"></script>
 </x-app-layout>
