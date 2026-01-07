@@ -56,8 +56,8 @@ class TicketController extends Controller
             $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
             $clientes = [];
         } elseif ($funcionario) {
-            $tickets = $consulta->where('funcionario_id', $funcionario->id)
-                ->orWhereNull('funcionario_id')
+            $tickets = $consulta//->where('funcionario_id', $funcionario->id)
+                //->whereNull('funcionario_id')
                 ->orderBy('id', 'desc')->paginate(10);
             $clientes = Cliente::all();
         } else {
@@ -183,10 +183,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        if (isset($ticket->funcionario_id) && isset(Auth::user()->funcionario) && ($ticket->funcionario_id !== Auth::user()->funcionario->id)) {
+        /* if (isset($ticket->funcionario_id) && isset(Auth::user()->funcionario) && ($ticket->funcionario_id !== Auth::user()->funcionario->id)) {
             return view('errors.accesoticket', []);
-        }
-
+        } */
 
         foreach (auth()->user()->unreadNotifications as $notification) {
             if ($notification->data['ticket_id'] == $ticket->id) {

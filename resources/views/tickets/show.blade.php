@@ -240,17 +240,15 @@
                                         d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
                             </x-button>
-                            @if (!$funcionario)
-                                <x-button type='button' id="cerrar_ticket"
-                                    class="ml-3 bg-green-800 hover:bg-green-700 active:bg-green-900 focus:border-green-700 ring-green-300">
-                                    Cerrar &nbsp;&nbsp;
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                </x-button>
-                            @endif
+                            <x-button type='button' id="cerrar_ticket"
+                                class="ml-3 bg-green-800 hover:bg-green-700 active:bg-green-900 focus:border-green-700 ring-green-300">
+                                Cerrar &nbsp;&nbsp;
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </x-button>
                         </div>
                     </form>
 

@@ -75,6 +75,7 @@
     <table class="border-collapse border border-slate-400 w-full">
         <thead>
             <tr>
+                <th class="border border-slate-300 px-5 py-1">N°</th>
                 <th class="border border-slate-300 px-5 py-1">Acciones</th>
                 <th class="border border-slate-300 px-5 py-1">Cliente</th>
                 <th class="border border-slate-300 px-5 py-1">Fecha</th>
@@ -86,6 +87,7 @@
         <tbody>
             @foreach ($tickets as $ticket)
                 <tr>
+                    <td class="border border-slate-300 px-5 py-2">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</td>
                     <td class="border border-slate-300 px-5 py-2">
                         <div class="flex flex-row space-x-2">
                             <x-show-button href="{{ route('tickets.show', $ticket->id) }}">
