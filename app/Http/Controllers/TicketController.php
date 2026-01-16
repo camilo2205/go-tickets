@@ -31,7 +31,8 @@ class TicketController extends Controller
         $fechas = explode(' - ', $request->fecha);
         $cliente_id = $request->cliente_id;
         $tags = Tag::all();
-        $tags_id = $request->tags_id ? $request->tags_id : [];
+        $tags_id = $request->tags_id ?: null;
+        $buscar = $request->buscar ?: null;
         $estado = $request->estado;
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
@@ -46,8 +47,8 @@ class TicketController extends Controller
         }
         if ($tags_id) {
             $consulta->whereHas('tags', function ($query) use ($tags_id) {
-                $query->whereIn('tag_id', $tags_id);
-            }, '=', count($tags_id));
+                $query->where('tag_id', $tags_id);
+            });
         }
         if ($cliente_id) {
             $consulta->where('cliente_id', $cliente_id);
@@ -65,7 +66,7 @@ class TicketController extends Controller
             $clientes = Cliente::all();
         }
 
-        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado', 'tags', 'tags_id'));
+        return view('tickets.index', compact('tickets', 'cliente', 'funcionario', 'clientes', 'fechas', 'cliente_id', 'estado', 'tags', 'tags_id', 'buscar'));
     }
 
     /**

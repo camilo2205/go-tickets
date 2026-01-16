@@ -275,17 +275,26 @@ $(document).ready(function () {
             getRespuestas();
         });
 
-
-
-    $('#tagsTickets #chip').click(function (e) {
-        e.preventDefault();
-        let tagsId = $(this).data('id');
-        window.location.href = `/tickets?tags_id%5B%5D=${tagsId}`;
-    });
-
     $('.filtro').change(function (e) {
         e.preventDefault();
-        $('#filtrar').submit();
+        
+        // Construir URL con todos los parámetros del formulario
+        let urlParams = new URLSearchParams();
+        
+        // Obtener todos los valores del formulario
+        let buscar = $('input[name="buscar"]').val();
+        let fecha = $('input[name="fecha"]').val();
+        let tags_id = $('select[name="tags_id"]').val();
+        let estado = $('input[name="estado"]').val();
+        
+        // Añadir solo los parámetros que tienen valor
+        if (buscar) urlParams.set('buscar', buscar);
+        if (fecha) urlParams.set('fecha', fecha);
+        if (tags_id) urlParams.set('tags_id', tags_id);
+        if (estado) urlParams.set('estado', estado);
+        
+        // Redirigir con los parámetros
+        window.location.href = `/tickets?${urlParams.toString()}`;
     });
 
     $(".cliente").select2({

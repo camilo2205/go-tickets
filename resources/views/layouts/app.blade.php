@@ -42,31 +42,27 @@
         @endauth
     @endif
     <div class="min-h-screen bg-white">
-        <!-- Page Content -->
         <main>
             <div class="flex flex-col md:flex-row">
-                @if (!isset($fullscreen) || $fullscreen == '0')
-                    @auth
-                        @include('layouts.sidebar')
-                    @endauth
-                @endif
                 @if (isset($fullscreen) && $fullscreen == '1')
                     <section class="overflow-auto w-full">
                 @else 
                     <section class="overflow-auto mt-16 w-full">
                 @endif
                     <div id="main" class="main-content flex-1 bg-white mt-12 md:mt-3 pb-24 md:pb-5">
-                        <!-- Page Heading -->
-                        <header class="bg-white">
-                            <div class="mx-auto py-2 sm:px-6 lg:px-8">
-                                {{ $header }}
-                            </div>
-                        </header>
+                        <div class="bg-white rounded-lg shadow-lg border border-gray-300 p-2 m-4 mt-4">
+                            <!-- Page Heading -->
+                            <header class="bg-white">
+                                <div class="mx-auto py-2 sm:px-6 lg:px-8">
+                                    {{ $header }}
+                                </div>
+                            </header>
 
-                        <div class="mx-auto flex-1 w-full">
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="px-6 bg-white border-b border-gray-200 overflow-x-auto pb-2">
-                                    {{ $slot }}
+                            <div class="mx-auto flex-1 w-full">
+                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                    <div class="px-6 bg-white border-b border-gray-200 overflow-x-auto pb-2">
+                                        {{ $slot }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

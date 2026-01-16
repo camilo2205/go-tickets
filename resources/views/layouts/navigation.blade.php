@@ -13,6 +13,43 @@
                                 <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                             </a>
                         </div>
+
+                        <!-- Navigation Links -->
+                        <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
+                            @can('dashboard') 
+                                <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-gray-200' : '' }}">
+                                    {{ __('INICIO') }}
+                                </a>
+                            @endcan
+                            @can('clientes.index')
+                                <a href="{{ route('clientes.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('clientes.*') ? 'bg-gray-200' : '' }}">
+                                    {{ __('CLIENTES') }}
+                                </a>
+                            @endcan
+                            @can('funcionarios.index')
+                                <a href="{{ route('funcionarios.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('funcionarios.*') ? 'bg-gray-200' : '' }}">
+                                    {{ __('FUNCIONARIOS') }}
+                                </a>
+                            @endcan
+                            @can('tickets.index')
+                                <a href="{{ route('tickets.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('tickets.*') ? 'bg-gray-200' : '' }}">
+                                    {{ __('TICKETS') }}
+                                </a>
+                            @endcan
+                            @can('users.index')
+                                <a href="{{ route('users.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('users.*') ? 'bg-gray-200' : '' }}">
+                                    {{ __('USUARIOS') }}
+                                </a>
+                            @endcan
+                            @can('tareas.index')
+                                <a href="{{ route('tareas.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('tareas.*') ? 'bg-gray-200' : '' }}">
+                                    {{ __('TAREAS') }}
+                                </a>
+                            @endcan
+                            <a href="{{ route('posts.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('posts.*') ? 'bg-gray-200' : '' }}">
+                                {{ __('INSTRUCTIVOS') }}
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Settings Dropdown -->
@@ -94,13 +131,39 @@
             <!-- Responsive Navigation Menu -->
             <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
-                    {{-- <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Inicio') }}
+                    @can('dashboard')
+                        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Inicio') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    @can('clientes.index')
+                        <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                            {{ __('Clientes') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    @can('funcionarios.index')
+                        <x-responsive-nav-link :href="route('funcionarios.index')" :active="request()->routeIs('funcionarios.*')">
+                            {{ __('Funcionarios') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    @can('tickets.index')
+                        <x-responsive-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.*')">
+                            {{ __('Tickets') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    @can('users.index')
+                        <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Usuarios') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    @can('tareas.index')
+                        <x-responsive-nav-link :href="route('tareas.index')" :active="request()->routeIs('tareas.*')">
+                            {{ __('Tareas') }}
+                        </x-responsive-nav-link>
+                    @endcan
+                    <x-responsive-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.*')">
+                        {{ __('Instructivos') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('clientes.index')"
-                        :active="request()->routeIs('clientes.index')">
-                        {{ __('Clientes') }}
-                    </x-responsive-nav-link> --}}
                 </div>
 
                 <!-- Responsive Settings Options -->
