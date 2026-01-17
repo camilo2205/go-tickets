@@ -10,7 +10,7 @@
                 </h2>
                 <span class="text-gray-600 text-sm" id="fecha-hora"></span>
             </div>
-            <form action="" id="filtrar" class="col-span-8 flex space-x-4 hidden lg:flex">
+            <form action="" id="filtrar" class="col-span-7 flex space-x-4 hidden lg:flex">
                 <input type="hidden" id="estado" name="estado" value="{{ $estado }}">
                 <input type="hidden" id="urgente" name="urgente" value="{{ request('urgente') }}">
                 <input type="hidden" id="mis_tickets" name="mis_tickets" value="{{ request('mis_tickets') }}">
@@ -43,7 +43,7 @@
                     </x-select>
                 </div>
             </form>
-            <div class="col-span-7 lg:col-span-2 flex items-end justify-end space-x-2">
+            <div class="col-span-7 lg:col-span-3 flex items-end justify-end space-x-2">
                 <a href="{{ route('tickets.create') }}" 
                    class="inline-flex items-center px-3 py-2 bg-blue-400 hover:bg-blue-500 text-white text-sm font-medium rounded shadow-sm transition duration-150 ease-in-out">
                     <i class="fas fa-plus mr-1"></i>
@@ -82,10 +82,12 @@
                 de
                 <span class="mx-1 px-2 py-1 bg-blue-100 rounded font-semibold">{{ $tickets->total() }}</span>
                 <span class="hidden sm:inline">tickets</span>
+
+
                 @if ($tickets->onFirstPage())
                     <span class="text-gray-400 mx-2">
                 @else
-                    <a href="{{ $tickets->appends(['cliente_id' => $cliente_id, 'tags_id' => $tags_id ?: '', 'estado' => $estado, 'fecha' => isset($fechas[1]) ? $fechas[0].' - '.$fechas[1] : ''])->previousPageUrl() }}" class="gray-blue-700 underline mx-2 hover:text-blue-900">
+                    <a href="{{ $tickets->appends(['cliente_id' => $cliente_id, 'tags_id' => $tags_id ?: '', 'estado' => $estado, 'fecha' => isset($fechas[1]) ? $fechas[0].' - '.$fechas[1] : ''])->previousPageUrl() }}" class="text-blue-700 underline mx-2 hover:text-blue-900">
                 @endif
                     <span class="hidden lg:inline">Anterior</span>
                     <span class="inline lg:hidden">Ant</span>
@@ -159,7 +161,7 @@
         </div>
     </div>
 
-    <div class="overflow-x-auto border-2 border-gray-200 rounded-lg shadow-sm">
+    <div class="overflow-x-auto rounded-lg shadow-sm">
         <table class="border-collapse w-full overflow-hidden">
         <thead class="bg-blue-50">
             <tr>

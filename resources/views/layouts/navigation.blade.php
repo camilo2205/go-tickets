@@ -15,7 +15,7 @@
                         </div>
 
                         <!-- Navigation Links -->
-                        <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
+                        <div class="hidden xl:flex sm:items-center sm:ml-6 space-x-0">
                             @can('dashboard') 
                                 <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-gray-200' : '' }}">
                                     {{ __('INICIO') }}
@@ -53,7 +53,7 @@
                     </div>
 
                     <!-- Settings Dropdown -->
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="hidden xl:flex sm:items-center sm:ml-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button
@@ -83,6 +83,8 @@
                                 </form>
                             </x-slot>
                         </x-dropdown>
+                        
+                        <!-- Notifications Desktop -->
                         <x-dropdown id="notifications">
                             <x-slot name="trigger">
                                 <a href="#"
@@ -111,8 +113,9 @@
                         </x-dropdown>
                     </div>
 
-                    <!-- Hamburger -->
-                    <div class="-mr-2 flex items-center sm:hidden">
+                    <!-- Hamburger and Notifications Mobile -->
+                    <div class="flex items-center space-x-2 xl:hidden">                        
+                        <!-- Hamburger -->
                         <button @click="open = ! open"
                             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-white-100 focus:outline-none focus:bg-white-100 focus:text-gray-500 transition duration-150 ease-in-out">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -124,12 +127,40 @@
                                     d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+                        
+                        <!-- Notifications Mobile -->
+                        <x-dropdown id="notifications-mobile">
+                            <x-slot name="trigger">
+                                <a href="#"
+                                    class="text-gray-600 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium relative">
+                                    <i class="fas fa-bell text-xl"></i>
+                                    <span
+                                        class="absolute top-0 right-0 inline-block w-6 h-6 text-red-400 text-xs font-bold leading-tight text-center rounded-full">
+                                        {{ auth()->user()->unReadNotifications()->count() > 0 ? auth()->user()->unReadNotifications()->count() : '' }}
+                                    </span>
+                                </a>
+                            </x-slot>
+                            <x-slot name="content">
+                                @foreach (auth()->user()->unReadNotifications as $notification)
+                                    <a href="{{ $notification->data['url'] }}"
+                                        class="block px-4 py-2 text-sm leading-5 bg-red-200">
+                                        {{ $notification->data['message'] }}
+                                    </a>
+                                @endforeach
+                                @foreach (auth()->user()->readNotifications as $notification)
+                                    <a href="{{ $notification->data['url'] }}"
+                                        class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                                        {{ $notification->data['message'] }}
+                                    </a>
+                                @endforeach
+                            </x-slot>
+                        </x-dropdown>
                     </div>
                 </div>
             </div>
 
             <!-- Responsive Navigation Menu -->
-            <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+            <div :class="{'block': open, 'hidden': ! open}" class="hidden xl:hidden">
                 <div class="pt-2 pb-3 space-y-1">
                     @can('dashboard')
                         <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -167,7 +198,7 @@
                 </div>
 
                 <!-- Responsive Settings Options -->
-                <div class="pt-4 pb-1 border-t border-gray-200 text-right">
+                <div class="pt-4 pb-1 border-t border-gray-200">
                     <div class="px-4">
                         <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                         <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
@@ -185,32 +216,6 @@
                         </form>
                     </div>
                 </div>
-                <x-dropdown id="notifications">
-                    <x-slot name="trigger">
-                        <a href="#"
-                            class="text-gray-600 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium relative">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span
-                                class="absolute top-0 inline-block w-6 h-6 text-red-400 text-xs font-bold leading-tight text-center rounded-full">
-                                {{ auth()->user()->unReadNotifications()->count() > 0 ? auth()->user()->unReadNotifications()->count() : '' }}
-                            </span>
-                        </a>
-                    </x-slot>
-                    <x-slot name="content">
-                        @foreach (auth()->user()->unReadNotifications as $notification)
-                            <a href="{{ $notification->data['url'] }}"
-                                class="block px-4 py-2 text-sm leading-5 bg-red-200">
-                                {{ $notification->data['message'] }}
-                            </a>
-                        @endforeach
-                        @foreach (auth()->user()->readNotifications as $notification)
-                            <a href="{{ $notification->data['url'] }}"
-                                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
-                                {{ $notification->data['message'] }}
-                            </a>
-                        @endforeach
-                    </x-slot>
-                </x-dropdown>
             </div>
             <x:notify-messages />
         </nav>
