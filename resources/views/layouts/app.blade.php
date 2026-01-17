@@ -60,7 +60,7 @@
 
                             <div class="mx-auto flex-1 w-full">
                                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div class="px-6 bg-white border-b border-gray-200 overflow-x-auto pb-2">
+                                    <div class="px-1 sm:px-6 bg-white border-b border-gray-200 overflow-x-auto pb-2">
                                         {{ $slot }}
                                     </div>
                                 </div>

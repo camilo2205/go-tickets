@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
+import { set } from 'lodash';
 
 // import Echo from 'laravel-echo';
 // import Pusher from 'pusher-js';
@@ -81,6 +82,10 @@ $(function () {
 
 
 $(document).ready(function () {
+    $('#fecha-hora').text(moment().format('DD/MM/YYYY hh:mm:ss A'));
+    setInterval(function () {
+        $('#fecha-hora').text(moment().format('DD/MM/YYYY hh:mm:ss A'));
+    }, 1000); // Actualiza cada segundo
 
     // Cuando un mensaje predeterminado sea seleccionado
     $('.message-btn').click(function () {
@@ -294,7 +299,7 @@ $(document).ready(function () {
         if (estado) urlParams.set('estado', estado);
         
         // Redirigir con los parámetros
-        window.location.href = `/tickets?${urlParams.toString()}`;
+        $('#filtrar').submit();
     });
 
     $(".cliente").select2({
