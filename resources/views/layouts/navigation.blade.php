@@ -21,34 +21,57 @@
                                     {{ __('INICIO') }}
                                 </a>
                             @endcan
-                            @can('clientes.index')
-                                <a href="{{ route('clientes.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('clientes.*') ? 'bg-gray-200' : '' }}">
-                                    {{ __('CLIENTES') }}
-                                </a>
-                            @endcan
-                            @can('funcionarios.index')
-                                <a href="{{ route('funcionarios.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('funcionarios.*') ? 'bg-gray-200' : '' }}">
-                                    {{ __('FUNCIONARIOS') }}
-                                </a>
-                            @endcan
                             @can('tickets.index')
                                 <a href="{{ route('tickets.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('tickets.*') ? 'bg-gray-200' : '' }}">
                                     {{ __('TICKETS') }}
                                 </a>
                             @endcan
-                            @can('users.index')
-                                <a href="{{ route('users.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('users.*') ? 'bg-gray-200' : '' }}">
-                                    {{ __('USUARIOS') }}
-                                </a>
-                            @endcan
-                            @can('tareas.index')
+                            
+                            <!-- Configuración Dropdown -->
+                            @canany(['clientes.index', 'funcionarios.index', 'users.index', 'categories.index'])
+                            <x-dropdown align="top" width="48">
+                                <x-slot name="trigger">
+                                    <button class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium flex items-center {{ request()->routeIs(['clientes.*', 'funcionarios.*', 'users.*', 'categories.*']) ? 'bg-gray-200' : '' }}">
+                                        {{ __('CONFIGURACIÓN') }}
+                                        <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    @can('clientes.index')
+                                        <x-dropdown-link :href="route('clientes.index')">
+                                            {{ __('Clientes') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                    @can('funcionarios.index')
+                                        <x-dropdown-link :href="route('funcionarios.index')">
+                                            {{ __('Funcionarios') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                    @can('users.index')
+                                        <x-dropdown-link :href="route('users.index')">
+                                            {{ __('Usuarios') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                    @can('categories.index')
+                                        <x-dropdown-link :href="route('categories.index')">
+                                            {{ __('Categorías') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                </x-slot>
+                            </x-dropdown>
+                            @endcanany
+
+                            {{-- @can('tareas.index')
                                 <a href="{{ route('tareas.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('tareas.*') ? 'bg-gray-200' : '' }}">
                                     {{ __('TAREAS') }}
                                 </a>
                             @endcan
                             <a href="{{ route('posts.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('posts.*') ? 'bg-gray-200' : '' }}">
                                 {{ __('INSTRUCTIVOS') }}
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
 
@@ -167,34 +190,49 @@
                             {{ __('Inicio') }}
                         </x-responsive-nav-link>
                     @endcan
-                    @can('clientes.index')
-                        <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
-                            {{ __('Clientes') }}
-                        </x-responsive-nav-link>
-                    @endcan
-                    @can('funcionarios.index')
-                        <x-responsive-nav-link :href="route('funcionarios.index')" :active="request()->routeIs('funcionarios.*')">
-                            {{ __('Funcionarios') }}
-                        </x-responsive-nav-link>
-                    @endcan
                     @can('tickets.index')
                         <x-responsive-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets.*')">
                             {{ __('Tickets') }}
                         </x-responsive-nav-link>
                     @endcan
-                    @can('users.index')
-                        <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                            {{ __('Usuarios') }}
-                        </x-responsive-nav-link>
-                    @endcan
-                    @can('tareas.index')
+                    
+                    <!-- Configuración Section Mobile -->
+                    @canany(['clientes.index', 'funcionarios.index', 'users.index', 'categories.index'])
+                    <div class="border-t border-gray-200 pt-2 mt-2">
+                        <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            {{ __('Configuración') }}
+                        </div>
+                        @can('clientes.index')
+                            <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                                {{ __('Clientes') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                        @can('funcionarios.index')
+                            <x-responsive-nav-link :href="route('funcionarios.index')" :active="request()->routeIs('funcionarios.*')">
+                                {{ __('Funcionarios') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                        @can('users.index')
+                            <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                                {{ __('Usuarios') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                        @can('categories.index')
+                            <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                                {{ __('Categorías') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                    </div>
+                    @endcanany
+                    
+                    {{-- @can('tareas.index')
                         <x-responsive-nav-link :href="route('tareas.index')" :active="request()->routeIs('tareas.*')">
                             {{ __('Tareas') }}
                         </x-responsive-nav-link>
                     @endcan
                     <x-responsive-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.*')">
                         {{ __('Instructivos') }}
-                    </x-responsive-nav-link>
+                    </x-responsive-nav-link> --}}
                 </div>
 
                 <!-- Responsive Settings Options -->

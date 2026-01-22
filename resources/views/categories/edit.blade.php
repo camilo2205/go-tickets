@@ -1,0 +1,166 @@
+<x-app-layout>
+    <x-slot name="header">
+        <span class="text-sm text-gray-600">
+            <a class="text-blue-600 hover:text-blue-800 underline" href="{{ route('categories.index') }}">
+                <i class="fas fa-folder-tree mr-1"></i>Categorías
+            </a>
+            / <span class="font-semibold text-gray-800">Editar</span>
+        </span>
+        <div class="grid grid-cols-12 mt-2 mb-2">
+            <div class="col-span-12 lg:col-span-6">
+                <h2 class="font-semibold text-2xl text-gray-800 leading-tight mt-1">
+                    {{ __('EDITAR CATEGORÍA') }}<i class="fas fa-edit ml-2 text-yellow-600"></i>
+                </h2>
+            </div>
+        </div>
+    </x-slot>
+
+    @if (session('error'))
+        <x-toast-notification type="error">
+            {{ session('error') }}
+        </x-toast-notification>
+    @endif
+
+    @if ($errors->any())
+        <x-toast-notification type="error">
+            Por favor, corrige los errores en el formulario.
+        </x-toast-notification>
+    @endif
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-6">
+        <form action="{{ route('categories.update', $category) }}" method="POST" class="flex flex-row flex-wrap">
+            @csrf
+            @method('PUT')
+
+            <!-- Nombre de la Categoría -->
+            <div class="basis-full p-1 md:p-2">
+                <x-label for="name" class="text-blue-900 font-semibold mb-1">
+                    <i class="fas fa-tag mr-1"></i>Nombre de la Categoría *
+                </x-label>
+                <x-input id="name" class="block mt-1 w-full" type="text" name="name" 
+                    placeholder="Nombre de la categoría" :value="old('name', $category->name)" required autofocus />
+                @error('name')
+                    <x-small class="text-red-600">{{ $message }}</x-small>
+                @enderror
+            </div>
+
+            <!-- Descripción -->
+            <div class="basis-full p-1 md:p-2">
+                <x-label for="descripcion" class="text-blue-900 font-semibold mb-1">
+                    <i class="fas fa-align-left mr-1"></i>Descripción
+                </x-label>
+                <x-textarea id="descripcion" class="block mt-1 w-full" name="descripcion" 
+                    placeholder="Descripción opcional de la categoría" rows="3">{{ old('descripcion', $category->descripcion) }}</x-textarea>
+                @error('descripcion')
+                    <x-small class="text-red-600">{{ $message }}</x-small>
+                @enderror
+            </div>
+
+            <!-- Sección de Subcategorías (solo para categorías principales) -->
+            <div class="basis-full p-1 md:p-2 mt-4" id="subcategories-section">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-layer-group mr-2 text-blue-600"></i>
+                                Subcategorías
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Gestiona las subcategorías de esta categoría principal
+                                <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
+                                    <span id="subcategory-count">{{ $category->children->count() }}</span> subcategorías
+                                </span>
+                            </p>
+                        </div>
+                        <button type="button" id="add-subcategory-btn" 
+                                class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg shadow-sm transition duration-150 ease-in-out">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Añadir Subcategoría
+                        </button>
+                    </div>
+
+                    <div id="subcategories-list" class="space-y-3">
+                        @foreach($category->children as $index => $subcategory)
+                            <div class="subcategory-item bg-gray-50 border border-gray-300 rounded-lg p-4 mb-3" data-index="{{ $index }}">
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-grip-vertical text-gray-400"></i>
+                                        <span class="font-semibold text-gray-700">
+                                            <i class="fas fa-folder text-blue-500 mr-1"></i>
+                                            Subcategoría {{ $index + 1 }}
+                                        </span>
+                                    </div>
+                                    <button type="button" class="remove-subcategory text-red-500 hover:text-red-700 transition">
+                                        <i class="fas fa-times-circle text-xl"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-blue-900 mb-1">
+                                            <i class="fas fa-tag mr-1"></i>Nombre *
+                                        </label>
+                                        <input type="text" 
+                                               name="subcategories[{{ $index }}][name]" 
+                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                                               placeholder="Nombre de la subcategoría"
+                                               value="{{ old('subcategories.' . $index . '.name', $subcategory->name) }}"
+                                               required>
+                                        <input type="hidden" name="subcategories[{{ $index }}][id]" value="{{ $subcategory->id }}">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-blue-900 mb-1">
+                                            <i class="fas fa-align-left mr-1"></i>Descripción
+                                        </label>
+                                        <input type="text" 
+                                               name="subcategories[{{ $index }}][descripcion]" 
+                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                                               placeholder="Descripción opcional"
+                                               value="{{ old('subcategories.' . $index . '.descripcion', $subcategory->descripcion) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div id="subcategories-empty-message" class="text-center py-8 text-gray-500" style="display: {{ $category->children->isEmpty() ? 'block' : 'none' }}">
+                        <i class="fas fa-folder-open text-4xl mb-2 opacity-50"></i>
+                        <p>No hay subcategorías añadidas aún</p>
+                        <p class="text-sm">Haz clic en "Añadir Subcategoría" para comenzar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            @if($category->children->isNotEmpty() && false)
+                <div class="basis-full p-1 md:p-2">
+                    <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4">
+                        <p class="text-yellow-800 text-sm">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>Nota:</strong> Esta categoría tiene {{ $category->children->count() }} subcategoría(s) asociada(s).
+                            Si la conviertes en subcategoría, las subcategorías actuales se mantendrán bajo esta categoría.
+                        </p>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Botones de Acción -->
+            <div class="basis-full p-1 md:p-2 mt-4 flex justify-between items-center border-t pt-4">
+                <a href="{{ route('categories.index') }}" 
+                   class="inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded shadow-sm transition duration-150 ease-in-out">
+                    <i class="fas fa-arrow-left mr-2"></i>Cancelar
+                </a>
+                <div class="flex space-x-2">
+                    <button type="submit" 
+                            class="inline-flex items-center px-4 py-2 bg-blue-400 hover:bg-blue-500 text-white text-sm font-medium rounded shadow-sm transition duration-150 ease-in-out">
+                        <i class="fas fa-save mr-2"></i>Actualizar Categoría
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="{{ asset('js/cruds/categories.js') }}"></script>
+</x-app-layout>

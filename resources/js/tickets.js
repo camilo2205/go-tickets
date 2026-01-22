@@ -6,6 +6,8 @@ import swal from 'sweetalert';
 import 'select2/dist/css/select2.css';
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css'; // Importar el CSS de Dropzone
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import { set } from 'lodash';
 
 // import Echo from 'laravel-echo';
@@ -101,6 +103,143 @@ $(document).ready(function () {
         }
     });
     $('#funcionario_id').trigger('change');
+
+    // Cargar subcategorías cuando se selecciona una categoría
+    $('#categoria_id').on('change', function() {
+        const categoryId = $(this).val();
+        const $subcategorySelect = $('#subcategoria_id');
+        const selectedSubcategory = $subcategorySelect.data('selected');
+        
+        // Limpiar el select de subcategorías
+        $subcategorySelect.empty();
+        $subcategorySelect.append('<option value="">Seleccionar subcategoría...</option>');
+        
+        if (categoryId) {
+            // Mostrar loading
+            $subcategorySelect.prop('disabled', true);
+            $subcategorySelect.append('<option value="">Cargando...</option>');
+            
+            // Hacer petición AJAX
+            $.ajax({
+                url: `/categories/${categoryId}/subcategories`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(subcategories) {
+                    $subcategorySelect.empty();
+                    $subcategorySelect.append('<option value="">Seleccionar subcategoría...</option>');
+                    
+                    if (subcategories.length > 0) {
+                        $.each(subcategories, function(index, subcategory) {
+                            const option = $('<option></option>')
+                                .attr('value', subcategory.id)
+                                .text(subcategory.name);
+                            
+                            // Preseleccionar si es el valor guardado
+                            if (selectedSubcategory && subcategory.id == selectedSubcategory) {
+                                option.prop('selected', true);
+                            }
+                            
+                            $subcategorySelect.append(option);
+                        });
+                    } else {
+                        $subcategorySelect.append('<option value="">No hay subcategorías</option>');
+                    }
+                    
+                    $subcategorySelect.prop('disabled', false);
+                },
+                error: function() {
+                    $subcategorySelect.empty();
+                    $subcategorySelect.append('<option value="">Error al cargar subcategorías</option>');
+                    $subcategorySelect.prop('disabled', false);
+                }
+            });
+        }
+    });
+
+    // Trigger change on page load if there's a selected category
+    if ($('#categoria_id').val()) {
+        $('#categoria_id').trigger('change');
+    }
+
+    // Función para mostrar notificaciones toast
+    function showToast(message, type = 'success') {
+        const backgroundColor = type === 'success' 
+            ? 'linear-gradient(to right, #00b09b, #96c93d)' 
+            : 'linear-gradient(to right, #ff5f6d, #ffc371)';
+        
+        Toastify({
+            text: message,
+            duration: 4000,
+            close: true,
+            gravity: 'top',
+            position: 'right',
+            backgroundColor: backgroundColor,
+            stopOnFocus: true
+        }).showToast();
+    }
+
+    // Guardar ticket con AJAX y mostrar toast
+    $('#guardar-ticket').click(function (e) {
+        e.preventDefault();
+        
+        const form = $('#ticket-form');
+        const formData = new FormData(form[0]);
+        const submitButton = $(this);
+        const originalText = submitButton.html();
+        
+        // Deshabilitar el botón y mostrar loading
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...');
+        
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    showToast(response.message || 'Ticket guardado exitosamente', 'success');
+                    
+                    // Redirigir después de un breve delay
+                    setTimeout(function() {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        } else {
+                            window.location.href = '/tickets';
+                        }
+                    }, 1500);
+                } else {
+                    showToast(response.message || 'Error al guardar el ticket', 'error');
+                    submitButton.prop('disabled', false).html(originalText);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    // Errores de validación - mostrar un toast por cada error
+                    const errors = xhr.responseJSON.errors;
+                    let delay = 0;
+                    
+                    Object.keys(errors).forEach(function(field) {
+                        errors[field].forEach(function(message) {
+                            setTimeout(function() {
+                                showToast(message, 'error');
+                            }, delay);
+                            delay += 300; // Delay de 300ms entre cada toast
+                        });
+                    });
+                } else {
+                    // Otros errores
+                    let errorMessage = 'Error al guardar el ticket';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    showToast(errorMessage, 'error');
+                }
+                
+                submitButton.prop('disabled', false).html(originalText);
+            }
+        });
+    });
 
     $('#cerrar_ticket').click(function (e) {
         e.preventDefault();
@@ -312,7 +451,6 @@ $(document).ready(function () {
     $(".tags").select2({
         tags: true,
         placeholder: '-- seleccione tags--',
-        theme: "classic",
         allowClear: true,
     })
 });

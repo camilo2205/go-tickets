@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TicketsExport;
+use App\Models\Category;
 use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Respuesta;
@@ -79,13 +80,15 @@ class TicketController extends Controller
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $clientes = Cliente::all();
+        $categorias = Category::where('parent_id', null)->with('children')->get();
+        
         $tags = Tag::all();
         if ($funcionario) {
             $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
         } else {
             $funcionarios = Funcionario::all();
         }
-        return view('tickets.create', compact('clientes', 'funcionarios', 'funcionario', 'cliente', 'tags'));
+        return view('tickets.create', compact('clientes', 'funcionarios', 'funcionario', 'cliente', 'tags', 'categorias'));
     }
 
     /**
@@ -98,18 +101,8 @@ class TicketController extends Controller
     {
         $request->validate([
             'cliente_id' => 'required',
+            'titulo' => 'required|min:5|max:100',
             'descripcion' => 'required|min:15',
-            'nombre_solicitante' => [
-                'required',
-                'min:10',
-                'max:35',
-                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
-                function ($attribute, $value, $fail) {
-                    if (str_word_count($value) < 2) {
-                        $fail('Debe escribir al menos nombre y apellido.');
-                    }
-                }
-            ],
             'prioridad' => 'required',
             'tipo' => 'required'
         ]);
@@ -122,8 +115,12 @@ class TicketController extends Controller
                 'funcionario_id' => $request->funcionario_id,
                 'prioridad' => $request->prioridad,
                 'descripcion' => $request->descripcion,
+                'titulo' => $request->titulo,
                 'nombre_solicitante'=>$request->nombre_solicitante,
                 'tipo' => $request->tipo,
+                'nivel_sla' => $request->nivel_sla,
+                'categoria_id' => $request->categoria_id,
+                'subcategoria_id' => $request->subcategoria_id,
                 'created_by' => auth()->user()->id
             ]);
             if ($request->has('tags')) {
@@ -153,10 +150,30 @@ class TicketController extends Controller
                     sendToWhatsApp($funcionario->user->celular, "GoTelemedicina SAS informa que un nuevo ticket ha sido creado (Ticket #$ticket->id).");
                 }
             }
+            
+            // Detectar si es petición AJAX y retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ticket creado correctamente.',
+                    'redirect' => route('tickets.index'),
+                    'ticket_id' => $ticket->id
+                ]);
+            }
+            
             return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
         } catch (Exception $e) {
             Log::alert("Error al crear ticket", [$e->getMessage() => $e]);
             DB::rollback();
+            
+            // Detectar si es petición AJAX y retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error no controlado, contacte al administrador del sistema.'
+                ], 500);
+            }
+            
             return redirect()->back()->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
     }
@@ -213,12 +230,13 @@ class TicketController extends Controller
         $funcionarios = Funcionario::all();
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
+        $categorias = Category::where('parent_id', null)->with('children')->get();
         if ($funcionario) {
             $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
         } else {
             $funcionarios = Funcionario::all();
         }
-        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente', 'funcionario', 'tags', 'selectags'));
+        return view('tickets.edit', compact('ticket', 'funcionarios', 'cliente', 'funcionario', 'tags', 'selectags', 'categorias'));
     }
 
     /**
@@ -232,19 +250,44 @@ class TicketController extends Controller
     {
         $request->validate([
             'descripcion' => 'required|min:15',
-            'nombre_solicitante' => [
-                'required',
-                'min:10',
-                'max:35',
-                'regex:/^[\pL\s\-]+$/u', // Solo letras, espacios y guiones
+            'prioridad' => 'required',
+            'tipo' => 'required',
+            'categoria_id' => [
                 function ($attribute, $value, $fail) {
-                    if (str_word_count($value) < 2) {
-                        $fail('Debe escribir al menos nombre y apellido.');
+                    if (auth()->user()->funcionario) {
+                        if (is_null($value)) {
+                            $fail('La categoría es obligatoria para funcionarios.');
+                        }
                     }
                 }
             ],
-            'prioridad' => 'required',
-            'tipo' => 'required'
+            'subcategoria_id' => [
+                function ($attribute, $value, $fail) {
+                    if (auth()->user()->funcionario) {
+                        if (is_null($value)) {
+                            $fail('La subcategoría es obligatoria para funcionarios.');
+                        }
+                    }
+                }
+            ],
+            'nivel_sla' => [
+                function ($attribute, $value, $fail) {
+                    if (auth()->user()->funcionario) {
+                        if (is_null($value)) {
+                            $fail('El nivel SLA es obligatorio para funcionarios.');
+                        }
+                    }
+                }
+            ],
+            'tag_id' => [
+                function ($attribute, $value, $fail) {
+                    if (auth()->user()->funcionario) {
+                        if (is_null($value)) {
+                            $fail('El Tag es obligatorio para funcionarios.');
+                        }
+                    }
+                }
+            ]
         ]);
         $sendWhatpsApp = $request->funcionario_id != $ticket->funcionario_id;
         try {
@@ -282,10 +325,30 @@ class TicketController extends Controller
                 sendNotification($ticket->funcionario->user, "Se te ha asignado un nuevo ticket (Ticket #$ticket->id)", "/tickets/{$ticket->id}", $ticket->id);
                 sendToWhatsApp($ticket->funcionario->user->celular, "GoTelemedicina SAS te informa que se te ha asignado un nuevo ticket (Ticket #$ticket->id).");
             }
+            
+            // Detectar si es petición AJAX y retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ticket actualizado correctamente.',
+                    'redirect' => route('tickets.index'),
+                    'ticket_id' => $ticket->id
+                ]);
+            }
+            
             return redirect()->route('tickets.index')->with('success', 'Ticket actualizado.');
         } catch (Exception $e) {
             Log::alert("Error al actualizar ticket", [$e->getMessage() => $e]);
             DB::rollback();
+            
+            // Detectar si es petición AJAX y retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error no controlado, contacte al administrador del sistema.'
+                ], 500);
+            }
+            
             return redirect()->route('tickets.index')->withInput()->with("error", 'Error no controlado, contacte al adminsitrador del sistema.');
         }
     }

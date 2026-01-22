@@ -18,6 +18,10 @@
     {{ isset($styles) ? $styles : '' }}
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Scripts -->
     <script>
         window._env = {
@@ -59,8 +63,8 @@
                             </header>
 
                             <div class="mx-auto flex-1 w-full">
-                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div class="px-1 sm:px-6 bg-white border-b border-gray-200 overflow-x-auto pb-2">
+                                <div class="bg-white overflow-hidden sm:rounded-lg">
+                                    <div class="px-1 sm:px-6 bg-white border-gray-200 overflow-x-auto pb-2">
                                         {{ $slot }}
                                     </div>
                                 </div>

@@ -181,7 +181,12 @@
                             <i class="fas fa-calendar-alt mr-1"></i>{{ formatDate($ticket->created_at, "d/m/Y") }}<br>
                             <i class="fas fa-clock mr-1"></i>{{ formatDate($ticket->created_at, "H:i:s") }}
                         </div>
-                        <span class="text-xs font-bold">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span><br>
+                        <span class="text-xs font-bold">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" class="text-blue-700 hover:underline">
+                                {{ Str::limit($ticket->cliente->codigo_cliente, 15, '...') }}
+                            #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}
+                            </a>
+                        </span><br>
                         {{ Str::limit($ticket->cliente->razon_social, 15, '...') }}<br>
                         <div class="lg:hidden mt-1">
                             @switch($ticket->estado)

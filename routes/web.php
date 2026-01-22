@@ -11,6 +11,7 @@ use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,7 @@ Route::put('/clientes/{cliente}/server', [ClienteController::class, 'updateDisk'
 
 Route::middleware(['auth'])->group(function () {
     Route::get('tareas/render', [TareaController::class, 'render'])->name('tareas.render');
+    Route::get('categories/{category}/subcategories', [CategoryController::class, 'getSubcategories'])->name('categories.subcategories');
     Route::resource('clientes', ClienteController::class);
     Route::resource('users', UserController::class);
     Route::resource('funcionarios', FuncionarioController::class);
@@ -60,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tareas', TareaController::class);
     Route::resource('respuestas', RespuestaController::class);
     Route::resource('posts', InstructivoController::class);
+    Route::resource('categories', CategoryController::class);
 
     // Rutas adicionales para tareas (index.blade.php)
     Route::patch('tareas/{tarea}/updateEnfoque', [TareaController::class, 'updateEnfoque'])->name('tareas.updateEnfoque');
