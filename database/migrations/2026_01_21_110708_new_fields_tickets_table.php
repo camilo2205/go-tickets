@@ -20,8 +20,12 @@ class NewFieldsTicketsTable extends Migration
             $table->dateTime('fecha_corregido')->nullable()->after('fecha_asignado');
             $table->dateTime('fecha_cerrado')->nullable()->after('fecha_corregido');
             $table->string('nivel_sla')->nullable()->after('prioridad');
-            $table->string('categoria')->nullable()->after('nivel_sla');
-            $table->string('subcategoria')->nullable()->after('categoria');
+            $table->boolean('vit')->default(false)->after('nivel_sla');
+            $table->unsignedBigInteger('categoria_id')->nullable()->after('vit');
+            $table->unsignedBigInteger('subcategoria_id')->nullable()->after('categoria_id');
+
+            $table->foreign('categoria_id')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('subcategoria_id')->references('id')->on('categories')->onDelete('set null');
         });
     }
 
@@ -33,10 +37,16 @@ class NewFieldsTicketsTable extends Migration
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
+            $table->dropColumn('titulo');
             $table->dropColumn('fecha_asignado');
             $table->dropColumn('fecha_corregido');
             $table->dropColumn('fecha_cerrado');
             $table->dropColumn('nivel_sla');
+            $table->dropColumn('vit');
+            $table->dropForeign(['categoria_id']);
+            $table->dropColumn('categoria_id');
+            $table->dropForeign(['subcategoria_id']);
+            $table->dropColumn('subcategoria_id');
         });
     }
 }

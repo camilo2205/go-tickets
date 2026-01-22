@@ -35,6 +35,7 @@ class TicketController extends Controller
         $tags_id = $request->tags_id ?: null;
         $buscar = $request->buscar ?: null;
         $estado = $request->estado;
+        $urgente = $request->urgente;
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
         $funcionario = Funcionario::where('user_id', auth()->user()->id)->first();
         $consulta = Ticket::query();
@@ -54,6 +55,24 @@ class TicketController extends Controller
         if ($cliente_id) {
             $consulta->where('cliente_id', $cliente_id);
         }
+        
+        if ($buscar) {
+            $tickets = $consulta->where(function ($query) use ($buscar) {
+                $query->where('titulo', 'like', "%$buscar%")
+                      ->orWhere('descripcion', 'like', "%$buscar%");
+            });
+        }
+
+        if ($urgente) {
+            $consulta->where('prioridad', 'urgente');
+        }
+
+        if ($mis_tickets = $request->mis_tickets) {
+            if ($funcionario) {
+                $consulta->where('funcionario_id', $funcionario->id);
+            }
+        }
+        
         if ($cliente) {
             $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
             $clientes = [];
@@ -121,18 +140,9 @@ class TicketController extends Controller
                 'nivel_sla' => $request->nivel_sla,
                 'categoria_id' => $request->categoria_id,
                 'subcategoria_id' => $request->subcategoria_id,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+                'tags' => $request->tags
             ]);
-            if ($request->has('tags')) {
-                foreach ($request->tags as $tag) {
-                    if (is_numeric($tag)) {
-                        $ticket->tags()->attach($tag);
-                    } else {
-                        $newTag = Tag::create(['nombre' => $tag]);
-                        $ticket->tags()->attach($newTag->id);
-                    }
-                }
-            }
             if ($request->hasfile('soportes')) {
                 foreach ($request->file('soportes') as $file) {
                     $path = $file->store('soportes');

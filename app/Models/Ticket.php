@@ -12,6 +12,7 @@ class Ticket extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'titulo',
         'cliente_id',
         'funcionario_id',
         'descripcion',
@@ -19,7 +20,10 @@ class Ticket extends Model
         'tipo',
         'estado',
         'created_by',
-        'nombre_solicitante', // Nuevo campo
+        'nombre_solicitante',
+        'nivel_sla',
+        'categoria_id',
+        'subcategoria_id'
     ];
 
     public static $rules = [

@@ -12,6 +12,7 @@
             </div>
             <form action="" id="filtrar" class="col-span-7 flex space-x-4 hidden lg:flex">
                 <input type="hidden" id="estado" name="estado" value="{{ $estado }}">
+                <input type="hidden" id="vit" name="vit" value="{{ request('vit') }}">
                 <input type="hidden" id="urgente" name="urgente" value="{{ request('urgente') }}">
                 <input type="hidden" id="mis_tickets" name="mis_tickets" value="{{ request('mis_tickets') }}">
                 <div class="flex-1">
@@ -147,16 +148,27 @@
                 
             <!-- Filtros Urgentes y Mis Tickets -->
             <div class="flex items-center gap-2">
+                @if ($funcionario)
+                    <!-- Filtro Tickets Muy Importantes solo visible para funcionarios -->
+                    <a href="{{ route('tickets.index', array_merge(request()->all(), ['vit' => request('vit') == '1' ? null : '1'])) }}" 
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition duration-150 ease-in-out {{ request('vit') == '1' ? 'bg-blue-300 text-white border-2 border-blue-800' : 'bg-blue-100 text-blue-400 hover:bg-blue-200' }}">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Tickets Muy Importantes
+                    </a>
+                @endif
                 <a href="{{ route('tickets.index', array_merge(request()->all(), ['urgente' => request('urgente') == '1' ? null : '1'])) }}" 
                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition duration-150 ease-in-out {{ request('urgente') == '1' ? 'bg-red-600 text-white border-2 border-red-800' : 'bg-red-100 text-red-800 hover:bg-red-200' }}">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     Urgentes
                 </a>
-                <a href="{{ route('tickets.index', array_merge(request()->all(), ['mis_tickets' => request('mis_tickets') == '1' ? null : '1'])) }}" 
-                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition duration-150 ease-in-out {{ request('mis_tickets') == '1' ? 'bg-purple-600 text-white border-2 border-purple-800' : 'bg-purple-100 text-purple-800 hover:bg-purple-200' }}">
-                    <i class="fas fa-user mr-1"></i>
-                    Mis Tickets
-                </a>
+                @if ($funcionario)
+                    <!-- Filtro Mis Tickets solo visible para funcionarios -->
+                    <a href="{{ route('tickets.index', array_merge(request()->all(), ['mis_tickets' => request('mis_tickets') == '1' ? null : '1'])) }}" 
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition duration-150 ease-in-out {{ request('mis_tickets') == '1' ? 'bg-purple-600 text-white border-2 border-purple-800' : 'bg-purple-100 text-purple-800 hover:bg-purple-200' }}">
+                        <i class="fas fa-user mr-1"></i>
+                        Mis Tickets
+                    </a>
+                @endif
             </div>
         </div>
     </div>
