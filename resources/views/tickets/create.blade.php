@@ -24,7 +24,7 @@
         </div>
     </x-slot>
 
-    <div id="form-div" class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-6">
+    {{-- <div id="form-div" class="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-6"> --}}
         <form action="{{ route('tickets.store') }}" method="post" id="ticket-form" class="flex flex-row flex-wrap"
             enctype="multipart/form-data">
             @csrf
@@ -55,27 +55,38 @@
                 @enderror
             </div>
 
-            <!-- Cliente -->
+            <!-- Soportes -->
             <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
-                <x-label for="cliente_id" class="text-blue-900 font-semibold mb-1">
-                    <i class="fas fa-building mr-1"></i>Cliente
+                <x-label for="soportes" class="text-blue-900 font-semibold mb-1">
+                    <i class="fas fa-paperclip mr-1"></i>Soportes
                 </x-label>
-                @if ($cliente)
-                    <strong class="text-gray-800">{{ $cliente->razon_social }}</strong>
-                    <input type="hidden" id="cliente_id" name="cliente_id" value="{{ $cliente->id }}">
-                @else
-                    <x-select name="cliente_id" id="cliente_id" class="w-full cliente">
-                        @foreach ($clientes as $client)
-                            <option value="{{ $client->id }}" @if ($client->id == old('cliente_id')) selected @endif>
-                                {{ $client->razon_social }}
-                            </option>
-                        @endforeach
-                    </x-select>
-                @endif
-                @error('cliente_id')
+                <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" 
+                    accept="image/*,.pdf,.doc,.docx" multiple />
+                @error('soportes')
                     <x-small class="text-red-600">{{ $message }}</x-small>
                 @enderror
             </div>
+
+            @if ($cliente)
+                <input type="hidden" id="cliente_id" name="cliente_id" value="{{ $cliente->id }}">
+            @else
+                <!-- Cliente -->
+                <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
+                    <x-label for="cliente_id" class="text-blue-900 font-semibold mb-1">
+                        <i class="fas fa-building mr-1"></i>Cliente
+                    </x-label>
+                        <x-select name="cliente_id" id="cliente_id" class="w-full cliente">
+                            @foreach ($clientes as $client)
+                                <option value="{{ $client->id }}" @if ($client->id == old('cliente_id')) selected @endif>
+                                    {{ $client->razon_social }}
+                                </option>
+                            @endforeach
+                        </x-select>
+                    @error('cliente_id')
+                        <x-small class="text-red-600">{{ $message }}</x-small>
+                    @enderror
+                </div>
+            @endif
 
             @if (!$cliente)
                 <!-- Encargado -->
@@ -129,23 +140,22 @@
                 @enderror
             </div>
             
-            <!-- nivel sla -->
-            <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
-                <x-label for="nivel_sla" class="text-blue-900 font-semibold mb-1">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Nivel de Soporte (SLA)
-                </x-label>
-                <x-select name="nivel_sla" id="nivel_sla" class="w-full">
-                    <option value=""
-                        @if ('' == old('nivel_sla')) selected @elseif(!old('nivel_sla')) selected @endif>
-                        Nivel 1</option>
-                    <option value="nivel_1" @if ('nivel_1' == old('nivel_sla')) selected @endif>Nivel 1</option>
-                    <option value="nivel_2" @if ('nivel_2' == old('nivel_sla')) selected @endif>Nivel 2</option>
-                    <option value="nivel_3" @if ('nivel_3' == old('nivel_sla')) selected @endif>Nivel 3</option>
-                </x-select>
-                @error('nivel_sla')
-                    <x-small class="text-red-600">{{ $message }}</x-small>
-                @enderror
-            </div>
+            @if ($funcionario)
+                <!-- nivel sla -->
+                <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
+                    <x-label for="nivel_sla" class="text-blue-900 font-semibold mb-1">
+                        <i class="fas fa-exclamation-circle mr-1"></i>Nivel de Soporte (SLA)
+                    </x-label>
+                    <x-select name="nivel_sla" id="nivel_sla" class="w-full">
+                        <option value="nivel_1" @if ('nivel_1' == old('nivel_sla')) selected @endif>Nivel 1</option>
+                        <option value="nivel_2" @if ('nivel_2' == old('nivel_sla')) selected @endif>Nivel 2</option>
+                        <option value="nivel_3" @if ('nivel_3' == old('nivel_sla')) selected @endif>Nivel 3</option>
+                    </x-select>
+                    @error('nivel_sla')
+                        <x-small class="text-red-600">{{ $message }}</x-small>
+                    @enderror
+                </div>
+            @endif
 
             <!-- Tipo -->
             <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
@@ -194,20 +204,8 @@
                     <x-small class="text-red-600">{{ $message }}</x-small>
                 @enderror
             </div>
-
-            <!-- Soportes -->
-            <div class="basis-full md:basis-1/2 lg:basis-1/3 p-1 md:p-2">
-                <x-label for="soportes" class="text-blue-900 font-semibold mb-1">
-                    <i class="fas fa-paperclip mr-1"></i>Soportes
-                </x-label>
-                <x-input type="file" name="soportes[]" id="soportes" class="block mt-1 w-full" 
-                    accept="image/*,.pdf,.doc,.docx" multiple />
-                @error('soportes')
-                    <x-small class="text-red-600">{{ $message }}</x-small>
-                @enderror
-            </div>
         </form>
-    </div>
+    {{-- </div> --}}
     <script src="{{ asset('js/cruds/tickets.js') }}" defer></script>
     @if (session('success') || session('error'))
     <script>

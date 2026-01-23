@@ -258,6 +258,20 @@ $(document).ready(function () {
         })
     });
 
+    $('#marcar_corregido').click(function (e) {
+        e.preventDefault();
+        swal({
+            title: 'MARCAR COMO CORREGIDO',
+            text: '¿Está seguro que desea marcar este ticket como corregido?',
+            icon: 'warning',
+            buttons: ['No, cancelar', 'Sí, marcar como corregido']
+        }).then(marcar => {
+            if (marcar) {
+                $('#marcar-corregido-form').submit();
+            }
+        })
+    });
+
 
     let token = $('meta[name="csrf-token"]').attr('content');
 
@@ -382,8 +396,8 @@ $(document).ready(function () {
                         }
 
                         let html = `
-                            <div class="flex ${respuesta.user.cliente || respuesta.user.func_gotele ? 'flex-row' : 'flex-row-reverse'} space-x-2">
-                                <div class="rounded-xl m-1 p-3 basis-7/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
+                            <div class="flex  ${respuesta.user.cliente || respuesta.user.func_gotele ? 'flex-row' : 'flex-row-reverse'} space-x-2">
+                                <div class="rounded-xl text-sm m-1 p-2 basis-9/12 ${respuesta.user.cliente || respuesta.user.func_gotele ? 'bg-cyan-300' : 'bg-green-200'}">
                                     <strong>${respuesta.user.name}
                                         (${respuesta.user.cliente ? 'Cliente' : (respuesta.user.funcionario ? 'Funcionario' : 'Admin')})
                                         - ${moment(respuesta.created_at).format('DD/MM/YYYY hh:mm A')} ${respuesta.cerrar ? '(Cerrado)' : ''}

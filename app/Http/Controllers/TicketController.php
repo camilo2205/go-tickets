@@ -72,6 +72,12 @@ class TicketController extends Controller
                 $consulta->where('funcionario_id', $funcionario->id);
             }
         }
+
+        if ($vit = $request->vit) {
+            if ($funcionario) {
+                $consulta->where('vit', true);
+            }
+        }
         
         if ($cliente) {
             $tickets = $consulta->where('cliente_id', $cliente->id)->orderBy('id', 'desc')->paginate(10);
@@ -101,7 +107,11 @@ class TicketController extends Controller
         $clientes = Cliente::all();
         $categorias = Category::where('parent_id', null)->with('children')->get();
         
-        $tags = Tag::all();
+        $tags = Tag::join('tags_tickets', 'tags.id', '=', 'tags_tickets.tag_id')
+            ->select('tags.id', 'tags.nombre', DB::raw('COUNT(tags_tickets.ticket_id) as uso_count'))
+            ->groupBy('tags.id', 'tags.nombre')
+            ->orderByDesc('uso_count')
+            ->get();
         if ($funcionario) {
             $funcionarios = Funcionario::where('user_id', auth()->user()->id)->get();
         } else {
@@ -235,7 +245,11 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        $tags = DB::table('tags')->get();
+        $tags = Tag::join('tags_tickets', 'tags.id', '=', 'tags_tickets.tag_id')
+            ->select('tags.id', 'tags.nombre', DB::raw('COUNT(tags_tickets.ticket_id) as uso_count'))
+            ->groupBy('tags.id', 'tags.nombre')
+            ->orderByDesc('uso_count')
+            ->get();
         $selectags = $ticket->tags->pluck('id')->toArray();
         $funcionarios = Funcionario::all();
         $cliente = Cliente::where('user_id', auth()->user()->id)->first();
@@ -262,20 +276,20 @@ class TicketController extends Controller
             'descripcion' => 'required|min:15',
             'prioridad' => 'required',
             'tipo' => 'required',
+            'funcionario_id' => [
+                function ($attribute, $value, $fail) {
+                    if (auth()->user()->funcionario) {
+                        if (is_null($value)) {
+                            $fail('El funcionario es obligatorio para funcionarios.');
+                        }
+                    }
+                }
+            ],
             'categoria_id' => [
                 function ($attribute, $value, $fail) {
                     if (auth()->user()->funcionario) {
                         if (is_null($value)) {
                             $fail('La categoría es obligatoria para funcionarios.');
-                        }
-                    }
-                }
-            ],
-            'subcategoria_id' => [
-                function ($attribute, $value, $fail) {
-                    if (auth()->user()->funcionario) {
-                        if (is_null($value)) {
-                            $fail('La subcategoría es obligatoria para funcionarios.');
                         }
                     }
                 }
@@ -289,7 +303,7 @@ class TicketController extends Controller
                     }
                 }
             ],
-            'tag_id' => [
+            'tags' => [
                 function ($attribute, $value, $fail) {
                     if (auth()->user()->funcionario) {
                         if (is_null($value)) {
@@ -303,18 +317,7 @@ class TicketController extends Controller
         try {
             DB::beginTransaction();
             $ticket->update($request->all());
-            $ticket_tag = DB::table('tags_tickets')->where('ticket_id', $ticket->id);
-            $ticket_tag->delete();
-            if ($request->has('tags')) {
-                foreach ($request->tags as $tag) {
-                    if (is_numeric($tag)) {
-                        $ticket->tags()->attach($tag);
-                    } else {
-                        $newTag = Tag::create(['nombre' => $tag]);
-                        $ticket->tags()->attach($newTag->id);
-                    }
-                }
-            }
+            
             if ($request->hasfile('soportes')) {
                 foreach ($request->file('soportes') as $file) {
                     $path = $file->store('soportes');
@@ -436,5 +439,29 @@ class TicketController extends Controller
         $_fechas = isset($fechas[1]) ? " entre $fechas[0] y $fechas[1]" : '';
 
         return Excel::download(new TicketsExport($cliente_id, $estado, $fechas, $tags_id), "Tickets$_estado$razon_social$_fechas.xlsx");
+    }
+
+    public function marcarCorregido(Request $request, Ticket $ticket)
+    {
+        try {
+            // Validar que exista al menos una respuesta del funcionario
+            $respuestasFuncionario = $ticket->respuestas()->whereHas('user', function($query) {
+                $query->whereHas('funcionario');
+            })->count();
+
+            if ($respuestasFuncionario === 0) {
+                return back()->with('error', 'No se puede marcar como corregido. Debe haber al menos una respuesta del funcionario.');
+            }
+
+            // Actualizar la fecha_corregido
+            $ticket->update([
+                'fecha_corregido' => now()
+            ]);
+
+            return back()->with('success', 'Ticket marcado como corregido exitosamente.');
+        } catch (Exception $e) {
+            Log::error('Error al marcar ticket como corregido: ' . $e->getMessage());
+            return back()->with('error', 'Error al marcar el ticket como corregido.');
+        }
     }
 }

@@ -23,7 +23,10 @@ class Ticket extends Model
         'nombre_solicitante',
         'nivel_sla',
         'categoria_id',
-        'subcategoria_id'
+        'subcategoria_id',
+        'fecha_asignado',
+        'fecha_corregido',
+        'fecha_cerrado'
     ];
 
     public static $rules = [

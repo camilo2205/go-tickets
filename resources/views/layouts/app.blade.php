@@ -53,8 +53,8 @@
                 @else 
                     <section class="overflow-auto mt-16 w-full">
                 @endif
-                    <div id="main" class="main-content flex-1 bg-white mt-12 md:mt-3 pb-24 md:pb-5">
-                        <div class="bg-white rounded-lg shadow-lg border border-gray-300 p-2 m-4 mt-4">
+                    <div id="main" class="main-content flex-1 bg-white mt-12 md:mt-3 md:pb-5">
+                        <div class="bg-white border border-gray-300 p-2">
                             <!-- Page Heading -->
                             <header class="bg-white">
                                 <div class="mx-auto py-2 sm:px-6 lg:px-8">

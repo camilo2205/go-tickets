@@ -94,7 +94,8 @@
                 <x-label for="Tags" class="text-blue-900 font-semibold mb-1">
                     <i class="fas fa-tag mr-1"></i>Tag
                 </x-label>
-                <x-select multiple="multiple" name="tags[]" id="tags" class="tags form-control w-full">
+                <x-select name="tags" id="tags" class="tags form-control w-full">
+                    <option value="">Seleccionar tag...</option>
                     @foreach ($tags as $tag)
                         <option value="{{ $tag->id }}" {{ in_array($tag->id, $selectags) ? 'selected' : '' }}>
                             {{ $tag->nombre }}
@@ -131,7 +132,6 @@
                 </x-label>
                 @if (!$cliente || $ticket->estado == 'creado')
                     <x-select name="nivel_sla" id="nivel_sla" class="w-full">
-                        <option value="" @if ($ticket->nivel_sla == '' || !$ticket->nivel_sla) selected @endif>Nivel 1</option>
                         <option value="nivel_1" @if ($ticket->nivel_sla == 'nivel_1') selected @endif>Nivel 1</option>
                         <option value="nivel_2" @if ($ticket->nivel_sla == 'nivel_2') selected @endif>Nivel 2</option>
                         <option value="nivel_3" @if ($ticket->nivel_sla == 'nivel_3') selected @endif>Nivel 3</option>
