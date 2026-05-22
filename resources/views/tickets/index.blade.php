@@ -195,6 +195,13 @@
                                 @break
                                 @endswitch
 
+                                @if($ticket->nivel_sla)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    <i class="fas fa-layer-group mr-1"></i>
+                                    {{ ucfirst(str_replace('_', ' ', $ticket->nivel_sla)) }}
+                                </span>
+                                @endif
+
                                 @if($ticket->respuestas->count() > 0)
                                 <span class="inline-flex items-center text-xs text-gray-500">
                                     <i class="fas fa-comments mr-1"></i>
@@ -261,25 +268,25 @@
                         <div class="flex-shrink-0 hidden lg:block">
                             @switch($ticket->sla)
                             @case(1)
-                                @if ($ticket->created_at->diffInHours($ticket->corregido_at) <= 1) 
+                                @if ($ticket->created_at->diffInHours($ticket->corregido_at) <= 1)
                                     <span class="inline-block w-2 h-2 rounded-full bg-green-500" title="SLA OK"></span>
-                                @elseif ($ticket->created_at->diffInHours($ticket->corregido_at) <= 2) 
+                                @elseif ($ticket->created_at->diffInHours($ticket->corregido_at) <= 2)
                                     <span class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="SLA en riesgo"></span>
                                 @else
                                     <span class="inline-block w-2 h-2 rounded-full bg-red-500" title="SLA incumplido"></span>
                                 @endif
                             @break
                             @case(2)
-                                @if ($ticket->created_at->diffInHours($ticket->corregido_at) <= 4) 
+                                @if ($ticket->created_at->diffInHours($ticket->corregido_at) <= 4)
                                     <span class="inline-block w-2 h-2 rounded-full bg-green-500" title="SLA OK"></span>
-                                @elseif ($ticket->created_at->diffInHours($ticket->corregido_at) <= 8) 
+                                @elseif ($ticket->created_at->diffInHours($ticket->corregido_at) <= 8)
                                     <span class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="SLA en riesgo"></span>
                                 @else
                                     <span class="inline-block w-2 h-2 rounded-full bg-red-500" title="SLA incumplido"></span>
                                 @endif
                             @break
                             @default
-                                @if ($ticket->created_at->diffInDays($ticket->corregido_at) <= 1) 
+                                @if ($ticket->created_at->diffInDays($ticket->corregido_at) <= 1)
                                     <span class="inline-block w-2 h-2 rounded-full bg-green-500" title="SLA OK"></span>
                                 @elseif ($ticket->created_at->diffInHours($ticket->corregido_at) <= 2)
                                     <span class="inline-block w-2 h-2 rounded-full bg-yellow-500" title="SLA en riesgo"></span>
@@ -463,7 +470,7 @@
         function toggleThread(ticketId) {
             const thread = document.getElementById('thread-' + ticketId);
             const icon = document.getElementById('icon-' + ticketId);
-            
+
             if (thread.classList.contains('hidden')) {
                 thread.classList.remove('hidden');
                 thread.classList.add('animate-fadeIn');

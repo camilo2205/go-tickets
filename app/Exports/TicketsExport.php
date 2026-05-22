@@ -17,6 +17,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithColumnWidths, WithStyles, WithMapping
 {
+    protected $cliente_id;
+
+    protected $estado;
+
+    protected $fechas;
+
+    protected $tags_id;
+
     public function __construct($cliente_id, $estado, $fechas, $tags_id)
     {
         $this->cliente_id = $cliente_id;
@@ -31,6 +39,7 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             'CLIENTE',
             'DESCRIPCIÓN',
             'ESTADO',
+            'NIVEL SLA',
             'ENCARGADO',
             'FECHA',
             'FECHA ATENCION',
@@ -93,6 +102,7 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             $razon_social,
             $ticket->descripcion,
             $ticket->estado,
+            $ticket->nivel_sla ? ucfirst(str_replace('_', ' ', $ticket->nivel_sla)) : '',
             $ticket->funcionario ? $ticket->funcionario->user->name : '',
             Date::parse($ticket->created_at),
             $ticket->respuestas()->first() ? $ticket->respuestas()->first()->created_at : '',
@@ -105,7 +115,8 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             'B' => 45,
-            'D' => 30
+            'D' => 18,
+            'E' => 30
         ];
     }
 
@@ -113,8 +124,8 @@ class TicketsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
     {
         return [
             1    => ['font' => ['bold' => true], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]],
-            "C:G"  => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]],
-            "A:G"  => ['alignment' => ['vertical' => Alignment::VERTICAL_CENTER]]
+            "C:H"  => ['alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]],
+            "A:H"  => ['alignment' => ['vertical' => Alignment::VERTICAL_CENTER]]
         ];
     }
 }
